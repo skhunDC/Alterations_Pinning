@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="brand-actions">
-        <button class="secondary" onclick="openPrintCertificate()">Print Certificate</button>
+        <button class="secondary" onclick="handlePrintCertificate()">Generate Certificate</button>
         <button class="primary" onclick="scrollToStatus()">View Status</button>
       </div>
     </header>
@@ -74,10 +74,9 @@
             <button
               type="button"
               id="print-certificate-button"
-              class="primary"
-              onclick="openPrintCertificate()"
+              class="primary primary-button"
             >
-              Print Certificate
+              Generate Certificate
             </button>
           </div>
           <div class="module-progress" id="moduleProgress"></div>
