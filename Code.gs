@@ -5,6 +5,10 @@ const MODULE_HEADERS = ['Timestamp', 'EmployeeName', 'LocationOrID', 'ModuleID',
 // Reusable Google Doc certificate template for Dublin Cleaners
 var CERTIFICATE_TEMPLATE_ID = '17yjalGF_nZEw_mWVQm9vlme_eoAYHLbBPw7nruiG1QQ';
 
+// Dublin Cleaners Certificate Assets
+var CERTIFICATE_LOGO_URL = 'https://www.dublincleaners.com/wp-content/uploads/2025/06/LogosHQ.png';
+var CERTIFICATE_BORDER_URL = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/Border3.jpg';
+
 // Folder to store generated certificates
 var CERTIFICATE_FOLDER_NAME = 'Alterations Pinning Certificates';
 
@@ -116,6 +120,112 @@ function getOrCreateCertificateFolder_() {
     return folders.next();
   }
   return DriveApp.createFolder(CERTIFICATE_FOLDER_NAME);
+}
+
+function generateCertificatePDF(employeeName, employeeLocationOrId) {
+  const cleanName = employeeName ? employeeName.toString().trim() : '';
+  if (!cleanName) {
+    throw new Error('Employee name is required to generate a certificate.');
+  }
+
+  const cleanLocation = employeeLocationOrId ? employeeLocationOrId.toString().trim() : '';
+  let status = null;
+  try {
+    status = getEmployeeCertificationStatus(cleanName);
+  } catch (err) {
+    // If status lookup fails, proceed without blocking certificate generation.
+    status = null;
+  }
+
+  const folder = getOrCreateCertificateFolder_();
+  const tz = Session.getScriptTimeZone();
+  const today = new Date();
+  const todayIso = Utilities.formatDate(today, tz, 'yyyy-MM-dd');
+  const prettyDate = Utilities.formatDate(today, tz, 'MMMM d, yyyy');
+  const docName = 'Alterations Pinning Certificate - ' + cleanName + ' - ' + todayIso;
+
+  const doc = DocumentApp.create(docName);
+  const docId = doc.getId();
+  const file = DriveApp.getFileById(docId);
+  folder.addFile(file);
+  DriveApp.getRootFolder().removeFile(file);
+
+  const body = doc.getBody();
+  body.clear();
+
+  const borderBlob = UrlFetchApp.fetch(CERTIFICATE_BORDER_URL).getBlob();
+  borderBlob.setName('border.jpg');
+  const borderParagraph = body.appendParagraph('');
+  const borderImage = borderParagraph.appendInlineImage(borderBlob);
+  borderParagraph.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  borderImage.setWidth(600);
+
+  const table = body.appendTable([['']]);
+  table.setBorderWidth(0);
+  const cell = table.getCell(0, 0);
+  cell.setPaddingTop(20);
+  cell.setPaddingBottom(20);
+  cell.setPaddingLeft(20);
+  cell.setPaddingRight(20);
+
+  const title1 = cell.appendParagraph('Dublin Cleaners');
+  title1.setHeading(DocumentApp.ParagraphHeading.HEADING1)
+    .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+  const title2 = cell.appendParagraph('Alterations Pinning Certification');
+  title2.setHeading(DocumentApp.ParagraphHeading.HEADING2)
+    .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+  const subtitle = cell.appendParagraph('Official Certification');
+  subtitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+  cell.appendParagraph('');
+
+  const label = cell.appendParagraph('This certifies that');
+  label.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+  const namePara = cell.appendParagraph(cleanName);
+  namePara.setAlignment(DocumentApp.HorizontalAlignment.CENTER)
+    .setBold(true)
+    .setFontSize(18);
+
+  const bodyText = 'has successfully completed the Dublin Cleaners Alterations Pinning Certification Program and is hereby certified and authorized to pin garments for our customers in-store in accordance with our quality, safety, and service standards.';
+  const bodyPara = cell.appendParagraph(bodyText);
+  bodyPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER)
+    .setFontSize(11);
+
+  const datePara = cell.appendParagraph('Date: ' + prettyDate);
+  datePara.setAlignment(DocumentApp.HorizontalAlignment.CENTER)
+    .setFontSize(10);
+
+  if (cleanLocation) {
+    const locPara = cell.appendParagraph('Store / Location: ' + cleanLocation);
+    locPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER)
+      .setFontSize(10);
+  }
+
+  cell.appendParagraph('');
+
+  const logoBlob = UrlFetchApp.fetch(CERTIFICATE_LOGO_URL).getBlob();
+  logoBlob.setName('logo.png');
+  const logoPara = cell.appendParagraph('');
+  const logoImage = logoPara.appendInlineImage(logoBlob);
+  logoImage.setWidth(120);
+  logoPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+  doc.saveAndClose();
+
+  const pdfBlob = file.getAs('application/pdf');
+  pdfBlob.setName(docName + '.pdf');
+  const pdfFile = folder.createFile(pdfBlob);
+
+  return {
+    docFileId: file.getId(),
+    docFileUrl: file.getUrl(),
+    pdfFileId: pdfFile.getId(),
+    pdfFileUrl: pdfFile.getUrl(),
+    isCertified: !!(status && status.isCertified)
+  };
 }
 
 function generateCertificateFromTemplate(employeeName, employeeLocation) {
