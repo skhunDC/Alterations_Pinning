@@ -3,7 +3,17 @@ const MODULE_RESULTS_SHEET = 'ModuleResults';
 const MODULE_HEADERS = ['Timestamp', 'EmployeeName', 'LocationOrID', 'ModuleID', 'Score', 'Passed'];
 
 function include(filename) {
-  return HtmlService.createHtmlOutputFromFile(filename).getContent();
+  const name = (filename || '').toString().trim();
+  if (!name) {
+    Logger.log('Include called without a filename; returning empty string.');
+    return '';
+  }
+  try {
+    return HtmlService.createHtmlOutputFromFile(name).getContent();
+  } catch (err) {
+    Logger.log(`Include failed for "${name}": ${err.message}`);
+    return '';
+  }
 }
 
 function doGet() {
