@@ -71,11 +71,12 @@
 
       .certificate-decor {
         position: relative;
-        width: 100%;
+        width: calc(100% + 5.5rem);
+        margin-left: -2.75rem;
         height: 120px;
         background-image: url('https://www.dublincleaners.com/wp-content/uploads/2025/12/1Border.png');
         background-repeat: no-repeat;
-        background-size: contain;
+        background-size: cover;
         background-position: center;
         flex-shrink: 0;
       }
@@ -100,7 +101,7 @@
       }
 
       .certificate-logo {
-        width: 200px;
+        width: 170px;
         max-width: 75%;
         height: auto;
         max-height: 90px;
@@ -258,10 +259,18 @@
         font-size: 0.95rem;
         page-break-inside: avoid;
         break-inside: avoid;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+        align-items: start;
       }
 
       .certificate-footer-block {
         text-align: center;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 0.9rem 1rem 1.1rem;
       }
 
       .certificate-footer-block .signature-line {
@@ -270,6 +279,23 @@
         border-top: 1px solid #444444;
         padding-top: 0.35rem;
         min-width: 280px;
+      }
+
+      .certificate-footer-block .signature-text-area {
+        margin-top: 0.6rem;
+        border: 1px dashed #9ca3af;
+        border-radius: 8px;
+        padding: 0.5rem 0.65rem;
+        min-height: 52px;
+        background: #ffffff;
+        color: #374151;
+      }
+
+      .certificate-footer-block .footer-label {
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #1f2937;
       }
 
       @media print {
@@ -286,6 +312,7 @@
         .certificate-wrapper {
           height: auto;
           min-height: 100vh;
+          padding: 0;
         }
       }
     </style>
@@ -330,8 +357,15 @@
         </div>
         <div class="certificate-footer-row">
           <div class="certificate-footer-block">
-            Supervisor sign-off (required):<br />
-            <span class="signature-line">&nbsp;</span>
+            <div class="footer-label">Supervisor sign-off (required)</div>
+            <span class="signature-line" aria-label="Supervisor signature line">&nbsp;</span>
+          </div>
+          <div class="certificate-footer-block">
+            <div class="footer-label">Manager signature</div>
+            <span class="signature-line" aria-label="Manager signature line">&nbsp;</span>
+            <div class="signature-text-area" aria-label="Manager notes area">
+              Manager name, title, and comments
+            </div>
           </div>
         </div>
         <div class="certificate-decor certificate-decor--bottom"></div>
