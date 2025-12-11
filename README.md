@@ -6,8 +6,8 @@ Google Apps Script + HTMLService single-page experience that delivers Dublin Cle
 - `Code.gs` — Apps Script backend (HTMLService entrypoint, Sheet helpers, quiz persistence, certification status API).
 - `appsscript.json` — Manifest configured for web app deployment.
 - `index.html` — Main UI shell with navigation, status, and modules.
-- `styles.html` — Inline CSS for the modern, responsive layout (sticky header, active navigation state, progress styles, admin table).
-- `scripts.html` — Client-side JS for module rendering, quizzes, Sheet saves, status updates, navigation focus, localStorage helpers, toasts, and admin summary fetches.
+- `styles.html` — Inline CSS for the modern, responsive layout (sticky header, active navigation state, progress styles).
+- `scripts.html` — Client-side JS for module rendering, quizzes, Sheet saves, status updates, navigation focus, localStorage helpers, and toasts.
 - `print.html` — Print-friendly certificate view that reflects module completion and highlights the employee name.
 - `docs/` — Trainer guidance and project overview docs.
 - `package.json` + `tests/` — Minimal local test harness placeholder.
@@ -27,7 +27,7 @@ Google Apps Script + HTMLService single-page experience that delivers Dublin Cle
 2. Navigate modules via sticky top navigation or sidebar; read objectives, content, visuals, and take the quiz (80% pass threshold). Active navigation is highlighted and focusable.
 3. Submit a quiz to save to Sheets and refresh status. The dashboard shows modules remaining, a progress bar with estimated minutes, and a checklist.
 4. Use **Print Certificate** to open `print.html` with the employee name and completion table for HR files and supervisor sign-off (only when certified).
-5. Admins can open the Admin View to load a read-only summary grouped by employee directly from the ModuleResults sheet.
+5. Admins can reference the underlying ModuleResults sheet directly in Google Sheets for summary reporting.
 
 ## Recertification + Sign-off Notes
 - Program suggests recertification every 18–24 months and immediate refreshers after documentation issues.
@@ -36,7 +36,6 @@ Google Apps Script + HTMLService single-page experience that delivers Dublin Cle
 ## Testing
 - Run `npm test` to execute lightweight helper tests in `tests/app.test.js` (no dependencies required).
 
-## Extending Admin Reporting
+## Extending Reporting
 - `Code.gs#getAllModuleResults` returns each ModuleResults row.
 - `Code.gs#getSummaryByEmployee` returns aggregated completion by employee name.
-- Extend the Admin View table or add filters by updating `loadAdminSummary` in `scripts.html` to use additional backend fields.

@@ -27,7 +27,6 @@
       <button class="nav-item" data-target="module-M3" onclick="navigateToSection('module-M3', this)">Module 3</button>
       <button class="nav-item" data-target="module-M4" onclick="navigateToSection('module-M4', this)">Module 4</button>
       <button class="nav-item" data-target="module-M5" onclick="navigateToSection('module-M5', this)">Module 5</button>
-      <button class="nav-item" data-target="admin-view" onclick="navigateToSection('admin-view', this)">Admin View</button>
     </nav>
 
     <main role="main">
@@ -103,31 +102,6 @@
         <div id="moduleContainer"></div>
       </section>
 
-      <section id="admin-view" class="module-section main-section" aria-labelledby="admin-title" hidden>
-        <div class="card">
-          <p class="eyebrow" id="admin-title">Admin View (Read-Only)</p>
-          <h2 tabindex="-1">Certification Summary</h2>
-          <p class="subtitle">Load a quick snapshot of who has passed which modules. Data is read-only from the ModuleResults sheet.</p>
-          <button class="primary" onclick="loadAdminSummary()">Load Summary</button>
-          <div class="table-wrapper">
-            <table class="admin-table" aria-label="Employee certification summary">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Location/ID</th>
-                  <th>Modules Passed</th>
-                  <th>Modules Failed</th>
-                  <th>Certified?</th>
-                  <th>Last Updated</th>
-                </tr>
-              </thead>
-              <tbody id="admin-summary-body">
-                <tr><td colspan="6" style="text-align:center;">Click “Load Summary” to fetch results.</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
     </main>
 
     <div id="global-toast" class="toast" role="status" aria-live="polite"></div>
