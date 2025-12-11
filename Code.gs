@@ -7,7 +7,7 @@ var CERTIFICATE_TEMPLATE_ID = '17yjalGF_nZEw_mWVQm9vlme_eoAYHLbBPw7nruiG1QQ';
 
 // Dublin Cleaners Certificate Assets
 var CERTIFICATE_LOGO_URL = 'https://www.dublincleaners.com/wp-content/uploads/2025/06/LogosHQ.png';
-var CERTIFICATE_BORDER_URL = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/Border3.jpg';
+var CERTIFICATE_BORDER_URL = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/1Border.png';
 
 // Folder to store generated certificates
 var CERTIFICATE_FOLDER_NAME = 'Alterations Pinning Certificates';
@@ -122,6 +122,28 @@ function getOrCreateCertificateFolder_() {
   return DriveApp.createFolder(CERTIFICATE_FOLDER_NAME);
 }
 
+function getCertificateBorderBlob_() {
+  const borderBlob = UrlFetchApp.fetch(CERTIFICATE_BORDER_URL).getBlob();
+  borderBlob.setName('border.png');
+  return borderBlob;
+}
+
+function applyCertificateBands_(doc, borderBlob) {
+  const safeBlob = borderBlob || getCertificateBorderBlob_();
+
+  const header = doc.getHeader() || doc.addHeader();
+  header.clear();
+  const headerPara = header.appendParagraph('');
+  headerPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  headerPara.appendInlineImage(safeBlob).setWidth(650);
+
+  const footer = doc.getFooter() || doc.addFooter();
+  footer.clear();
+  const footerPara = footer.appendParagraph('');
+  footerPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  footerPara.appendInlineImage(safeBlob).setWidth(650);
+}
+
 function findExistingCertificateArtifacts_(employeeName) {
   const cleanName = employeeName ? employeeName.toString().trim() : '';
   if (!cleanName) return null;
@@ -204,12 +226,8 @@ function generateCertificatePDF(employeeName, employeeLocationOrId) {
   const body = doc.getBody();
   body.clear();
 
-  const borderBlob = UrlFetchApp.fetch(CERTIFICATE_BORDER_URL).getBlob();
-  borderBlob.setName('border.jpg');
-  const borderParagraph = body.appendParagraph('');
-  const borderImage = borderParagraph.appendInlineImage(borderBlob);
-  borderParagraph.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  borderImage.setWidth(600);
+  const borderBlob = getCertificateBorderBlob_();
+  applyCertificateBands_(doc, borderBlob);
 
   const table = body.appendTable([['']]);
   table.setBorderWidth(0);
@@ -299,6 +317,8 @@ function generateCertificateFromTemplate(employeeName, employeeLocation) {
 
   const newFile = templateFile.makeCopy(docName, folder);
   const newDoc = DocumentApp.openById(newFile.getId());
+
+  applyCertificateBands_(newDoc, getCertificateBorderBlob_());
 
   const prettyDate = Utilities.formatDate(today, tz, 'MMMM d, yyyy');
 
