@@ -138,14 +138,13 @@ function generateCertificateFromTemplate(employeeName, employeeLocation) {
 
   const newFile = templateFile.makeCopy(docName, folder);
   const newDoc = DocumentApp.openById(newFile.getId());
-  const body = newDoc.getBody();
 
   const prettyDate = Utilities.formatDate(today, tz, 'MMMM d, yyyy');
 
-  body.replaceText('{{EMPLOYEE_NAME}}', cleanName);
-  body.replaceText('{{CERTIFICATE_DATE}}', prettyDate);
-  body.replaceText('{{STORE_LOCATION}}', cleanLocation || '');
-  body.replaceText('{{PROGRAM_NAME}}', 'Alterations Pinning Certification Program');
+  replacePlaceholderAcrossDoc_(newDoc, '{{EMPLOYEE_NAME}}', cleanName);
+  replacePlaceholderAcrossDoc_(newDoc, '{{CERTIFICATE_DATE}}', prettyDate);
+  replacePlaceholderAcrossDoc_(newDoc, '{{STORE_LOCATION}}', cleanLocation || '');
+  replacePlaceholderAcrossDoc_(newDoc, '{{PROGRAM_NAME}}', 'Alterations Pinning Certification Program');
 
   newDoc.saveAndClose();
 
@@ -160,6 +159,38 @@ function generateCertificateFromTemplate(employeeName, employeeLocation) {
     pdfFileUrl: pdfFile.getUrl(),
     isCertified: !!isCertified
   };
+}
+
+function replacePlaceholderAcrossDoc_(doc, placeholder, replacement) {
+  const safeValue = replacement == null ? '' : replacement;
+  const containers = [doc.getBody(), doc.getHeader(), doc.getFooter()];
+
+  containers.forEach(function(container) {
+    if (!container) return;
+    let range = null;
+    while (true) {
+      range = container.findText(placeholder, range);
+      if (!range) break;
+
+      const element = range.getElement();
+      if (!element || typeof element.editAsText !== 'function') continue;
+
+      const text = element.asText();
+      const start = range.getStartOffset();
+      const end = range.getEndOffsetInclusive();
+      const attrs = text.getAttributes(start) || {};
+
+      text.deleteText(start, end);
+      text.insertText(start, safeValue);
+
+      if (safeValue.length > 0) {
+        if (!attrs.foregroundColor) {
+          attrs.foregroundColor = '#000000';
+        }
+        text.setAttributes(start, start + safeValue.length - 1, attrs);
+      }
+    }
+  });
 }
 
 function buildCertificateContent_(body, employeeName, employeeLocationOrId, status, issuedOn) {
