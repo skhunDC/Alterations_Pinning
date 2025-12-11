@@ -1616,7 +1616,7 @@
         const message = err && err.message ? err.message : 'Could not create certificate. Please try again.';
         showToast(message, 'error');
       })
-      .generateCertificateFromTemplate(name, location);
+      .generateCertificatePDF(name, location);
   }
 
   function setupPrintCertificateButton() {
