@@ -1,149 +1,95 @@
-const SPREADSHEET_NAME = 'Dublin Cleaners Training';
-const PROGRESS_SHEET_NAME = 'TrainingProgress';
-const HEADER_ROW = ['Timestamp', 'EmployeeName', 'LocationOrID', 'ModuleID', 'ModuleTitle', 'QuizScore', 'PassFail', 'Notes'];
+const SPREADSHEET_NAME = 'Alterations Pinning Certification';
+const MODULE_RESULTS_SHEET = 'ModuleResults';
+const MODULE_HEADERS = ['Timestamp', 'EmployeeName', 'LocationOrID', 'ModuleID', 'Score', 'Passed'];
 
 function include(filename) {
   return HtmlService.createHtmlOutputFromFile(filename).getContent();
 }
 
 function doGet() {
-  ensureSheet();
   const template = HtmlService.createTemplateFromFile('index');
   return template
     .evaluate()
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
-    .setTitle('Alterations Pinning Certification');
+    .setTitle('Alterations Pinning Certification Program')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
-function ensureSheet() {
-  const ss = getOrCreateSpreadsheet();
-  let sheet = ss.getSheetByName(PROGRESS_SHEET_NAME);
-  if (!sheet) {
-    sheet = ss.insertSheet(PROGRESS_SHEET_NAME);
-    sheet.appendRow(HEADER_ROW);
+function getOrCreateCertificationSpreadsheet_() {
+  const existing = DriveApp.getFilesByName(SPREADSHEET_NAME);
+  if (existing.hasNext()) {
+    return SpreadsheetApp.open(existing.next());
   }
-  const headers = sheet.getRange(1, 1, 1, HEADER_ROW.length).getValues()[0];
-  if (headers.join('') !== HEADER_ROW.join('')) {
-    sheet.getRange(1, 1, 1, HEADER_ROW.length).setValues([HEADER_ROW]);
+  return SpreadsheetApp.create(SPREADSHEET_NAME);
+}
+
+function getOrCreateModuleResultsSheet_() {
+  const ss = getOrCreateCertificationSpreadsheet_();
+  let sheet = ss.getSheetByName(MODULE_RESULTS_SHEET);
+  if (!sheet) {
+    sheet = ss.insertSheet(MODULE_RESULTS_SHEET);
+  }
+  const headerRange = sheet.getRange(1, 1, 1, MODULE_HEADERS.length);
+  const headers = headerRange.getValues()[0];
+  const headersMatch = headers.join('') === MODULE_HEADERS.join('');
+  if (!headersMatch) {
+    headerRange.setValues([MODULE_HEADERS]);
   }
   return sheet;
 }
 
-function getOrCreateSpreadsheet() {
-  const files = DriveApp.getFilesByName(SPREADSHEET_NAME);
-  if (files.hasNext()) {
-    return SpreadsheetApp.open(files.next());
+function saveModuleResult(moduleId, employeeName, employeeLocationOrId, score, passed) {
+  if (!employeeName || !moduleId) {
+    throw new Error('Employee name and module ID are required.');
   }
-  const ss = SpreadsheetApp.create(SPREADSHEET_NAME);
-  return ss;
-}
-
-function saveModuleResult(payload) {
-  if (!payload || !payload.employeeName || !payload.moduleId) {
-    throw new Error('Invalid payload. Please provide employee name and module ID.');
-  }
-  const sheet = ensureSheet();
-  const values = [
+  const sheet = getOrCreateModuleResultsSheet_();
+  const row = [
     new Date(),
-    payload.employeeName.trim(),
-    (payload.locationOrId || '').trim(),
-    payload.moduleId,
-    payload.moduleTitle || '',
-    payload.quizScore || '',
-    payload.passFail || '',
-    payload.notes || ''
+    employeeName.trim(),
+    (employeeLocationOrId || '').trim(),
+    moduleId,
+    typeof score === 'number' ? score : '',
+    !!passed
   ];
-  sheet.appendRow(values);
-  return {
-    success: true,
-    savedAt: values[0]
-  };
+  sheet.appendRow(row);
+  return { savedAt: row[0] };
 }
 
-function getModuleStatus(employeeName, locationOrId) {
+function getEmployeeCertificationStatus(employeeName) {
   if (!employeeName) {
-    return [];
+    return { completedModules: [], missingModules: ['M1', 'M2', 'M3', 'M4', 'M5'], isCertified: false };
   }
-  const sheet = ensureSheet();
+  const sheet = getOrCreateModuleResultsSheet_();
   const data = sheet.getDataRange().getValues();
-  const rows = data.slice(1).filter(function(row) {
-    const matchName = row[1] && row[1].toString().toLowerCase() === employeeName.toLowerCase();
-    const matchLocation = !locationOrId || (row[2] && row[2].toString().toLowerCase() === locationOrId.toLowerCase());
-    return matchName && matchLocation;
+  const records = data.slice(1).filter(function(row) {
+    return row[1] && row[1].toString().trim().toLowerCase() === employeeName.trim().toLowerCase();
   });
-  const latestByModule = {};
-  rows.forEach(function(row) {
+  const latest = {};
+  records.forEach(function(row) {
     const moduleId = row[3];
     const timestamp = row[0];
-    if (!latestByModule[moduleId] || latestByModule[moduleId].timestamp < timestamp) {
-      latestByModule[moduleId] = {
-        timestamp: timestamp,
-        employeeName: row[1],
-        locationOrId: row[2],
+    if (!latest[moduleId] || latest[moduleId].timestamp < timestamp) {
+      latest[moduleId] = {
         moduleId: moduleId,
-        moduleTitle: row[4],
-        quizScore: row[5],
-        passFail: row[6],
-        notes: row[7]
+        score: row[4],
+        passed: row[5] === true || row[5] === 'TRUE',
+        timestamp: timestamp
       };
     }
   });
-  return Object.keys(latestByModule).map(function(key) { return latestByModule[key]; });
+  const allModules = ['M1', 'M2', 'M3', 'M4', 'M5'];
+  const completedModules = allModules.filter(function(id) {
+    return latest[id] && latest[id].passed === true;
+  });
+  const missingModules = allModules.filter(function(id) { return completedModules.indexOf(id) === -1; });
+  return { completedModules: completedModules, missingModules: missingModules, isCertified: missingModules.length === 0 };
 }
 
-function getModulesCatalog() {
+function getAllModules() {
   return [
-    {
-      id: 'module-1',
-      title: 'Customer Instruction & Measurement Philosophy',
-      objectives: [
-        'Use objective final measurements instead of subjective shorthand.',
-        'Avoid +/- language; specify final measurements clearly.',
-        'Guide customers to clarity and confirm understanding.',
-        'Reinforce that hem is a garment part, not a measurement.'
-      ]
-    },
-    {
-      id: 'module-2',
-      title: 'Pinning Tools & Safety',
-      objectives: [
-        'Choose correct pin types and default to safety pins for transport.',
-        'Place pins horizontally to protect garments and staff.',
-        'Apply pin safety rules to prevent accidents and garment damage.'
-      ]
-    },
-    {
-      id: 'module-3',
-      title: 'Pinning by Garment Type',
-      objectives: [
-        'Smooth fabric before measuring and pinning.',
-        'Balance inseams based on handedness questions for men.',
-        'Verify customer-pinned garments with tape measure.',
-        'Enforce one patch per garment and classify CSR vs tailor-only tasks.'
-      ]
-    },
-    {
-      id: 'module-4',
-      title: 'SPOT POS Notes & Communication',
-      objectives: [
-        'Record clear, objective alteration notes in SPOT.',
-        'Avoid vague language and confirm instructions with customers.',
-        'Use annotated SPOT examples to avoid ambiguity.'
-      ]
-    },
-    {
-      id: 'module-5',
-      title: 'Exceptions & Escalation',
-      objectives: [
-        'Identify garments CSRs must not pin.',
-        'Escalate appropriately to tailors with respectful phrasing.',
-        'Use visual cues and sorting practices to avoid mistakes.'
-      ]
-    }
+    { id: 'M1', title: 'Customer Instruction & Measurement Philosophy' },
+    { id: 'M2', title: 'Pinning Tools & Safety' },
+    { id: 'M3', title: 'Pinning by Garment Type' },
+    { id: 'M4', title: 'SPOT POS Notes & Communication' },
+    { id: 'M5', title: 'Exceptions & Escalation' }
   ];
-}
-
-function getLatestRecordsForPrint(employeeName, locationOrId) {
-  const status = getModuleStatus(employeeName || '', locationOrId || '');
-  return status;
 }
