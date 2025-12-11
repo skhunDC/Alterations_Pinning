@@ -15,7 +15,16 @@
         </div>
       </div>
       <div class="brand-actions">
-        <button class="secondary" onclick="handlePrintCertificate()">Generate Certificate</button>
+        <button
+          class="secondary"
+          id="header-certificate-button"
+          onclick="handlePrintCertificate()"
+          disabled
+          aria-disabled="true"
+          title="Pass all five modules to unlock certificate printing"
+        >
+          Generate Certificate
+        </button>
         <button class="primary" onclick="scrollToStatus()">View Status</button>
       </div>
     </header>
@@ -75,6 +84,9 @@
               type="button"
               id="print-certificate-button"
               class="primary primary-button"
+              disabled
+              aria-disabled="true"
+              title="Pass all five modules to unlock certificate printing"
             >
               Generate Certificate (PDF)
             </button>
