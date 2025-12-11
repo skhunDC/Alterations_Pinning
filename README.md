@@ -6,9 +6,9 @@ Google Apps Script + HTMLService single-page experience that delivers Dublin Cle
 - `Code.gs` — Apps Script backend (HTMLService entrypoint, Sheet helpers, quiz persistence, certification status API).
 - `appsscript.json` — Manifest configured for web app deployment.
 - `index.html` — Main UI shell with navigation, status, and modules.
-- `styles.html` — Inline CSS for the modern, responsive layout.
-- `scripts.html` — Client-side JS for module rendering, quizzes, Sheet saves, and status updates.
-- `print.html` — Print-friendly certificate view that reflects module completion.
+- `styles.html` — Inline CSS for the modern, responsive layout (sticky header, active navigation state, progress styles, admin table).
+- `scripts.html` — Client-side JS for module rendering, quizzes, Sheet saves, status updates, navigation focus, localStorage helpers, toasts, and admin summary fetches.
+- `print.html` — Print-friendly certificate view that reflects module completion and highlights the employee name.
 - `docs/` — Trainer guidance and project overview docs.
 - `package.json` + `tests/` — Minimal local test harness placeholder.
 
@@ -23,14 +23,20 @@ Google Apps Script + HTMLService single-page experience that delivers Dublin Cle
 - `getEmployeeCertificationStatus(employeeName)` aggregates passing attempts to report completed and missing modules plus overall certification.
 
 ## Using the UI
-1. Enter employee name (required) and location/ID (optional) at the top.
-2. Navigate modules via sidebar; read objectives, content, visuals, and take the quiz (80% pass threshold).
-3. Submit a quiz to save to Sheets and refresh status. The banner shows remaining modules and progress bar.
-4. Use **Print Certificate** to open `print.html` with the employee name and completion table for HR files and supervisor sign-off.
+1. Enter employee name (required) and location/ID (optional) at the top. The app remembers these via localStorage when available.
+2. Navigate modules via sticky top navigation or sidebar; read objectives, content, visuals, and take the quiz (80% pass threshold). Active navigation is highlighted and focusable.
+3. Submit a quiz to save to Sheets and refresh status. The dashboard shows modules remaining, a progress bar with estimated minutes, and a checklist.
+4. Use **Print Certificate** to open `print.html` with the employee name and completion table for HR files and supervisor sign-off (only when certified).
+5. Admins can open the Admin View to load a read-only summary grouped by employee directly from the ModuleResults sheet.
 
 ## Recertification + Sign-off Notes
 - Program suggests recertification every 18–24 months and immediate refreshers after documentation issues.
 - Supervisor sign-off for live pinning is captured outside the app but noted on the printable certificate.
 
 ## Testing
-- Run `npm test` to execute the placeholder sanity check in `tests/app.test.js` (no dependencies required).
+- Run `npm test` to execute lightweight helper tests in `tests/app.test.js` (no dependencies required).
+
+## Extending Admin Reporting
+- `Code.gs#getAllModuleResults` returns each ModuleResults row.
+- `Code.gs#getSummaryByEmployee` returns aggregated completion by employee name.
+- Extend the Admin View table or add filters by updating `loadAdminSummary` in `scripts.html` to use additional backend fields.

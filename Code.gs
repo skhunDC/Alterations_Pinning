@@ -103,3 +103,64 @@ function getAllModules() {
     { id: 'M5', title: 'Exceptions & Escalation' }
   ];
 }
+
+function getAllModuleResults() {
+  const sheet = getOrCreateModuleResultsSheet_();
+  const values = sheet.getDataRange().getValues();
+  const rows = values.slice(1);
+  return rows.map(row => ({
+    timestamp: row[0],
+    employeeName: row[1],
+    employeeLocationOrId: row[2],
+    moduleId: row[3],
+    score: row[4],
+    passed: row[5] === true || row[5] === 'TRUE'
+  }));
+}
+
+function getSummaryByEmployee() {
+  const results = getAllModuleResults();
+  const summaryMap = {};
+  results.forEach(entry => {
+    const key = (entry.employeeName || '').trim().toLowerCase();
+    if (!key) return;
+    if (!summaryMap[key]) {
+      summaryMap[key] = {
+        employeeName: entry.employeeName,
+        employeeLocationOrId: entry.employeeLocationOrId,
+        modulesPassed: [],
+        modulesFailed: [],
+        lastUpdated: entry.timestamp
+      };
+    }
+    const existing = summaryMap[key];
+    if (entry.employeeLocationOrId && !existing.employeeLocationOrId) {
+      existing.employeeLocationOrId = entry.employeeLocationOrId;
+    }
+    if (!existing.lastUpdated || (entry.timestamp && entry.timestamp > existing.lastUpdated)) {
+      existing.lastUpdated = entry.timestamp;
+    }
+    if (entry.passed) {
+      if (!existing.modulesPassed.includes(entry.moduleId)) {
+        existing.modulesPassed.push(entry.moduleId);
+      }
+    } else {
+      if (!existing.modulesFailed.includes(entry.moduleId)) {
+        existing.modulesFailed.push(entry.moduleId);
+      }
+    }
+  });
+
+  return Object.values(summaryMap).map(item => {
+    const allModules = ['M1', 'M2', 'M3', 'M4', 'M5'];
+    const isCertified = allModules.every(id => item.modulesPassed.includes(id));
+    return {
+      employeeName: item.employeeName,
+      employeeLocationOrId: item.employeeLocationOrId,
+      modulesPassed: item.modulesPassed.sort(),
+      modulesFailed: item.modulesFailed.sort(),
+      isCertified: isCertified,
+      lastUpdated: item.lastUpdated
+    };
+  });
+}

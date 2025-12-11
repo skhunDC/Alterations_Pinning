@@ -20,7 +20,18 @@
       </div>
     </header>
 
-    <section class="identity-bar">
+    <nav class="main-nav" role="navigation" aria-label="Primary">
+      <button class="nav-item active" data-target="dashboard" aria-current="page" onclick="navigateToSection('dashboard', this)">Dashboard</button>
+      <button class="nav-item" data-target="module-M1" onclick="navigateToSection('module-M1', this)">Module 1</button>
+      <button class="nav-item" data-target="module-M2" onclick="navigateToSection('module-M2', this)">Module 2</button>
+      <button class="nav-item" data-target="module-M3" onclick="navigateToSection('module-M3', this)">Module 3</button>
+      <button class="nav-item" data-target="module-M4" onclick="navigateToSection('module-M4', this)">Module 4</button>
+      <button class="nav-item" data-target="module-M5" onclick="navigateToSection('module-M5', this)">Module 5</button>
+      <button class="nav-item" data-target="admin-view" onclick="navigateToSection('admin-view', this)">Admin View</button>
+    </nav>
+
+    <main role="main">
+      <section class="identity-bar">
       <div class="field">
         <label>Employee Name *</label>
         <input type="text" id="employeeName" placeholder="e.g., Jordan Taylor" />
@@ -33,42 +44,75 @@
         <label>&nbsp;</label>
         <button class="primary" onclick="loadCertificationStatus()">Save/Refresh</button>
       </div>
-    </section>
+      </section>
 
-    <section class="dashboard" id="statusPanel">
-      <div class="card status-card">
-        <div class="status-header">
-          <div>
-            <p class="eyebrow">Certification Status</p>
-            <h2 id="certStatus">Enter your name to view progress</h2>
-            <p id="certSubstatus" class="subtitle">Modules remaining will appear here after your first save.</p>
+      <section class="dashboard main-section" id="dashboard" aria-labelledby="dashboard-title">
+        <div class="card status-card">
+          <div class="status-header">
+            <div>
+              <p class="eyebrow" id="dashboard-title">Certification Status</p>
+              <h2 id="certStatus" tabindex="-1">Enter your name to view progress</h2>
+              <p id="certSubstatus" class="subtitle">Modules remaining will appear here after your first save.</p>
+            </div>
+            <div class="badge" id="certBadge">Pending</div>
           </div>
-          <div class="badge" id="certBadge">Pending</div>
+          <div class="progress-row">
+            <div class="progress-bar" aria-label="Overall progress">
+              <div id="progressFill" class="progress-bar-fill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 / 5 modules complete • Estimated 0 minutes to finish</div>
+          </div>
+          <div class="module-progress" id="moduleProgress"></div>
+          <ul id="module-status-list" class="module-status-list" aria-label="Module completion checklist"></ul>
         </div>
-        <div class="progress-bar">
-          <div id="progressFill"></div>
+        <div class="card quick-notes">
+          <h3 id="overview-title" tabindex="-1">Program Overview</h3>
+          <ul>
+            <li>Objective measurements only: “shorten inseam to 30 inches,” not “hem 2 inches.”</li>
+            <li>Safety pins and horizontal orientation are mandatory for plant-bound garments.</li>
+            <li>Verify customer-pinned garments with a tape measure; record final dimensions.</li>
+            <li>Use clear SPOT POS notes and escalate tailor-only garments with confidence.</li>
+            <li>Recertify every 18–24 months; immediate retraining after documentation issues.</li>
+          </ul>
         </div>
-        <div class="module-progress" id="moduleProgress"></div>
-      </div>
-      <div class="card quick-notes">
-        <h3>Program Overview</h3>
-        <ul>
-          <li>Objective measurements only: “shorten inseam to 30 inches,” not “hem 2 inches.”</li>
-          <li>Safety pins and horizontal orientation are mandatory for plant-bound garments.</li>
-          <li>Verify customer-pinned garments with a tape measure; record final dimensions.</li>
-          <li>Use clear SPOT POS notes and escalate tailor-only garments with confidence.</li>
-          <li>Recertify every 18–24 months; immediate retraining after documentation issues.</li>
-        </ul>
-      </div>
-    </section>
+      </section>
 
-    <section class="layout">
-      <nav class="side-nav">
-        <p class="eyebrow">Modules</p>
-        <ul id="navList"></ul>
-      </nav>
-      <main id="moduleContainer"></main>
-    </section>
+      <section class="layout main-section" id="modules" aria-labelledby="modules-title" hidden>
+        <div class="side-nav">
+          <p class="eyebrow" id="modules-title">Modules</p>
+          <ul id="navList"></ul>
+        </div>
+        <div id="moduleContainer"></div>
+      </section>
+
+      <section id="admin-view" class="module-section main-section" aria-labelledby="admin-title" hidden>
+        <div class="card">
+          <p class="eyebrow" id="admin-title">Admin View (Read-Only)</p>
+          <h2 tabindex="-1">Certification Summary</h2>
+          <p class="subtitle">Load a quick snapshot of who has passed which modules. Data is read-only from the ModuleResults sheet.</p>
+          <button class="primary" onclick="loadAdminSummary()">Load Summary</button>
+          <div class="table-wrapper">
+            <table class="admin-table" aria-label="Employee certification summary">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Location/ID</th>
+                  <th>Modules Passed</th>
+                  <th>Modules Failed</th>
+                  <th>Certified?</th>
+                  <th>Last Updated</th>
+                </tr>
+              </thead>
+              <tbody id="admin-summary-body">
+                <tr><td colspan="6" style="text-align:center;">Click “Load Summary” to fetch results.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="global-toast" class="toast" role="status" aria-live="polite"></div>
 
     <?!= include('scripts'); ?>
   </body>
