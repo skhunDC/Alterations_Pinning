@@ -208,6 +208,63 @@ function createCertificateFile(employeeName, employeeLocationOrId) {
   };
 }
 
+function findLatestCertificateFile_(employeeName) {
+  if (!employeeName) return null;
+
+  const folder = getOrCreateCertificateFolder_();
+  const files = folder.getFiles();
+  const prefix = `Alterations Pinning Certificate - ${employeeName.trim()} -`;
+
+  let latest = null;
+  while (files.hasNext()) {
+    const file = files.next();
+    if (file.getName().startsWith(prefix)) {
+      const updated = file.getLastUpdated();
+      if (!latest || (updated && updated > latest.updated)) {
+        latest = {
+          fileId: file.getId(),
+          fileUrl: file.getUrl(),
+          fileName: file.getName(),
+          updated: updated || new Date(0)
+        };
+      }
+    }
+  }
+
+  return latest;
+}
+
+function ensureCertificateFile(employeeName, employeeLocationOrId) {
+  if (!employeeName) {
+    throw new Error('Employee name is required to create a certificate.');
+  }
+
+  const status = getEmployeeCertificationStatus(employeeName);
+  if (!status.isCertified) {
+    throw new Error('Employee must complete all modules before creating a certificate.');
+  }
+
+  const existing = findLatestCertificateFile_(employeeName);
+  if (existing) {
+    return {
+      fileId: existing.fileId,
+      fileUrl: existing.fileUrl,
+      fileName: existing.fileName,
+      employeeName: employeeName.trim(),
+      status: 'existing'
+    };
+  }
+
+  const created = createCertificateFile(employeeName, employeeLocationOrId);
+  return {
+    fileId: created.fileId,
+    fileUrl: created.fileUrl,
+    fileName: `${created.employeeName} (new)`,
+    employeeName: created.employeeName,
+    status: 'created'
+  };
+}
+
 function getAllModuleResults() {
   const sheet = getOrCreateModuleResultsSheet_();
   const values = sheet.getDataRange().getValues();

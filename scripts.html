@@ -1589,7 +1589,8 @@
       .withSuccessHandler(result => {
         printButton?.removeAttribute('disabled');
         if (result?.fileUrl) {
-          showToast('Certificate created and saved to Drive. Opening now.', 'success');
+          const action = result.status === 'existing' ? 'Found your saved certificate in Drive. Opening now.' : 'Certificate created and saved to Drive. Opening now.';
+          showToast(action, 'success');
           window.open(result.fileUrl, '_blank', 'noopener');
         } else {
           showToast('Certificate created, but no file link was returned.', 'info');
@@ -1600,7 +1601,7 @@
         const message = err && err.message ? err.message : 'Could not create certificate. Please try again.';
         showToast(message, 'error');
       })
-      .createCertificateFile(name, location);
+      .ensureCertificateFile(name, location);
   }
 
   function bindIdentityPersistence() {
