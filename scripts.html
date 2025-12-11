@@ -548,9 +548,21 @@
     }
   ];
 
+  const moduleTimeEstimates = {
+    M1: 20,
+    M2: 15,
+    M3: 25,
+    M4: 20,
+    M5: 20
+  };
+
+  const totalProgramMinutes = Object.values(moduleTimeEstimates).reduce((sum, minutes) => sum + minutes, 0);
+
   let lastCertificationStatus = null;
 
   document.addEventListener('DOMContentLoaded', () => {
+    setTotalEstimateText();
+    setRemainingEstimatePlaceholder();
     renderNavigation();
     renderModules();
     bindIdentityPersistence();
@@ -558,12 +570,50 @@
     loadCertificationStatus();
   });
 
+  function setTotalEstimateText() {
+    const totalEstimateEl = document.getElementById('total-time-estimate');
+    if (totalEstimateEl) {
+      totalEstimateEl.textContent = `Estimated time for full certification: ${formatMinutes(totalProgramMinutes)}.`;
+    }
+  }
+
+  function setRemainingEstimatePlaceholder() {
+    const remainingEstimateEl = document.getElementById('remaining-time-estimate');
+    if (remainingEstimateEl) {
+      remainingEstimateEl.textContent = 'Estimated time remaining: enter your name to calculate.';
+    }
+  }
+
   function getEmployeeName() {
     return document.getElementById('employeeName').value.trim();
   }
 
   function getEmployeeLocation() {
     return document.getElementById('employeeLocation').value.trim();
+  }
+
+  function formatMinutes(minutes) {
+    if (minutes <= 0) return '~0 minutes';
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    if (!hours) {
+      return `~${minutes} minute${minutes === 1 ? '' : 's'}`;
+    }
+    const hourLabel = `${hours} hr${hours === 1 ? '' : 's'}`;
+    const minuteLabel = remainingMinutes ? ` ${remainingMinutes} min` : '';
+    return `~${hourLabel}${minuteLabel}`;
+  }
+
+  function calculateRemainingMinutes(missingModules = []) {
+    return missingModules.reduce((total, moduleId) => total + (moduleTimeEstimates[moduleId] || 0), 0);
+  }
+
+  function updateTimeEstimates(missingModules) {
+    const remainingEstimateEl = document.getElementById('remaining-time-estimate');
+    const remainingMinutes = calculateRemainingMinutes(missingModules || []);
+    if (remainingEstimateEl) {
+      remainingEstimateEl.textContent = `Estimated time remaining: ${formatMinutes(remainingMinutes)}`;
+    }
   }
 
   function renderNavigation() {
@@ -1347,10 +1397,12 @@
     const missing = status.missingModules || [];
     const percent = Math.round((completed.length / modules.length) * 100);
     progressFill.style.width = `${percent}%`;
-    const estimatedMinutes = missing.length * 6;
+    const remainingMinutes = calculateRemainingMinutes(missing);
+    const remainingDisplay = formatMinutes(remainingMinutes);
     if (progressText) {
-      progressText.textContent = `${completed.length} / ${modules.length} modules complete • Estimated ${estimatedMinutes} minutes to finish`;
+      progressText.textContent = `${completed.length} / ${modules.length} modules complete • Estimated ${remainingDisplay} to finish`;
     }
+    updateTimeEstimates(missing);
 
     if (status.isCertified) {
       badge.textContent = 'Certified Alteration Pinner';
