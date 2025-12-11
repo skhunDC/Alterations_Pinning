@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <?!= include('styles'); ?>
+  </head>
+  <body>
+    <header>
+      <div class="topbar">
+        <div class="branding">
+          <img src="https://www.dublincleaners.com/wp-content/uploads/2024/12/Dublin-Logos-stacked.png" alt="Dublin Cleaners logo">
+          <div class="title-group">
+            <h1>Alterations Pinning Certification Program</h1>
+            <p>Train CSRs to pin safely, document accurately, and communicate clearly.</p>
+          </div>
+        </div>
+        <div class="cta-actions">
+          <button class="secondary" onclick="window.print()">Print / Save PDF</button>
+        </div>
+      </div>
+      <div class="cta-banner">
+        <div>
+          <h2 style="margin: 0 0 6px 0;">Employee Resource Hub</h2>
+          <p>Complete all five modules, pass the micro-quizzes, and log your results to earn the Alterations Pinning certification.</p>
+          <div class="input-stack" style="margin-top:8px;">
+            <div>
+              <label class="section-label">Employee Name</label>
+              <input type="text" id="employeeName" placeholder="e.g., Jordan Taylor" />
+            </div>
+            <div>
+              <label class="section-label">Location or ID</label>
+              <input type="text" id="locationId" placeholder="e.g., Sawmill Rd / #123" />
+            </div>
+          </div>
+        </div>
+        <div class="cta-actions" style="justify-content: flex-end;">
+          <button class="primary" onclick="startCertification()">Start Certification</button>
+          <button class="secondary" onclick="loadProgress()">Refresh Progress</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="info-grid">
+        <div class="card">
+          <div class="pill">Program Scope</div>
+          <p style="margin-top:8px;">Covers customer instruction, pinning tools, garment-specific pinning, SPOT POS notes, and escalation rules. Designed for non-tailor CSRs.</p>
+          <ul>
+            <li>Certification focus: objective measurements, safety pins, horizontal orientation, clear SPOT notes.</li>
+            <li>Evaluation: complete modules + quizzes, pin 3 garments, accurate SPOT entry, supervisor sign-off.</li>
+            <li>Recertify every 18–24 months or after documentation issues.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="pill">How to Use</div>
+          <ol style="padding-left: 20px; margin: 8px 0 0 0;">
+            <li>Enter your name and location/ID.</li>
+            <li>Complete each module card: overview → objectives → content → quiz → downloads.</li>
+            <li>Submit quiz to log completion. Results are saved to Google Sheets automatically.</li>
+            <li>Use the print/PDF button for a completion summary.</li>
+          </ol>
+        </div>
+      </section>
+
+      <section style="margin-top:24px;" id="modules"></section>
+
+      <section style="margin-top:24px;">
+        <div class="card">
+          <div class="flex-row" style="justify-content: space-between; align-items: center;">
+            <h2>Progress & Sign-off</h2>
+            <button class="primary" onclick="loadProgress()">Sync Progress</button>
+          </div>
+          <p>Latest saved attempts per module for this employee.</p>
+          <div class="progress-grid" id="progressGrid"></div>
+        </div>
+      </section>
+    </main>
+
+    <?!= include('scripts'); ?>
+  </body>
+</html>
