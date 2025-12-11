@@ -1456,6 +1456,22 @@
     }
   }
 
+  function fetchCertificationStatusByName(name) {
+    if (!google.script || !google.script.run) {
+      return Promise.resolve(lastCertificationStatus);
+    }
+
+    return new Promise((resolve, reject) => {
+      google.script.run
+        .withSuccessHandler(status => {
+          lastCertificationStatus = status;
+          resolve(status);
+        })
+        .withFailureHandler(err => reject(err))
+        .getEmployeeCertificationStatus(name);
+    });
+  }
+
   function renderCertificationStatus(status) {
     lastCertificationStatus = status;
     const badge = document.getElementById('certBadge');
@@ -1550,20 +1566,50 @@
     navigateToSection('dashboard');
   }
 
-  function openCertificatePrint() {
-    if (lastCertificationStatus && !lastCertificationStatus.isCertified) {
-      showToast('Complete all modules before printing your certificate.', 'info');
-      navigateToSection('dashboard');
+  function openPrintCertificate() {
+    const name = getEmployeeName();
+    if (!name) {
+      showToast('Enter employee name before printing a certificate.', 'error');
+      document.getElementById('employeeName')?.focus();
       return;
     }
-    const name = getEmployeeName();
+
     const location = getEmployeeLocation();
-    const url = `print.html?name=${encodeURIComponent(name || '')}&location=${encodeURIComponent(location || '')}`;
-    window.open(url, '_blank');
+
+    if (!google.script || !google.script.run) {
+      openCertificatePrintWindow(name, location);
+      return;
+    }
+
+    fetchCertificationStatusByName(name)
+      .then(status => {
+        if (!status) {
+          showToast('Click Save/Refresh to load your certification status before printing.', 'info');
+          loadCertificationStatus();
+          return;
+        }
+
+        if (!status.isCertified) {
+          showToast('Complete all modules before printing your certificate.', 'info');
+          navigateToSection('dashboard');
+          return;
+        }
+
+        openCertificatePrintWindow(name, location);
+      })
+      .catch(err => {
+        console.log('Certificate status check failed', err);
+        openCertificatePrintWindow(name, location);
+      });
   }
 
-  function openPrintCertificate() {
-    openCertificatePrint();
+  function openCertificatePrintWindow(name, location) {
+    const url = `print.html?name=${encodeURIComponent(name)}&location=${encodeURIComponent(location || '')}`;
+    window.open(url, '_blank', 'noopener');
+  }
+
+  function openCertificatePrint() {
+    openPrintCertificate();
   }
 
   function bindIdentityPersistence() {

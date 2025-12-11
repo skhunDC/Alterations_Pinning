@@ -66,6 +66,20 @@
             <p id="total-time-estimate">Estimated time for full certification: ~1 hr 40 min.</p>
             <p id="remaining-time-estimate">Estimated time remaining: enter your name to calculate.</p>
           </div>
+          <div class="status-actions">
+            <div class="status-actions__copy">
+              <p class="eyebrow">Print-ready certificate</p>
+              <p class="subtitle">Opens a clean certificate view for save/print once modules are passed.</p>
+            </div>
+            <button
+              type="button"
+              id="print-certificate-button"
+              class="primary"
+              onclick="openPrintCertificate()"
+            >
+              Print Certificate
+            </button>
+          </div>
           <div class="module-progress" id="moduleProgress"></div>
           <ul id="module-status-list" class="module-status-list" aria-label="Module completion checklist"></ul>
         </div>

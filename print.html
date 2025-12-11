@@ -1,84 +1,230 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <base target="_top">
+    <base target="_top" />
     <style>
-      body { font-family: 'Inter', Arial, sans-serif; margin: 32px; color: #1f2933; background: #f8fafc; }
-      .certificate { background: #fff; padding: 32px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); max-width: 960px; margin: 0 auto; }
-      .header { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px; }
-      .logo { height: 80px; }
-      h1 { margin: 8px 0 0 0; color: #006c5c; }
-      h2 { margin: 6px 0; }
-      .status { display: inline-block; padding: 8px 12px; border-radius: 999px; background: #e8f8f2; color: #0f5132; font-weight: 700; }
-      .statement { font-size: 1.05rem; margin: 12px 0; }
-      .recipient { font-size: 1.6rem; font-weight: 800; color: #0f172a; margin: 0; }
-      .meta { color: #334155; margin: 4px 0; }
-      table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-      th, td { border: 1px solid #d0d7de; padding: 10px; text-align: left; }
-      th { background: #f3f4f6; }
-      .footer { margin-top: 18px; font-size: 0.95rem; }
-      @media print { .certificate { box-shadow: none; } }
+      :root {
+        --green: #0d8571;
+        --gold: #c79d2f;
+        --ink: #0f172a;
+        --muted: #475569;
+        --border: #e2e8f0;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        background: #eef2f7;
+        color: var(--ink);
+        padding: 32px 12px;
+      }
+
+      .print-page {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      .certificate {
+        background: #fff;
+        border-radius: 18px;
+        padding: 32px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+        border: 1px solid var(--border);
+      }
+
+      .certificate__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding-bottom: 18px;
+        border-bottom: 2px solid var(--border);
+      }
+
+      .brand-block { display: flex; align-items: center; gap: 12px; }
+      .brand-block img { height: 90px; width: auto; }
+
+      .program-meta { text-align: right; }
+      .program-label {
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      h1 { margin: 6px 0 0 0; color: var(--green); }
+      .badge {
+        display: inline-block;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-weight: 800;
+        border: 1px solid var(--border);
+        color: var(--ink);
+        background: #f8fafc;
+      }
+      .badge--success { background: #e8f8f2; color: #0f5132; border-color: #b7e4cf; }
+      .badge--warning { background: #fff4e5; color: #8a6b00; border-color: #facc15; }
+
+      .certificate__body { padding: 18px 0 12px 0; text-align: center; }
+      .recipient { font-size: 1.8rem; margin: 10px 0 6px 0; font-weight: 800; color: #0f172a; }
+      .cert-statement { font-size: 1.05rem; margin: 10px auto; max-width: 760px; color: #1f2933; }
+
+      .meta-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin: 18px 0;
+        text-align: left;
+      }
+      .meta-card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        background: #f8fafc;
+      }
+      .meta-label { display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+      .meta-value { font-weight: 800; font-size: 1.05rem; color: var(--ink); }
+
+      .module-list { margin-top: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+      .module-row {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        background: #fdfdfd;
+        text-align: left;
+      }
+      .module-row__title { margin: 2px 0 6px 0; font-weight: 800; color: #0f172a; }
+      .module-row__status { margin: 0; font-weight: 700; color: #991b1b; }
+      .module-row--pass { border-color: #c1f0d4; background: #f0fdf4; }
+      .module-row--pass .module-row__status { color: #0f5132; }
+
+      .certificate__footer { margin-top: 20px; border-top: 1px solid var(--border); padding-top: 14px; text-align: center; }
+      .footer-note { margin: 8px 0; color: var(--muted); font-weight: 600; }
+      .signature-line { margin: 16px auto 0 auto; max-width: 460px; border-top: 1px dashed var(--border); padding-top: 8px; color: var(--muted); }
+
+      @media print {
+        body { background: #fff; padding: 0; }
+        .certificate { box-shadow: none; border-color: #d9e2ec; }
+      }
     </style>
   </head>
   <body>
-    <div class="certificate">
-      <div class="header">
-        <div>
-          <img src="https://www.dublincleaners.com/wp-content/uploads/2024/12/Dublin-Logos-stacked.png" alt="Dublin Cleaners logo" class="logo" />
-          <p class="status" id="certStatus">Certification Pending</p>
-        </div>
-        <div style="text-align: right;">
-          <p class="eyebrow" style="margin:0; text-transform: uppercase; letter-spacing: 0.08em;">Alterations Pinning Certification Program</p>
-          <h1>Certification of Completion</h1>
-          <p class="recipient" id="employeeNameField">Employee: </p>
-          <p class="meta" id="dateField">Date: </p>
-        </div>
-      </div>
-      <p class="statement"><span id="statementName"></span> has successfully completed the Alterations Pinning Certification Program and demonstrated the knowledge to pin safely, write objective notes, and escalate complex garments.</p>
-      <p class="meta" id="locationField"></p>
-      <p class="meta">Status updates dynamically based on ModuleResults at the time of printing.</p>
-      <table>
-        <thead>
-          <tr><th>Module</th><th>Title</th><th>Status</th></tr>
-        </thead>
-        <tbody id="moduleTable"></tbody>
-      </table>
-      <div class="footer">
-        <p>Supervisor sign-off (external): ________________________________</p>
-        <p>Note: Recertification recommended every 18–24 months.</p>
+    <div class="print-page">
+      <div class="certificate">
+        <header class="certificate__header">
+          <div class="brand-block">
+            <img src="https://www.dublincleaners.com/wp-content/uploads/2024/12/Dublin-Logos-stacked.png" alt="Dublin Cleaners logo" />
+            <div>
+              <p class="program-label">Alterations Pinning Certification Program</p>
+              <p class="badge badge--warning" id="certStatus">Certification Pending</p>
+            </div>
+          </div>
+          <div class="program-meta">
+            <h1>Certification of Completion</h1>
+          </div>
+        </header>
+
+        <main class="certificate__body">
+          <p class="recipient" id="certificate-name">Employee Name</p>
+          <p class="cert-statement" id="certificate-statement"></p>
+          <div class="meta-row">
+            <div class="meta-card">
+              <span class="meta-label">Date</span>
+              <span class="meta-value" id="dateField"></span>
+            </div>
+            <div class="meta-card">
+              <span class="meta-label">Location / ID</span>
+              <span class="meta-value" id="locationField">—</span>
+            </div>
+            <div class="meta-card">
+              <span class="meta-label">Status</span>
+              <span class="meta-value" id="statusText">Certification Pending</span>
+            </div>
+          </div>
+          <div class="module-list" id="moduleList"></div>
+        </main>
+
+        <footer class="certificate__footer">
+          <p class="footer-note">Certified to pin garments for customers in-store upon successful completion of all modules.</p>
+          <div class="signature-line">Supervisor sign-off (if required): ________________________________</div>
+        </footer>
       </div>
     </div>
 
     <script>
       const params = new URLSearchParams(window.location.search);
-      const employeeName = params.get('name') || 'Employee';
-      const location = params.get('location') || '';
-      document.getElementById('employeeNameField').textContent = employeeName;
-      document.getElementById('statementName').textContent = employeeName;
-      document.getElementById('locationField').textContent = location ? `Location/ID: ${location}` : '';
-      document.getElementById('dateField').textContent = `Date: ${new Date().toLocaleDateString()}`;
+      const employeeName = (params.get('name') || '').trim() || 'Employee';
+      const location = (params.get('location') || '').trim();
+      const moduleTitles = {
+        M1: 'Customer Instruction & Measurement Philosophy',
+        M2: 'Pinning Tools & Safety',
+        M3: 'Pinning by Garment Type',
+        M4: 'SPOT POS Notes & Communication',
+        M5: 'Exceptions & Escalation'
+      };
+      const moduleOrder = ['M1', 'M2', 'M3', 'M4', 'M5'];
+      const statusBadge = document.getElementById('certStatus');
+      const statusText = document.getElementById('statusText');
+      const moduleList = document.getElementById('moduleList');
 
-      const tableBody = document.getElementById('moduleTable');
-      const defaultRows = ['M1','M2','M3','M4','M5'].map(id => `<tr><td>${id}</td><td></td><td>Pending</td></tr>`).join('');
-      tableBody.innerHTML = defaultRows;
+      document.getElementById('certificate-name').textContent = employeeName;
+      document.getElementById('certificate-statement').textContent = `${employeeName} has completed the Dublin Cleaners Alterations Pinning Certification Program and is certified to pin garments for customers in-store.`;
+      document.getElementById('dateField').textContent = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date());
+      document.getElementById('locationField').textContent = location || '—';
 
-      if (google.script && google.script.run && employeeName.trim()) {
-        google.script.run.withSuccessHandler(status => {
-          if (!status) return;
-          document.getElementById('certStatus').textContent = status.isCertified ? 'Certified Alteration Pinner' : 'Certification Pending';
-          document.getElementById('certStatus').style.background = status.isCertified ? '#e8f8f2' : '#fff4e5';
-          document.getElementById('certStatus').style.color = status.isCertified ? '#0f5132' : '#8a6b00';
-          const rows = ['M1','M2','M3','M4','M5'].map(id => {
-            const passed = status.completedModules.includes(id);
-            return `<tr><td>${id}</td><td>${moduleTitle(id)}</td><td>${passed ? 'Passed' : 'Pending'}</td></tr>`;
-          }).join('');
-          tableBody.innerHTML = rows;
-        }).getEmployeeCertificationStatus(employeeName);
+      function moduleRow(id, passed) {
+        const className = `module-row ${passed ? 'module-row--pass' : ''}`;
+        const status = passed ? 'Passed' : 'Pending';
+        return `<div class="${className}">
+          <p class="module-row__title">${id} — ${moduleTitles[id] || ''}</p>
+          <p class="module-row__status">${status}</p>
+        </div>`;
       }
 
-      function moduleTitle(id) {
-        const titles = { M1: 'Customer Instruction & Measurement Philosophy', M2: 'Pinning Tools & Safety', M3: 'Pinning by Garment Type', M4: 'SPOT POS Notes & Communication', M5: 'Exceptions & Escalation' };
-        return titles[id] || '';
+      function renderModules(status) {
+        const completed = status?.completedModules || [];
+        moduleList.innerHTML = moduleOrder.map(id => moduleRow(id, completed.includes(id))).join('');
+      }
+
+      function renderStatus(status) {
+        const certified = !!status?.isCertified;
+        statusBadge.textContent = certified ? 'Certified Alteration Pinner' : 'Certification Pending';
+        statusBadge.classList.toggle('badge--success', certified);
+        statusBadge.classList.toggle('badge--warning', !certified);
+        statusText.textContent = certified ? 'Certified' : 'In Progress';
+        renderModules(status);
+      }
+
+      function triggerPrint() {
+        if (triggerPrint.hasRun) return;
+        triggerPrint.hasRun = true;
+        setTimeout(() => window.print(), 200);
+      }
+
+      const fallbackTimer = setTimeout(triggerPrint, 1400);
+
+      if (google.script && google.script.run && employeeName.trim()) {
+        google.script.run
+          .withSuccessHandler(status => {
+            clearTimeout(fallbackTimer);
+            if (status) {
+              renderStatus(status);
+            } else {
+              renderModules();
+            }
+            triggerPrint();
+          })
+          .withFailureHandler(() => {
+            renderModules();
+            triggerPrint();
+          })
+          .getEmployeeCertificationStatus(employeeName);
+      } else {
+        renderModules();
+        triggerPrint();
       }
     </script>
   </body>
