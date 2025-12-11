@@ -1,6 +1,7 @@
 const SPREADSHEET_NAME = 'Alterations Pinning Certification';
 const MODULE_RESULTS_SHEET = 'ModuleResults';
 const MODULE_HEADERS = ['Timestamp', 'EmployeeName', 'LocationOrID', 'ModuleID', 'Score', 'Passed'];
+const CERTIFICATE_FOLDER_NAME = 'Alterations Pinning Certificates';
 
 function include(filename) {
   const name = (filename || '').toString().trim();
@@ -102,6 +103,109 @@ function getAllModules() {
     { id: 'M4', title: 'SPOT POS Notes & Communication' },
     { id: 'M5', title: 'Exceptions & Escalation' }
   ];
+}
+
+function getOrCreateCertificateFolder_() {
+  const folders = DriveApp.getFoldersByName(CERTIFICATE_FOLDER_NAME);
+  if (folders.hasNext()) {
+    return folders.next();
+  }
+  return DriveApp.createFolder(CERTIFICATE_FOLDER_NAME);
+}
+
+function buildCertificateContent_(body, employeeName, employeeLocationOrId, status, issuedOn) {
+  body.clear();
+  body.appendParagraph('Alterations Pinning Certification')
+    .setHeading(DocumentApp.ParagraphHeading.HEADING1)
+    .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+  body.appendParagraph('Certification of Completion')
+    .setHeading(DocumentApp.ParagraphHeading.HEADING2)
+    .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+  body.appendParagraph('Awarded to').setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  body.appendParagraph(employeeName)
+    .setFontSize(18)
+    .setBold(true)
+    .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+  const statement = `${employeeName} has completed the Dublin Cleaners Alterations Pinning Certification Program and is certified to pin garments for customers in-store.`;
+  body.appendParagraph(statement)
+    .setFontSize(12)
+    .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+  const table = body.appendTable([
+    ['Issued On', Utilities.formatDate(issuedOn, Session.getScriptTimeZone() || 'America/New_York', 'MMMM d, yyyy')],
+    ['Location / ID', employeeLocationOrId || '—'],
+    ['Status', status.isCertified ? 'Certified' : 'In Progress']
+  ]);
+  table.getRow(0).editAsText().setBold(true);
+  table.getRow(1).editAsText().setBold(true);
+  table.getRow(2).editAsText().setBold(true);
+
+  body.appendParagraph('Module Completion').setHeading(DocumentApp.ParagraphHeading.HEADING3);
+  const moduleList = body.appendListItem('');
+  moduleList.clear();
+  const allModules = getAllModules();
+  const completed = status.completedModules || [];
+  allModules.forEach(module => {
+    const item = body.appendListItem(`${module.id} — ${module.title}`);
+    item.setNestingLevel(0);
+    item.setGlyphType(DocumentApp.GlyphType.BULLET);
+    item.editAsText().setBold(completed.includes(module.id));
+    if (completed.includes(module.id)) {
+      item.appendText(' (Passed)');
+    }
+  });
+
+  body.appendParagraph('Supervisor sign-off (if required): ________________________________')
+    .setSpacingBefore(14)
+    .setSpacingAfter(6)
+    .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+}
+
+function createCertificateFile(employeeName, employeeLocationOrId) {
+  if (!employeeName) {
+    throw new Error('Employee name is required to create a certificate.');
+  }
+
+  const status = getEmployeeCertificationStatus(employeeName);
+  if (!status.isCertified) {
+    throw new Error('Employee must complete all modules before creating a certificate.');
+  }
+
+  const folder = getOrCreateCertificateFolder_();
+  const issuedOn = new Date();
+  const tz = Session.getScriptTimeZone() || 'America/New_York';
+  const dateStamp = Utilities.formatDate(issuedOn, tz, 'yyyy-MM-dd');
+  const baseName = `Alterations Pinning Certificate - ${employeeName.trim()} - ${dateStamp}`;
+
+  const doc = DocumentApp.create(baseName);
+  buildCertificateContent_(doc.getBody(), employeeName.trim(), (employeeLocationOrId || '').trim(), status, issuedOn);
+  doc.saveAndClose();
+
+  const docFile = DriveApp.getFileById(doc.getId());
+  folder.addFile(docFile);
+  const parents = docFile.getParents();
+  while (parents.hasNext()) {
+    const parent = parents.next();
+    if (parent.getId() !== folder.getId()) {
+      parent.removeFile(docFile);
+    }
+  }
+
+  const pdfBlob = docFile.getAs('application/pdf').setName(`${baseName}.pdf`);
+  const pdfFile = folder.createFile(pdfBlob);
+
+  return {
+    fileId: pdfFile.getId(),
+    fileUrl: pdfFile.getUrl(),
+    docId: docFile.getId(),
+    docUrl: docFile.getUrl(),
+    folderUrl: folder.getUrl(),
+    issuedOn: issuedOn,
+    employeeName: employeeName.trim()
+  };
 }
 
 function getAllModuleResults() {
