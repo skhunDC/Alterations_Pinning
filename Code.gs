@@ -7,7 +7,8 @@ var CERTIFICATE_TEMPLATE_ID = '17yjalGF_nZEw_mWVQm9vlme_eoAYHLbBPw7nruiG1QQ';
 
 // Dublin Cleaners Certificate Assets
 var CERTIFICATE_LOGO_URL = 'https://www.dublincleaners.com/wp-content/uploads/2025/06/LogosHQ.png';
-var CERTIFICATE_BORDER_URL = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/1Border.png';
+var CERTIFICATE_HEADER_URL = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/TopB.png';
+var CERTIFICATE_FOOTER_URL = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/BottomB.png';
 
 // Folder to store generated certificates
 var CERTIFICATE_FOLDER_NAME = 'Alterations Pinning Certificates';
@@ -122,26 +123,33 @@ function getOrCreateCertificateFolder_() {
   return DriveApp.createFolder(CERTIFICATE_FOLDER_NAME);
 }
 
-function getCertificateBorderBlob_() {
-  const borderBlob = UrlFetchApp.fetch(CERTIFICATE_BORDER_URL).getBlob();
-  borderBlob.setName('border.png');
-  return borderBlob;
+function getCertificateHeaderBlob_() {
+  const headerBlob = UrlFetchApp.fetch(CERTIFICATE_HEADER_URL).getBlob();
+  headerBlob.setName('header.png');
+  return headerBlob;
 }
 
-function applyCertificateBands_(doc, borderBlob) {
-  const safeBlob = borderBlob || getCertificateBorderBlob_();
+function getCertificateFooterBlob_() {
+  const footerBlob = UrlFetchApp.fetch(CERTIFICATE_FOOTER_URL).getBlob();
+  footerBlob.setName('footer.png');
+  return footerBlob;
+}
+
+function applyCertificateBands_(doc, headerBlob, footerBlob) {
+  const safeHeader = headerBlob || getCertificateHeaderBlob_();
+  const safeFooter = footerBlob || getCertificateFooterBlob_();
 
   const header = doc.getHeader() || doc.addHeader();
   header.clear();
   const headerPara = header.appendParagraph('');
   headerPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  headerPara.appendInlineImage(safeBlob).setWidth(600);
+  headerPara.appendInlineImage(safeHeader).setWidth(720);
 
   const footer = doc.getFooter() || doc.addFooter();
   footer.clear();
   const footerPara = footer.appendParagraph('');
   footerPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  footerPara.appendInlineImage(safeBlob).setWidth(600);
+  footerPara.appendInlineImage(safeFooter).setWidth(720);
 }
 
 function findExistingCertificateArtifacts_(employeeName) {
@@ -226,8 +234,9 @@ function generateCertificatePDF(employeeName, employeeLocationOrId) {
   const body = doc.getBody();
   body.clear();
 
-  const borderBlob = getCertificateBorderBlob_();
-  applyCertificateBands_(doc, borderBlob);
+  const headerBlob = getCertificateHeaderBlob_();
+  const footerBlob = getCertificateFooterBlob_();
+  applyCertificateBands_(doc, headerBlob, footerBlob);
 
   const table = body.appendTable([['']]);
   table.setBorderWidth(0);
@@ -320,7 +329,7 @@ function generateCertificateFromTemplate(employeeName, employeeLocation) {
   const newFile = templateFile.makeCopy(docName, folder);
   const newDoc = DocumentApp.openById(newFile.getId());
 
-  applyCertificateBands_(newDoc, getCertificateBorderBlob_());
+  applyCertificateBands_(newDoc, getCertificateHeaderBlob_(), getCertificateFooterBlob_());
 
   const prettyDate = Utilities.formatDate(today, tz, 'MMMM d, yyyy');
 
