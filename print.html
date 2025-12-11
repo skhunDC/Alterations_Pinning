@@ -67,24 +67,20 @@
         break-inside: avoid;
       }
 
-      .certificate::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-image: url('https://www.dublincleaners.com/wp-content/uploads/2025/12/Border3.jpg');
+      .certificate-decor {
+        position: relative;
+        width: 100%;
+        height: 120px;
+        background-image: url('https://www.dublincleaners.com/wp-content/uploads/2025/12/1Border.png');
         background-repeat: no-repeat;
+        background-size: cover;
         background-position: center;
-        background-size: contain;
-        opacity: 0.65;
-        pointer-events: none;
+        flex-shrink: 0;
       }
 
-      .certificate::after {
-        content: '';
-        position: absolute;
-        inset: 1.4rem;
-        border: 2px solid var(--border-light);
-        pointer-events: none;
+      .certificate-decor--bottom {
+        transform: scaleY(-1);
+        margin-top: auto;
       }
 
       .certificate-content {
@@ -255,7 +251,7 @@
       }
 
       .certificate-footer-row {
-        margin-top: auto;
+        margin-top: 1rem;
         padding-top: 1.25rem;
         font-size: 0.95rem;
         page-break-inside: avoid;
@@ -295,6 +291,7 @@
   <body>
     <div class="certificate-wrapper">
       <div class="certificate">
+        <div class="certificate-decor"></div>
         <div class="certificate-content">
           <div class="certificate-title">Alterations Pinning Certification</div>
           <div class="certificate-subtitle">Certification of Completion</div>
@@ -335,6 +332,7 @@
             <span class="signature-line">&nbsp;</span>
           </div>
         </div>
+        <div class="certificate-decor certificate-decor--bottom"></div>
       </div>
     </div>
 
