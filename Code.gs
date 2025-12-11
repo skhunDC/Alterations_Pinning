@@ -1,7 +1,12 @@
 const SPREADSHEET_NAME = 'Alterations Pinning Certification';
 const MODULE_RESULTS_SHEET = 'ModuleResults';
 const MODULE_HEADERS = ['Timestamp', 'EmployeeName', 'LocationOrID', 'ModuleID', 'Score', 'Passed'];
-const CERTIFICATE_FOLDER_NAME = 'Alterations Pinning Certificates';
+
+// Reusable Google Doc certificate template for Dublin Cleaners
+var CERTIFICATE_TEMPLATE_ID = '17yjalGF_nZEw_mWVQm9vlme_eoAYHLbBPw7nruiG1QQ';
+
+// Folder to store generated certificates
+var CERTIFICATE_FOLDER_NAME = 'Alterations Pinning Certificates';
 
 function include(filename) {
   const name = (filename || '').toString().trim();
@@ -111,6 +116,81 @@ function getOrCreateCertificateFolder_() {
     return folders.next();
   }
   return DriveApp.createFolder(CERTIFICATE_FOLDER_NAME);
+}
+
+function generateCertificateFromTemplate(employeeName, employeeLocation) {
+  if (!employeeName || !employeeName.trim()) {
+    throw new Error('Employee name is required to generate a certificate.');
+  }
+
+  const cleanName = employeeName.trim();
+  const cleanLocation = employeeLocation ? String(employeeLocation).trim() : '';
+  const folder = getOrCreateCertificateFolder_();
+
+  const status = getEmployeeCertificationStatus(cleanName);
+  const isCertified = status && status.isCertified;
+
+  const templateFile = DriveApp.getFileById(CERTIFICATE_TEMPLATE_ID);
+  const today = new Date();
+  const tz = Session.getScriptTimeZone();
+  const dateStamp = Utilities.formatDate(today, tz, 'yyyy-MM-dd');
+  const docName = 'Alterations Pinning Certificate - ' + cleanName + ' - ' + dateStamp;
+
+  const newFile = templateFile.makeCopy(docName, folder);
+  const newDoc = DocumentApp.openById(newFile.getId());
+
+  const prettyDate = Utilities.formatDate(today, tz, 'MMMM d, yyyy');
+
+  replacePlaceholderAcrossDoc_(newDoc, '{{EMPLOYEE_NAME}}', cleanName);
+  replacePlaceholderAcrossDoc_(newDoc, '{{CERTIFICATE_DATE}}', prettyDate);
+  replacePlaceholderAcrossDoc_(newDoc, '{{STORE_LOCATION}}', cleanLocation || '');
+  replacePlaceholderAcrossDoc_(newDoc, '{{PROGRAM_NAME}}', 'Alterations Pinning Certification Program');
+
+  newDoc.saveAndClose();
+
+  const pdfBlob = newFile.getAs('application/pdf');
+  pdfBlob.setName(docName + '.pdf');
+  const pdfFile = folder.createFile(pdfBlob);
+
+  return {
+    docFileId: newFile.getId(),
+    docFileUrl: newFile.getUrl(),
+    pdfFileId: pdfFile.getId(),
+    pdfFileUrl: pdfFile.getUrl(),
+    isCertified: !!isCertified
+  };
+}
+
+function replacePlaceholderAcrossDoc_(doc, placeholder, replacement) {
+  const safeValue = replacement == null ? '' : replacement;
+  const containers = [doc.getBody(), doc.getHeader(), doc.getFooter()];
+
+  containers.forEach(function(container) {
+    if (!container) return;
+    let range = null;
+    while (true) {
+      range = container.findText(placeholder, range);
+      if (!range) break;
+
+      const element = range.getElement();
+      if (!element || typeof element.editAsText !== 'function') continue;
+
+      const text = element.asText();
+      const start = range.getStartOffset();
+      const end = range.getEndOffsetInclusive();
+      const attrs = text.getAttributes(start) || {};
+
+      text.deleteText(start, end);
+      text.insertText(start, safeValue);
+
+      if (safeValue.length > 0) {
+        if (!attrs.foregroundColor) {
+          attrs.foregroundColor = '#000000';
+        }
+        text.setAttributes(start, start + safeValue.length - 1, attrs);
+      }
+    }
+  });
 }
 
 function buildCertificateContent_(body, employeeName, employeeLocationOrId, status, issuedOn) {
