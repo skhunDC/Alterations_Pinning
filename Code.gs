@@ -209,7 +209,7 @@ function buildCertificateContent_(body, employeeName, employeeLocationOrId, stat
     .setBold(true)
     .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
 
-  const statement = `${employeeName} has completed the Dublin Cleaners Alterations Pinning Certification Program and is certified to pin garments for customers in-store.`;
+  const statement = `${employeeName} has completed the Official Dublin Cleaners Alterations Pinning Certification Program and is certified to pin garments.`;
   body.appendParagraph(statement)
     .setFontSize(12)
     .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
@@ -233,14 +233,11 @@ function buildCertificateContent_(body, employeeName, employeeLocationOrId, stat
     item.setNestingLevel(0);
     item.setGlyphType(DocumentApp.GlyphType.BULLET);
     item.editAsText().setBold(completed.includes(module.id));
-    if (completed.includes(module.id)) {
-      item.appendText(' (Passed)');
-    }
+    item.appendText(completed.includes(module.id) ? ' (Passed)' : ' (Pending)');
   });
 
-  body.appendParagraph('Supervisor sign-off (if required): ________________________________')
-    .setSpacingBefore(14)
-    .setSpacingAfter(6)
+  body.appendParagraph('Supervisor sign-off (required): ________________________________')
+    .setSpacingBefore(18)
     .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
 }
 

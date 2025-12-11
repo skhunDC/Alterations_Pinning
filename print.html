@@ -79,14 +79,15 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.35rem;
         color: var(--accent);
       }
 
       .certificate-subtitle {
-        font-size: 1.1rem;
-        margin-bottom: 1.8rem;
-        color: var(--muted);
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+        color: var(--text);
       }
 
       .certificate-label {
@@ -94,17 +95,18 @@
         margin-bottom: 0.2rem;
         color: #666666;
         letter-spacing: 0.08em;
+        text-transform: uppercase;
       }
 
       .certificate-name {
-        font-size: 1.8rem;
+        font-size: 1.9rem;
         font-weight: 700;
         margin-bottom: 1rem;
       }
 
       .certificate-body-text {
         font-size: 1rem;
-        max-width: 800px;
+        max-width: 820px;
         margin: 0 auto 2rem auto;
         line-height: 1.6;
         color: #333333;
@@ -142,7 +144,7 @@
 
       .certificate-meta-row {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 1rem;
         margin-bottom: 1.5rem;
       }
@@ -186,16 +188,24 @@
       }
 
       .module-row__title {
-        margin: 0 0 0.35rem 0;
+        margin: 0;
         font-weight: 700;
         color: var(--text);
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+        align-items: baseline;
       }
 
       .module-row__status {
         margin: 0;
         font-weight: 700;
-        color: #991b1b;
         font-size: 0.95rem;
+        color: #0f5132;
+      }
+
+      .module-row__status--pending {
+        color: #8a6b00;
       }
 
       .module-row--pass {
@@ -208,31 +218,20 @@
       }
 
       .certificate-footer-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         margin-top: 2rem;
         font-size: 0.95rem;
-        gap: 1.5rem;
       }
 
       .certificate-footer-block {
         text-align: center;
-        flex: 1;
       }
 
-      .certificate-footer-block span.signature-line {
+      .certificate-footer-block .signature-line {
         display: inline-block;
-        margin-top: 1.2rem;
+        margin-top: 0.6rem;
         border-top: 1px solid #444444;
-        padding-top: 0.2rem;
-        min-width: 180px;
-      }
-
-      .certificate-date {
-        font-size: 0.95rem;
-        margin-top: 1rem;
-        color: #555555;
+        padding-top: 0.35rem;
+        min-width: 280px;
       }
 
       @media print {
@@ -254,14 +253,13 @@
           src="https://www.dublincleaners.com/wp-content/uploads/2024/12/Dublin-Logos-stacked.png"
           alt="Dublin Cleaners logo"
         />
-        <div class="certificate-title">Certification of Completion</div>
-        <div class="certificate-subtitle">Official Dublin Cleaners Certification</div>
-        <div class="certificate-label">This certifies that</div>
+        <div class="certificate-title">Alterations Pinning Certification</div>
+        <div class="certificate-subtitle">Certification of Completion</div>
+        <div class="certificate-label">Awarded to</div>
         <div id="certificate-employee-name" class="certificate-name">Employee Name</div>
         <p class="certificate-body-text" id="certificate-statement">
-          has successfully completed the Dublin Cleaners
-          <strong>Alterations Pinning Certification Program</strong>
-          and is hereby certified and authorized to pin garments for our customers in-store in accordance with our quality and safety standards.
+          has completed the Official Dublin Cleaners <strong>Alterations Pinning Certification Program</strong> and is certified
+          to pin garments.
         </p>
         <div class="certificate-status-row">
           <span class="badge badge--warning" id="certStatus">Certification Pending</span>
@@ -269,25 +267,23 @@
         </div>
         <div class="certificate-meta-row">
           <div class="certificate-meta-card">
-            <span class="meta-label">Date</span>
+            <span class="meta-label">Issued On</span>
             <span class="meta-value" id="certificate-date"></span>
           </div>
           <div class="certificate-meta-card">
             <span class="meta-label">Location / ID</span>
             <span class="meta-value" id="locationField">—</span>
           </div>
+          <div class="certificate-meta-card">
+            <span class="meta-label">Status</span>
+            <span class="meta-value" id="statusValue">—</span>
+          </div>
         </div>
         <div class="module-list" id="moduleList"></div>
         <div class="certificate-footer-row">
           <div class="certificate-footer-block">
-            <span class="signature-line">Authorized Trainer</span>
-          </div>
-          <div class="certificate-footer-block">
-            Dublin Cleaners<br />
-            Official Training &amp; Certification
-          </div>
-          <div class="certificate-footer-block">
-            <span class="signature-line">Store / Location</span>
+            Supervisor sign-off (required):<br />
+            <span class="signature-line">&nbsp;</span>
           </div>
         </div>
       </div>
@@ -308,18 +304,19 @@
       const statusBadge = document.getElementById('certStatus');
       const statusText = document.getElementById('statusText');
       const moduleList = document.getElementById('moduleList');
+      const statusValue = document.getElementById('statusValue');
 
       document.getElementById('certificate-employee-name').textContent = employeeName;
-      document.getElementById('certificate-statement').innerHTML = `${employeeName} has successfully completed the Dublin Cleaners <strong>Alterations Pinning Certification Program</strong> and is hereby certified and authorized to pin garments for our customers in-store in accordance with our quality and safety standards.`;
-      document.getElementById('certificate-date').textContent = `Date: ${new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date())}`;
+      document.getElementById('certificate-statement').innerHTML = `${employeeName} has completed the Official Dublin Cleaners <strong>Alterations Pinning Certification Program</strong> and is certified to pin garments.`;
+      document.getElementById('certificate-date').textContent = `${new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date())}`;
       document.getElementById('locationField').textContent = location || '—';
 
       function moduleRow(id, passed) {
         const className = `module-row ${passed ? 'module-row--pass' : ''}`;
         const status = passed ? 'Passed' : 'Pending';
+        const statusClass = passed ? 'module-row__status' : 'module-row__status module-row__status--pending';
         return `<div class="${className}">
-          <p class="module-row__title">${id} — ${moduleTitles[id] || ''}</p>
-          <p class="module-row__status">${status}</p>
+          <p class="module-row__title">${id} — ${moduleTitles[id] || ''} <span class="${statusClass}">(${status})</span></p>
         </div>`;
       }
 
@@ -330,10 +327,11 @@
 
       function renderStatus(status) {
         const certified = !!status?.isCertified;
-        statusBadge.textContent = certified ? 'Certified Alteration Pinner' : 'Certification Pending';
+        statusBadge.textContent = certified ? 'Certified' : 'Certification Pending';
         statusBadge.classList.toggle('badge--success', certified);
         statusBadge.classList.toggle('badge--warning', !certified);
         statusText.textContent = certified ? 'Certified' : 'In Progress';
+        statusValue.textContent = certified ? 'Certified' : 'In Progress';
         renderModules(status);
       }
 
