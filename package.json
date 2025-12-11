@@ -1,0 +1,10 @@
+{
+  "name": "alterations-pinning",
+  "version": "1.0.0",
+  "description": "Apps Script HTMLService training app for Dublin Cleaners Alterations Pinning certification",
+  "scripts": {
+    "test": "node tests/sanity.js"
+  },
+  "devDependencies": {},
+  "license": "MIT"
+}

@@ -1,0 +1,388 @@
+<script>
+  const modules = [
+    {
+      id: 'module-1',
+      title: 'Customer Instruction & Measurement Philosophy',
+      overview: 'Turn subjective customer requests into objective, final measurements that tailors can execute without guesswork.',
+      objectives: [
+        'Replace +/- shorthand with final measurement statements ("shorten to 36 inches" vs "-2").',
+        'Clarify that hem is a garment part; measurements must specify length/width in inches.',
+        'Coach customers to choose precise outcomes using scripts and visual cues.',
+        'Document objective notes that match the pinned garment.'
+      ],
+      content: [
+        'Scenario drills: convert vague asks ("make it slimmer") into measurable outcomes ("waist 32", "hip 40").',
+        'Good vs bad measurement language and how it affects tailor accuracy.',
+        'Complaint prevention: repeat back final measurements before logging.',
+        'Sample form fields: garment, part, final measurement, balance, pass/fail of clarity.'
+      ],
+      quiz: [
+        {
+          question: 'Which note is correct for a pant hem request?',
+          options: [
+            { label: '"-1.5 off the hem"', correct: false },
+            { label: '"Hem to finish at 30 inches, measure both legs"', correct: true },
+            { label: '"Shorten a little"', correct: false }
+          ]
+        },
+        {
+          question: 'How do you avoid subjective language?',
+          options: [
+            { label: 'State the final measurement in inches and confirm with the customer.', correct: true },
+            { label: 'Use symbols like +/- to save time.', correct: false },
+            { label: 'Let the tailor guess the final length.', correct: false }
+          ]
+        }
+      ],
+      downloads: [
+        'Objective vs subjective cheat sheet (PDF-ready text).',
+        'Rewrite practice worksheet for unclear customer requests.'
+      ],
+      notes: 'Always repeat back the final measurement and the garment part before pinning.'
+    },
+    {
+      id: 'module-2',
+      title: 'Pinning Tools & Safety',
+      overview: 'Use the right pin every time and keep garments travel-ready with mandatory safety pins and horizontal orientation.',
+      objectives: [
+        'Identify straight pins vs. safety pins; default to safety pins for any garment leaving the counter.',
+        'Place pins horizontally to prevent fabric stress and injuries.',
+        'Follow pin safety rules and demonstrate safe removal.'
+      ],
+      content: [
+        'Tool matching: pair pin types with correct garments and scenarios.',
+        'Safety pins are mandatory for transport to the plant—no exceptions.',
+        'Orientation diagrams: pins run left-to-right, never vertical.',
+        'Demo checklist: smooth fabric, place pin horizontally, check stability.'
+      ],
+      quiz: [
+        {
+          question: 'What pin orientation is required?',
+          options: [
+            { label: 'Vertical pins to save time', correct: false },
+            { label: 'Horizontal pins only', correct: true },
+            { label: 'Any orientation is fine', correct: false }
+          ]
+        },
+        {
+          question: 'Which pin must you use for garments traveling to the plant?',
+          options: [
+            { label: 'Straight dressmaker pin', correct: false },
+            { label: 'Safety pin, closed securely', correct: true },
+            { label: 'No pin, just fold the garment', correct: false }
+          ]
+        }
+      ],
+      downloads: [
+        'Pin safety sheet with do/don’t list.',
+        'Orientation diagram set for quick reference.'
+      ],
+      notes: 'If a customer pins at home, replace with safety pins and verify with a tape measure.'
+    },
+    {
+      id: 'module-3',
+      title: 'Pinning by Garment Type',
+      overview: 'Apply garment-specific rules: smooth fabric, verify customer pinning, enforce one patch per garment, and classify tailor-only work.',
+      objectives: [
+        'Smooth fabric before measuring and pinning to avoid crooked hems.',
+        'Ask men which leg is dominant to balance inseams.',
+        'Verify customer-pinned garments with a tape measure; adjust if off-measure.',
+        'Patch policy: one patch pinned per garment; complex repairs go to tailor.'
+      ],
+      content: [
+        'Visual diagrams for pants, dresses, jackets—showing horizontal pins and balance points.',
+        'Tape-measure demonstration: measure both sides to confirm symmetry.',
+        'CSR-approved vs. tailor-only list: simple hems and waist taps vs. complex reshaping.',
+        'Customer scripts: "I’ll smooth the fabric, measure both inseams, and use safety pins for travel."'
+      ],
+      quiz: [
+        {
+          question: 'What must you do when a customer brings in a pre-pinned garment?',
+          options: [
+            { label: 'Trust their pins and skip measuring', correct: false },
+            { label: 'Verify with a tape measure and repin with safety pins', correct: true },
+            { label: 'Remove all pins and guess the fit', correct: false }
+          ]
+        },
+        {
+          question: 'How do you balance inseams for men?',
+          options: [
+            { label: 'Ask which leg is dominant and check both sides', correct: true },
+            { label: 'Pin only the right leg', correct: false },
+            { label: 'Use vertical pins on the longer leg', correct: false }
+          ]
+        }
+      ],
+      downloads: [
+        'Garment diagrams (pants, skirts, jackets) showing pin placement.',
+        'CSR vs. tailor-only reference list.',
+        'Patch placement one-per-garment reminder.'
+      ],
+      notes: 'Always smooth fabric before measuring and keep pins horizontal for every garment type.'
+    },
+    {
+      id: 'module-4',
+      title: 'SPOT POS Notes & Communication',
+      overview: 'Record precise, objective notes in SPOT so tailors receive exact instructions.',
+      objectives: [
+        'Avoid vague language and log final measurements.',
+        'Use confirmation scripts to repeat details to the customer.',
+        'Add annotated SPOT notes: garment part, final measurement, balance, and safety pin confirmation.'
+      ],
+      content: [
+        'POS input guide: garment + part + final measurement + balance notes.',
+        'Scenario practice: rewrite "take in a bit" to "waist 32 inches, hip 40 inches, safety pinned".',
+        'Fill-in-the-system exercises to build speed and clarity.',
+        'Customer confirmation script: "You’ll get back pants hemmed to 30 inches with safety pins placed horizontally."'
+      ],
+      quiz: [
+        {
+          question: 'Which SPOT note is correct?',
+          options: [
+            { label: '"Shorten some"', correct: false },
+            { label: '"Hem finished length 30 in, both legs measured, safety pinned"', correct: true },
+            { label: '"+2 hem"', correct: false }
+          ]
+        },
+        {
+          question: 'What should every note avoid?',
+          options: [
+            { label: 'Vague terms without measurements', correct: true },
+            { label: 'Listing garment parts', correct: false },
+            { label: 'Mentioning safety pins', correct: false }
+          ]
+        }
+      ],
+      downloads: [
+        'SPOT note templates and screenshots.',
+        'Scenario rewrite practice sheet.'
+      ],
+      notes: 'Always capture final measurements and pin orientation in SPOT to prevent ambiguity.'
+    },
+    {
+      id: 'module-5',
+      title: 'Exceptions & Escalation',
+      overview: 'Know when to stop and escalate to a tailor, and how to communicate clearly with customers.',
+      objectives: [
+        'Identify garments CSRs must not pin (leather, beading, complex reshaping).',
+        'Use respectful scripts to escalate and schedule tailor consults.',
+        'Sort garments visually and tag escalations to avoid errors.'
+      ],
+      content: [
+        'Visual exception list: leather, sequins, lace overlays, bridal/evening wear, heavy beading.',
+        'Escalation scripts: "This requires a tailor fit; let’s set a fitting time so we get it perfect."',
+        'Sorting quiz: tag exception garments and route to tailor bin.',
+        'Reminder: one patch per garment; multiple patches escalate.'
+      ],
+      quiz: [
+        {
+          question: 'Which garment should you NOT pin?',
+          options: [
+            { label: 'Standard cotton chinos', correct: false },
+            { label: 'Sequined gown', correct: true },
+            { label: 'Uniform pants', correct: false }
+          ]
+        },
+        {
+          question: 'What is the correct escalation phrasing?',
+          options: [
+            { label: '"We can’t do this."', correct: false },
+            { label: '"This needs a tailor fitting; let’s book a time to get it right."', correct: true },
+            { label: '"Maybe we try it anyway."', correct: false }
+          ]
+        }
+      ],
+      downloads: [
+        'Exception garment poster (printable).',
+        'Escalation scripts handout.'
+      ],
+      notes: 'When in doubt, escalate; do not pin garments outside CSR-safe list.'
+    }
+  ];
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderModules();
+  });
+
+  function startCertification() {
+    const name = getEmployeeName();
+    if (!name) {
+      alert('Enter your name to begin.');
+      return;
+    }
+    document.getElementById('modules').scrollIntoView({ behavior: 'smooth' });
+    loadProgress();
+  }
+
+  function getEmployeeName() {
+    return document.getElementById('employeeName').value.trim();
+  }
+
+  function getLocationId() {
+    return document.getElementById('locationId').value.trim();
+  }
+
+  function renderModules() {
+    const container = document.getElementById('modules');
+    container.innerHTML = modules.map(module => createModuleCard(module)).join('');
+  }
+
+  function createModuleCard(module) {
+    const objectives = module.objectives.map(obj => `<li class="objective-item">${obj}</li>`).join('');
+    const content = module.content.map(item => `<li>${item}</li>`).join('');
+    const downloads = module.downloads.map(item => `<li>${item}</li>`).join('');
+    const quiz = module.quiz.map((q, qi) => {
+      const options = q.options.map((opt, oi) => `
+        <label class="quiz-option">
+          <input type="radio" name="${module.id}-q${qi}" value="${oi}" />
+          <span>${opt.label}</span>
+        </label>
+      `).join('');
+      return `<div class="quiz-question">
+        <strong>${q.question}</strong>
+        <div>${options}</div>
+      </div>`;
+    }).join('');
+
+    return `
+      <article class="card module-card" id="${module.id}">
+        <div class="flex-row" style="justify-content: space-between; align-items: center;">
+          <h2>${module.title}</h2>
+          <span class="pill">Module</span>
+        </div>
+        <div class="section-box"><div class="section-label">Overview</div>${module.overview}</div>
+        <div class="section-box objectives"><div class="section-label">Learning Objectives</div><ul>${objectives}</ul></div>
+        <div class="section-box content"><div class="section-label">Content Highlights</div><ul>${content}</ul></div>
+        <div class="section-box quiz"><div class="section-label">Micro-Quiz</div>${quiz}
+          <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
+          <div class="quiz-result" id="${module.id}-result"></div>
+        </div>
+        <div class="section-box download-links"><div class="section-label">Downloads / References</div><ul>${downloads}</ul></div>
+        <div class="module-footer">
+          <div class="flex-row">
+            <span class="status-badge" id="${module.id}-status">Not submitted</span>
+            <small>${module.notes}</small>
+          </div>
+          <div class="module-actions">
+            <button class="secondary" onclick="saveQuickNote('${module.id}')">Save Note Only</button>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function submitQuiz(moduleId) {
+    const module = modules.find(m => m.id === moduleId);
+    const name = getEmployeeName();
+    if (!name) {
+      alert('Enter your name before submitting a quiz.');
+      return;
+    }
+    const locationId = getLocationId();
+    let correctCount = 0;
+    module.quiz.forEach((q, qi) => {
+      const selected = document.querySelector(`input[name="${module.id}-q${qi}"]:checked`);
+      if (selected && q.options[Number(selected.value)].correct) {
+        correctCount += 1;
+      }
+    });
+    const score = Math.round((correctCount / module.quiz.length) * 100);
+    const pass = score >= 80;
+    const notes = `Auto-saved via quiz; ${correctCount}/${module.quiz.length} correct.`;
+
+    const payload = {
+      employeeName: name,
+      locationOrId: locationId,
+      moduleId: module.id,
+      moduleTitle: module.title,
+      quizScore: score,
+      passFail: pass ? 'PASS' : 'REVIEW',
+      notes: notes
+    };
+
+    setStatus(moduleId, `Saving...`, 'pending');
+    if (google.script && google.script.run) {
+      google.script.run.withSuccessHandler((res) => {
+        setStatus(moduleId, `${pass ? 'PASS' : 'REVIEW'} • ${score}% • saved ${new Date(res.savedAt).toLocaleString()}`, pass ? 'pass' : 'fail');
+        document.getElementById(`${moduleId}-result`).innerText = pass ? 'Great job! You passed.' : 'Review content and retry.';
+        loadProgress();
+      }).withFailureHandler((err) => {
+        setStatus(moduleId, `Error: ${err}`, 'fail');
+      }).saveModuleResult(payload);
+    } else {
+      console.log('Simulated save', payload);
+      setStatus(moduleId, `${pass ? 'PASS' : 'REVIEW'} • ${score}% (local only)`, pass ? 'pass' : 'fail');
+    }
+  }
+
+  function saveQuickNote(moduleId) {
+    const module = modules.find(m => m.id === moduleId);
+    const name = getEmployeeName();
+    if (!name) {
+      alert('Enter your name before saving.');
+      return;
+    }
+    const locationId = getLocationId();
+    const notes = prompt('Add a note (optional):', 'Reviewed content; ready for live demo.');
+    const payload = {
+      employeeName: name,
+      locationOrId: locationId,
+      moduleId: module.id,
+      moduleTitle: module.title,
+      quizScore: '',
+      passFail: 'NOTE',
+      notes: notes || 'Quick note saved.'
+    };
+    setStatus(moduleId, 'Saving note...', 'pending');
+    if (google.script && google.script.run) {
+      google.script.run.withSuccessHandler((res) => {
+        setStatus(moduleId, `NOTE saved ${new Date(res.savedAt).toLocaleString()}`, 'pass');
+        loadProgress();
+      }).withFailureHandler((err) => {
+        setStatus(moduleId, `Error: ${err}`, 'fail');
+      }).saveModuleResult(payload);
+    } else {
+      console.log('Simulated note save', payload);
+      setStatus(moduleId, 'NOTE saved (local only)', 'pass');
+    }
+  }
+
+  function setStatus(moduleId, text, state) {
+    const badge = document.getElementById(`${moduleId}-status`);
+    if (!badge) return;
+    badge.innerText = text;
+    badge.classList.remove('pass', 'fail');
+    if (state === 'pass') badge.classList.add('pass');
+    if (state === 'fail') badge.classList.add('fail');
+  }
+
+  function loadProgress() {
+    const name = getEmployeeName();
+    if (!name) {
+      return;
+    }
+    const locationId = getLocationId();
+    if (google.script && google.script.run) {
+      google.script.run.withSuccessHandler(renderProgress).getModuleStatus(name, locationId);
+    } else {
+      console.log('Simulated progress load');
+    }
+  }
+
+  function renderProgress(records) {
+    const grid = document.getElementById('progressGrid');
+    if (!records || records.length === 0) {
+      grid.innerHTML = '<div class="card status-card"><p>No saved progress yet.</p></div>';
+      return;
+    }
+    grid.innerHTML = records.map(record => {
+      return `<div class="card status-card">
+        <h4>${record.moduleTitle || record.moduleId}</h4>
+        <div class="status-badge ${record.passFail === 'PASS' ? 'pass' : 'fail'}">${record.passFail || 'PENDING'}</div>
+        <p style="margin:6px 0 0 0;">Score: ${record.quizScore || '—'}</p>
+        <p style="margin:2px 0;">Saved: ${record.timestamp ? new Date(record.timestamp).toLocaleString() : '—'}</p>
+        <p style="margin:2px 0;">Notes: ${record.notes || '—'}</p>
+      </div>`;
+    }).join('');
+  }
+</script>
