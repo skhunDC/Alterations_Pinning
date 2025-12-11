@@ -122,6 +122,46 @@ function getOrCreateCertificateFolder_() {
   return DriveApp.createFolder(CERTIFICATE_FOLDER_NAME);
 }
 
+function findExistingCertificateArtifacts_(employeeName) {
+  const cleanName = employeeName ? employeeName.toString().trim() : '';
+  if (!cleanName) return null;
+
+  const folder = getOrCreateCertificateFolder_();
+  const prefix = 'Alterations Pinning Certificate - ' + cleanName + ' -';
+  const files = folder.getFiles();
+
+  let latestPdf = null;
+  let latestDoc = null;
+
+  while (files.hasNext()) {
+    const file = files.next();
+    if (!file.getName().startsWith(prefix)) continue;
+
+    const mime = file.getMimeType();
+    const updated = typeof file.getLastUpdated === 'function' ? file.getLastUpdated() : null;
+    const record = {
+      file: file,
+      fileId: file.getId(),
+      fileUrl: file.getUrl(),
+      fileName: file.getName(),
+      updated: updated || new Date(0)
+    };
+
+    if (mime === MimeType.PDF || mime === 'application/pdf') {
+      if (!latestPdf || record.updated > latestPdf.updated) {
+        latestPdf = record;
+      }
+    } else if (mime === MimeType.GOOGLE_DOCS || mime === 'application/vnd.google-apps.document') {
+      if (!latestDoc || record.updated > latestDoc.updated) {
+        latestDoc = record;
+      }
+    }
+  }
+
+  if (!latestPdf && !latestDoc) return null;
+  return { pdf: latestPdf, doc: latestDoc };
+}
+
 function generateCertificatePDF(employeeName, employeeLocationOrId) {
   const cleanName = employeeName ? employeeName.toString().trim() : '';
   if (!cleanName) {
@@ -135,6 +175,17 @@ function generateCertificatePDF(employeeName, employeeLocationOrId) {
   } catch (err) {
     // If status lookup fails, proceed without blocking certificate generation.
     status = null;
+  }
+
+  const existing = findExistingCertificateArtifacts_(cleanName);
+  if (existing && existing.pdf) {
+    return {
+      docFileId: existing.doc ? existing.doc.fileId : null,
+      docFileUrl: existing.doc ? existing.doc.fileUrl : null,
+      pdfFileId: existing.pdf.fileId,
+      pdfFileUrl: existing.pdf.fileUrl,
+      isCertified: !!(status && status.isCertified)
+    };
   }
 
   const folder = getOrCreateCertificateFolder_();
