@@ -3,29 +3,74 @@
   <head>
     <base target="_top">
     <style>
-      body { font-family: 'Inter', Arial, sans-serif; margin: 24px; color: #1f2933; }
-      h1 { color: #006c5c; }
+      body { font-family: 'Inter', Arial, sans-serif; margin: 32px; color: #1f2933; background: #f8fafc; }
+      .certificate { background: #fff; padding: 24px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); max-width: 900px; margin: 0 auto; }
+      .header { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+      .logo { height: 80px; }
+      h1 { margin: 8px 0 0 0; color: #006c5c; }
+      .status { display: inline-block; padding: 8px 12px; border-radius: 999px; background: #e8f8f2; color: #0f5132; font-weight: 700; }
       table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-      th, td { border: 1px solid #d0d7de; padding: 8px; text-align: left; }
+      th, td { border: 1px solid #d0d7de; padding: 10px; text-align: left; }
       th { background: #f3f4f6; }
+      .footer { margin-top: 18px; font-size: 0.95rem; }
     </style>
   </head>
   <body>
-    <h1>Alterations Pinning Certification - Print View</h1>
-    <p>This view can be wired to load latest module attempts for the employee. Export as PDF for HR records.</p>
-    <table>
-      <thead>
-        <tr>
-          <th>Module</th>
-          <th>Pass/Fail</th>
-          <th>Quiz Score</th>
-          <th>Timestamp</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td colspan="5">Connect to <code>getLatestRecordsForPrint</code> in Code.gs to populate this table.</td></tr>
-      </tbody>
-    </table>
+    <div class="certificate">
+      <div class="header">
+        <div>
+          <img src="https://www.dublincleaners.com/wp-content/uploads/2024/12/Dublin-Logos-stacked.png" alt="Dublin Cleaners logo" class="logo" />
+          <p class="status" id="certStatus">Certification Pending</p>
+        </div>
+        <div style="text-align: right;">
+          <p class="eyebrow" style="margin:0; text-transform: uppercase; letter-spacing: 0.08em;">Alterations Pinning Certification Program</p>
+          <h1>Digital Certificate</h1>
+          <p id="employeeNameField" style="margin:0; font-weight:700;">Employee: </p>
+          <p id="dateField" style="margin:0;">Date: </p>
+        </div>
+      </div>
+      <p style="margin-top: 16px;">Status shows “Certified Alteration Pinner” once all five modules are passed. Save/print for HR files and supervisor sign-off.</p>
+      <table>
+        <thead>
+          <tr><th>Module</th><th>Title</th><th>Status</th></tr>
+        </thead>
+        <tbody id="moduleTable"></tbody>
+      </table>
+      <div class="footer">
+        <p>Supervisor sign-off (external): ________________________________</p>
+        <p>Note: Recertification recommended every 18–24 months.</p>
+      </div>
+    </div>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const employeeName = params.get('name') || 'Employee';
+      const location = params.get('location') || '';
+      document.getElementById('employeeNameField').textContent = `Employee: ${employeeName}${location ? ' • ' + location : ''}`;
+      document.getElementById('dateField').textContent = `Date: ${new Date().toLocaleDateString()}`;
+
+      const tableBody = document.getElementById('moduleTable');
+      const defaultRows = ['M1','M2','M3','M4','M5'].map(id => `<tr><td>${id}</td><td></td><td>Pending</td></tr>`).join('');
+      tableBody.innerHTML = defaultRows;
+
+      if (google.script && google.script.run && employeeName.trim()) {
+        google.script.run.withSuccessHandler(status => {
+          if (!status) return;
+          document.getElementById('certStatus').textContent = status.isCertified ? 'Certified Alteration Pinner' : 'Certification Pending';
+          document.getElementById('certStatus').style.background = status.isCertified ? '#e8f8f2' : '#fff4e5';
+          document.getElementById('certStatus').style.color = status.isCertified ? '#0f5132' : '#8a6b00';
+          const rows = ['M1','M2','M3','M4','M5'].map(id => {
+            const passed = status.completedModules.includes(id);
+            return `<tr><td>${id}</td><td>${moduleTitle(id)}</td><td>${passed ? 'Passed' : 'Pending'}</td></tr>`;
+          }).join('');
+          tableBody.innerHTML = rows;
+        }).getEmployeeCertificationStatus(employeeName);
+      }
+
+      function moduleTitle(id) {
+        const titles = { M1: 'Customer Instruction & Measurement Philosophy', M2: 'Pinning Tools & Safety', M3: 'Pinning by Garment Type', M4: 'SPOT POS Notes & Communication', M5: 'Exceptions & Escalation' };
+        return titles[id] || '';
+      }
+    </script>
   </body>
 </html>
