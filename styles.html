@@ -175,6 +175,28 @@
   .checklist { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; align-items: center; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 12px; background: #f8fafc; }
   .checklist-note { text-align: center; }
 
+  /* Module 3 specific UI */
+  .garment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .garment-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #fff; box-shadow: inset 0 1px 0 #fff; }
+  .garment-card__header { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .garment-card ul { margin: 8px 0 0 0; }
+
+  .callout-card { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; align-items: center; border: 1px solid #cce6d6; background: linear-gradient(135deg, #f0fdf4, #fefce8); border-radius: 12px; padding: 14px; }
+  .stretch-risk { text-align: center; border-left: 1px dashed #cbd5e1; padding-left: 12px; }
+
+  .two-column { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .card-lite { border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #f9fafb; }
+
+  .verification { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; align-items: center; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 12px; background: #fff; }
+  .verification-note { border-left: 1px solid #e5e7eb; padding-left: 12px; }
+
+  .metric-table { border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #f8fafc; display: grid; gap: 8px; }
+  .metric-row { display: grid; grid-template-columns: 160px 1fr; gap: 10px; align-items: start; background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #e5e7eb; }
+  .metric-label { font-weight: 700; color: var(--green); }
+  .metric-examples p { margin: 4px 0; }
+
+  .checklist-lite { border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #fff7ed; }
+
   .scenario-card .answer { color: #0f5132; font-weight: 700; }
 
   .sr-only { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
