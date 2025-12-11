@@ -1671,29 +1671,4 @@
     }, 3200);
   }
 
-  function loadAdminSummary() {
-    const tbody = document.getElementById('admin-summary-body');
-    if (google.script && google.script.run) {
-      google.script.run.withSuccessHandler(rows => {
-        if (!Array.isArray(rows) || rows.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No results yet.</td></tr>';
-          return;
-        }
-        tbody.innerHTML = rows.map(row => `
-          <tr>
-            <td>${row.employeeName || ''}</td>
-            <td>${row.employeeLocationOrId || ''}</td>
-            <td>${(row.modulesPassed || []).join(', ') || '—'}</td>
-            <td>${(row.modulesFailed || []).join(', ') || '—'}</td>
-            <td>${row.isCertified ? 'Yes' : 'No'}</td>
-            <td>${row.lastUpdated ? new Date(row.lastUpdated).toLocaleString() : ''}</td>
-          </tr>
-        `).join('');
-        showToast('Admin summary loaded', 'success');
-      }).withFailureHandler(err => {
-        showToast('Error loading summary', 'error');
-        tbody.innerHTML = `<tr><td colspan="6">${err}</td></tr>`;
-      }).getSummaryByEmployee();
-    }
-  }
 </script>
