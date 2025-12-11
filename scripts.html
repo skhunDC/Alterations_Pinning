@@ -658,6 +658,25 @@
     container.innerHTML = modules.map(module => moduleTemplate(module)).join('');
   }
 
+  function renderModuleNavigation(moduleId) {
+    const moduleNumber = parseInt(moduleId.replace('M', ''), 10);
+    const totalModules = modules.length;
+    const hasPrevious = moduleNumber > 1;
+    const hasNextModule = moduleNumber < totalModules;
+    const nextTarget = hasNextModule ? `module-M${moduleNumber + 1}` : 'dashboard';
+    const nextLabel = hasNextModule ? `Next: Module ${moduleNumber + 1}` : 'Next: Certification Status';
+
+    const previousButton = hasPrevious
+      ? `<button type="button" class="nav-button" onclick="navigateToSection('module-M${moduleNumber - 1}')">Previous: Module ${moduleNumber - 1}</button>`
+      : '';
+
+    return `
+            <div class="module-nav" aria-label="Module navigation">
+              ${previousButton}
+              <button type="button" class="nav-button primary" onclick="navigateToSection('${nextTarget}')">${nextLabel}</button>
+            </div>`;
+  }
+
   function moduleTemplate(module) {
     if (module.id === 'M1') {
       return moduleOneTemplate(module);
@@ -702,14 +721,15 @@
           <div class="quiz" aria-label="quiz for ${module.title}">
             <h3>Knowledge Check</h3>
             ${quiz}
-            <div class="quiz-footer">
-              <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
-              <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
-            </div>
+          <div class="quiz-footer">
+            <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
+            <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
           </div>
-        </article>
-      </section>
-    `;
+          ${renderModuleNavigation(module.id)}
+        </div>
+      </article>
+    </section>
+  `;
   }
 
   function moduleOneTemplate(module) {
@@ -828,6 +848,7 @@
             <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
             <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
           </div>
+          ${renderModuleNavigation(module.id)}
         </div>
         </article>
       </section>
@@ -981,6 +1002,7 @@
             <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
             <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
           </div>
+          ${renderModuleNavigation(module.id)}
         </div>
         </article>
       </section>
@@ -1084,6 +1106,7 @@
             <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
             <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
           </div>
+          ${renderModuleNavigation(module.id)}
         </div>
         </article>
       </section>
@@ -1214,6 +1237,7 @@
             <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
             <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
           </div>
+          ${renderModuleNavigation(module.id)}
         </div>
         </article>
       </section>
@@ -1333,6 +1357,7 @@
             <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
             <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
           </div>
+          ${renderModuleNavigation(module.id)}
         </div>
         </article>
       </section>
