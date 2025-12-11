@@ -438,55 +438,111 @@
     {
       id: 'M5',
       title: 'Exceptions & Escalation',
-      intro: 'Recognize tailor-only garments and escalate with respectful, confident language.',
+      intro: 'Recognize tailor-only garments, protect complex pieces, and escalate with respectful, confident language.',
       objectives: [
-        'Spot garments CSRs should not pin (delicate, complex, high-risk items).',
-        'Use escalation scripts that reassure customers.',
-        'Keep patches and special items paired to the correct garment.'
+        'Recognize garments and alteration types that are CSR-approved versus tailor-only.',
+        'Decide quickly when not to pin and instead escalate to a tailor.',
+        'Use clear, respectful scripts to explain escalation to customers.',
+        'Apply a Customer-Pinned Protocol for complex or risky garments.',
+        'Document exceptions and escalations so the tailor understands context.',
+        'Prioritize safety and garment integrity over speed when making decisions.'
       ],
-      sections: [
+      tailorOnlyCategories: [
         {
-          title: 'Tailor-Only List',
-          bullets: [
-            'Extremely delicate fabrics or intricate beading.',
-            'Complex gowns or wedding dresses.',
-            'Expensive specialty items with high risk.'
+          title: 'Complex or High-Risk Garments',
+          items: [
+            'Wedding dresses and formal gowns with multiple layers.',
+            'Garments with heavy beading, sequins, or intricate lace.',
+            'Custom suits or high-end designer garments with special construction.'
           ]
         },
         {
-          title: 'Escalation Scripts',
-          bullets: [
-            '“This type of garment is handled directly by our tailor to ensure the best result. I’ll note your request and have them review it.”',
-            '“Because of the beading/lace, our tailor will determine the safest way to pin and sew this area.”',
-            'Visual description: two-column card showing CSR-safe garments vs. tailor-only garments.'
+          title: 'Delicate or Specialty Fabrics',
+          items: [
+            'Very delicate silk, chiffon, or tulle where pinning could cause holes.',
+            'Leather, suede, or coated fabrics that might mark or puncture.'
           ]
         },
         {
-          title: 'Customer-Pinned Protocol',
-          bullets: [
-            'Do not alter customer pinning without consultation when item is high-risk.',
-            'If unsure, escalate to tailor and log the request clearly.',
-            'One patch per garment; escalate if multiple complex patches are requested.'
+          title: 'Complex Alterations',
+          items: [
+            'Major resizing such as multiple seams, bodice work, or re-cutting.',
+            'Complex jacket tailoring like shoulder work or major re-shaping.',
+            'Any alteration that changes the basic structure of the garment.'
           ]
         }
       ],
+      comparison: {
+        csrApproved: [
+          'Basic pant hems with clear final inseam.',
+          'Simple waist take-ins on casual pants or skirts.',
+          'Straightforward sleeve or dress length changes without embellishment.'
+        ],
+        tailorOnly: [
+          'Heavily beaded gowns or lace overlays.',
+          'Leather or suede pieces that could mark with pins.',
+          'Major re-shaping that changes how a garment is built.'
+        ]
+      },
+      customerPinnedProtocol: {
+        steps: [
+          'Acknowledge the customer effort and preferences.',
+          'Explain the garment is complex or high-risk and needs tailor review.',
+          'Do not sew or adjust until the tailor confirms the pinning.',
+          'Document: “Customer-pinned; tailor to review before proceeding. Do not alter until tailor approves.”'
+        ],
+        reminder: 'CSR role: protect the garment, the customer’s investment, and the company’s reputation.'
+      },
+      escalationTriggers: [
+        'Customer is unsure about what they want and the garment is complex.',
+        'Fabric appears fragile or easily damaged by pins.',
+        'Requested change is major (size, shape, drape).',
+        'CSR feels uncomfortable or not confident about where or how to pin.'
+      ],
+      scripts: [
+        {
+          title: 'General Tailor-Only',
+          line: 'Because of the detail and fabric on this piece, our tailor needs to handle the pinning to make sure it’s done safely and correctly. I’ll note your request and have them look at it.'
+        },
+        {
+          title: 'High-Risk Fabric',
+          line: 'This fabric can mark easily if pinned the wrong way. To protect your garment, I’m going to have our tailor review and pin it personally.'
+        },
+        {
+          title: 'Customer-Pinned Complex Garment',
+          line: 'I see you’ve pinned where you’d like it, thank you. Because this is a more delicate or complex piece, our tailor will double-check and confirm everything before sewing so we don’t risk damage.'
+        },
+        {
+          title: 'When CSR Is Unsure',
+          line: 'I want to make sure this turns out exactly how you expect. I’m going to have our tailor review this with your notes instead of me pinning it.'
+        }
+      ],
+      documentationNotes: [
+        'Tailor-only: beaded bodice; customer wants length to floor with heels; tailor to pin and advise.',
+        'Customer pinned train on wedding dress; tailor to review pinned length before sewing.',
+        'Leather jacket shoulder reshape requested; escalate to tailor for structural plan before any pinning.'
+      ],
+      boundaryStatements: [
+        'Employees are expected to say “This needs a tailor” instead of guessing on risky garments.',
+        'Slowing down and escalating is safer than damaging a high-value garment.'
+      ],
       quiz: [
-        { type: 'mcq', question: 'Which garment should you NOT pin as a CSR?', options: [
-          { label: 'Standard cotton chinos', correct: false },
-          { label: 'Intricate beaded gown', correct: true },
-          { label: 'Uniform pants', correct: false }
+        { type: 'mcq', question: 'Which garment must be escalated to the tailor?', options: [
+          { label: 'Simple cotton chinos needing a hem', correct: false },
+          { label: 'Wedding dress with beading and multiple layers', correct: true },
+          { label: 'Casual skirt needing a basic waist take-in', correct: false }
         ]},
-        { type: 'mcq', question: 'Best escalation phrase:', options: [
-          { label: 'We can’t do this.', correct: false },
-          { label: 'This needs a tailor fitting; let’s book a time to get it right.', correct: true },
-          { label: 'Maybe we try it anyway.', correct: false }
+        { type: 'mcq', question: 'Customer pinned a delicate, beaded gown. What should you do first?', options: [
+          { label: 'Accept the pins and send to the plant', correct: false },
+          { label: 'Escalate to tailor review before altering', correct: true },
+          { label: 'Remove all pins and start over without notes', correct: false }
         ]},
-        { type: 'tf', question: 'It is okay to pin an intricate beaded gown if you feel confident.', answer: false },
-        { type: 'short', question: 'How should patches be handled?', answers: ['pin each patch to its garment', 'one patch per garment', 'pin patch to garment'] },
-        { type: 'mcq', question: 'When in doubt about scope, you should…', options: [
-          { label: 'Proceed quickly', correct: false },
-          { label: 'Escalate to a tailor and document clearly', correct: true },
-          { label: 'Ignore the concern', correct: false }
+        { type: 'tf', question: 'Feeling unsure about a complex garment is a valid trigger to escalate.', answer: true },
+        { type: 'short', question: 'What documentation should you add for customer-pinned complex garments?', answers: ['tailor to review before proceeding', 'tailor to review', 'do not alter until tailor approves'] },
+        { type: 'mcq', question: 'Which escalation script tone best matches policy?', options: [
+          { label: 'Polite, confident explanation that a tailor will review for safety', correct: true },
+          { label: 'Telling the customer the garment is too hard to handle', correct: false },
+          { label: 'Promising to try pinning quickly anyway', correct: false }
         ]}
       ]
     }
@@ -528,6 +584,9 @@
     }
     if (module.id === 'M4') {
       return moduleFourTemplate(module);
+    }
+    if (module.id === 'M5') {
+      return moduleFiveTemplate(module);
     }
     const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
     const sections = module.sections.map(section => `
@@ -1041,6 +1100,121 @@
         <div class="section checklist-lite" aria-label="Quick checklist">
           <h3>Quick Pinning Checklist</h3>
           <ul>${quickChecklist}</ul>
+        </div>
+
+        <div class="quiz" aria-label="quiz for ${module.title}">
+          <h3>Knowledge Check</h3>
+          ${quiz}
+          <div class="quiz-footer">
+            <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
+            <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  // Module 5 custom layout focuses on exceptions, escalation triggers, and safe scripting.
+  // New classes: module-five__grid, module-five__card, module-five__comparison, module-five__script, module-five__protocol,
+  // module-five__note, module-five__boundary, module-five__script-grid (documented in styles.html).
+  function moduleFiveTemplate(module) {
+    const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
+    const tailorOnlyCards = module.tailorOnlyCategories.map(category => `
+      <div class="module-five__card">
+        <p class="pill pill-quiet">Tailor-only</p>
+        <h3>${category.title}</h3>
+        <ul>${category.items.map(item => `<li>${item}</li>`).join('')}</ul>
+      </div>
+    `).join('');
+
+    const comparisonCards = `
+      <div class="module-five__comparison" aria-label="CSR-approved vs Tailor-only comparison">
+        <div class="module-five__card success">
+          <p class="pill pill-quiet">CSR-approved</p>
+          <h3>CSR-Approved Examples</h3>
+          <ul>${module.comparison.csrApproved.map(item => `<li>${item}</li>`).join('')}</ul>
+          <p class="micro-copy">Escalate if these include complex fabrics, structure, or embellishment.</p>
+        </div>
+        <div class="module-five__card warning">
+          <p class="pill pill-quiet">Tailor review required</p>
+          <h3>Tailor-Only Examples</h3>
+          <ul>${module.comparison.tailorOnly.map(item => `<li>${item}</li>`).join('')}</ul>
+          <p class="micro-copy">When in doubt, choose safety and escalate.</p>
+        </div>
+      </div>
+    `;
+
+    const protocolSteps = module.customerPinnedProtocol.steps.map((step, idx) => `<li><strong>Step ${idx + 1}:</strong> ${step}</li>`).join('');
+    const escalationList = module.escalationTriggers.map(item => `<li>${item}</li>`).join('');
+    const scriptCards = module.scripts.map(script => `
+      <div class="module-five__script">
+        <p class="eyebrow">${script.title}</p>
+        <p>“${script.line}”</p>
+      </div>
+    `).join('');
+    const documentationList = module.documentationNotes.map(note => `<li>${note}</li>`).join('');
+    const boundaryList = module.boundaryStatements.map(item => `<li>${item}</li>`).join('');
+    const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
+
+    return `
+      <article class="module module-five" id="${module.id}">
+        <span class="pill">Module ${module.id.replace('M','')}</span>
+        <h2>${module.title}</h2>
+        <p>${module.intro}</p>
+
+        <div class="section">
+          <h3>Learning Objectives</h3>
+          <ul>${objectives}</ul>
+        </div>
+
+        <div class="section module-five__grid" aria-label="Tailor-only garments and visual guide">
+          <div>
+            <h3>Tailor-Only List</h3>
+            <p class="micro-copy">These garments must be reviewed and pinned by the tailor—CSRs should not guess or experiment.</p>
+            <div class="module-five__card-grid">${tailorOnlyCards}</div>
+          </div>
+          <div>
+            <h3>CSR vs Tailor Visual Guide</h3>
+            ${comparisonCards}
+          </div>
+        </div>
+
+        <div class="section module-five__grid" aria-label="Customer pinned protocol and escalation triggers">
+          <div class="module-five__protocol">
+            <p class="eyebrow">Customer-Pinned Protocol</p>
+            <h3>Guard Complex or Risky Garments</h3>
+            <ul>${protocolSteps}</ul>
+            <div class="module-five__note-line">${module.customerPinnedProtocol.reminder}</div>
+          </div>
+          <div class="module-five__card outline">
+            <p class="eyebrow">Escalation Triggers</p>
+            <h3>Stop and Involve the Tailor When…</h3>
+            <ul>${escalationList}</ul>
+          </div>
+        </div>
+
+        <div class="section" aria-label="Escalation scripts">
+          <h3>Escalation Scripts (Customer-Facing)</h3>
+          <div class="module-five__script-grid">${scriptCards}</div>
+        </div>
+
+        <div class="section module-five__grid" aria-label="Documentation and boundaries">
+          <div class="module-five__note">
+            <p class="eyebrow">Documenting Exceptions & Escalations</p>
+            <h3>Write Notes Tailors Can Act On</h3>
+            <ul>${documentationList}</ul>
+            <p class="micro-copy">Mirror this language in SPOT so the tailor understands risks and customer preferences.</p>
+          </div>
+          <div class="module-five__boundary">
+            <p class="eyebrow">Boundary Setting</p>
+            <h3>Saying “No” Safely</h3>
+            <ul>${boundaryList}</ul>
+          </div>
+        </div>
+
+        <div class="section module-five__reminder callout">
+          <p class="eyebrow">Protection First</p>
+          <p>Safety and garment integrity take priority over speed. Escalate early rather than risk damage.</p>
         </div>
 
         <div class="quiz" aria-label="quiz for ${module.title}">
