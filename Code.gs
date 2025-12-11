@@ -420,6 +420,14 @@ function buildCertificateContent_(body, employeeName, employeeLocationOrId, stat
   body.appendParagraph('Supervisor sign-off (required): ________________________________')
     .setSpacingBefore(18)
     .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+  body.appendParagraph('Manager signature: ________________________________')
+    .setSpacingBefore(12)
+    .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+
+  body.appendParagraph('Manager name / comments: ________________________________________________')
+    .setSpacingBefore(8)
+    .setAlignment(DocumentApp.HorizontalAlignment.CENTER);
 }
 
 function createCertificateFile(employeeName, employeeLocationOrId) {
