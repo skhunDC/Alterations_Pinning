@@ -599,6 +599,7 @@
     renderModules();
     bindIdentityPersistence();
     restoreIdentityFromStorage();
+    updateCertificateButtonState(lastCertificationStatus);
     setupPrintCertificateButton();
     loadCertificationStatus();
   });
@@ -623,6 +624,27 @@
 
   function getEmployeeLocation() {
     return document.getElementById('employeeLocation').value.trim();
+  }
+
+  function updateCertificateButtonState(status) {
+    const isCertified = !!(status && status.isCertified);
+    const buttons = [
+      document.getElementById('print-certificate-button'),
+      document.getElementById('header-certificate-button')
+    ];
+
+    buttons.forEach(btn => {
+      if (!btn) return;
+      if (isCertified) {
+        btn.removeAttribute('disabled');
+        btn.setAttribute('aria-disabled', 'false');
+        btn.title = 'Generate certificate PDF for this certified employee.';
+      } else {
+        btn.setAttribute('disabled', 'disabled');
+        btn.setAttribute('aria-disabled', 'true');
+        btn.title = 'Pass all five modules to unlock certificate printing';
+      }
+    });
   }
 
   function formatMinutes(minutes) {
@@ -1487,6 +1509,7 @@
     const completed = status.completedModules || [];
     const missing = status.missingModules || [];
     const percent = Math.round((completed.length / modules.length) * 100);
+    updateCertificateButtonState(status);
     progressFill.style.width = `${percent}%`;
     const remainingMinutes = calculateRemainingMinutes(missing);
     const remainingDisplay = formatMinutes(remainingMinutes);
@@ -1584,18 +1607,39 @@
       return;
     }
 
-    if (printButton) {
-      printButton.setAttribute('disabled', 'disabled');
-      printButton.textContent = 'Generating…';
-    }
-    showToast('Generating your certificate from the Dublin Cleaners template…', 'info');
+    const setLoadingState = isLoading => {
+      if (!printButton) return;
+      if (isLoading) {
+        printButton.setAttribute('disabled', 'disabled');
+        printButton.textContent = 'Generating…';
+      } else {
+        printButton.textContent = originalLabel || 'Generate Certificate (PDF)';
+        updateCertificateButtonState(lastCertificationStatus);
+      }
+    };
 
-    google.script.run
-      .withSuccessHandler(result => {
-        if (printButton) {
-          printButton.removeAttribute('disabled');
-          printButton.textContent = originalLabel || 'Generate Certificate';
+    fetchCertificationStatusByName(name)
+      .then(status => {
+        lastCertificationStatus = status;
+        updateCertificateButtonState(status);
+        if (!status || !status.isCertified) {
+          showToast('Pass all five modules before generating a certificate.', 'error');
+          return null;
         }
+
+        setLoadingState(true);
+        showToast('Generating your certificate from the Dublin Cleaners template…', 'info');
+
+        return new Promise((resolve, reject) => {
+          google.script.run
+            .withSuccessHandler(resolve)
+            .withFailureHandler(reject)
+            .generateCertificatePDF(name, location);
+        });
+      })
+      .then(result => {
+        if (!result) return;
+        setLoadingState(false);
 
         if (result?.pdfFileUrl) {
           showToast('Certificate generated and saved to Drive. Opening PDF…', 'success');
@@ -1608,15 +1652,11 @@
           showToast('Note: This employee is not fully certified according to records.', 'warning');
         }
       })
-      .withFailureHandler(err => {
-        if (printButton) {
-          printButton.removeAttribute('disabled');
-          printButton.textContent = originalLabel || 'Generate Certificate';
-        }
+      .catch(err => {
+        setLoadingState(false);
         const message = err && err.message ? err.message : 'Could not create certificate. Please try again.';
         showToast(message, 'error');
-      })
-      .generateCertificatePDF(name, location);
+      });
   }
 
   function setupPrintCertificateButton() {
