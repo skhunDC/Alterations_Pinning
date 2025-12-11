@@ -548,9 +548,13 @@
     }
   ];
 
+  let lastCertificationStatus = null;
+
   document.addEventListener('DOMContentLoaded', () => {
     renderNavigation();
     renderModules();
+    bindIdentityPersistence();
+    restoreIdentityFromStorage();
     loadCertificationStatus();
   });
 
@@ -564,7 +568,7 @@
 
   function renderNavigation() {
     const navList = document.getElementById('navList');
-    navList.innerHTML = modules.map(module => `<li><button onclick="scrollToModule('${module.id}')">${module.id} — ${module.title}</button></li>`).join('');
+    navList.innerHTML = modules.map(module => `<li><button class="nav-link" onclick="navigateToSection('module-${module.id}', this)">${module.id} — ${module.title}</button></li>`).join('');
   }
 
   function renderModules() {
@@ -596,29 +600,33 @@
       </div>`).join('');
     const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
 
+    const sectionId = `module-${module.id}`;
+    const headingId = `${sectionId}-title`;
     return `
-      <article class="module" id="${module.id}">
-        <span class="pill">Module ${module.id.replace('M','')}</span>
-        <h2>${module.title}</h2>
-        <p>${module.intro}</p>
-        <div class="section">
-          <h3>Learning Objectives</h3>
-          <ul>${objectives}</ul>
-        </div>
-        ${sections}
-        <div class="section callout">
-          <strong>Visual/Diagram Descriptions:</strong>
-          <ul>${module.sections.map(s => s.bullets.find(b => b.toLowerCase().includes('diagram') || b.toLowerCase().includes('visual'))).filter(Boolean).map(item => `<li>${item}</li>`).join('') || '<li>See notes above.</li>'}</ul>
-        </div>
-        <div class="quiz" aria-label="quiz for ${module.title}">
-          <h3>Knowledge Check</h3>
-          ${quiz}
-          <div class="quiz-footer">
-            <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
-            <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
+      <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
+        <article class="module" id="${module.id}">
+          <span class="pill">Module ${module.id.replace('M','')}</span>
+          <h2 id="${headingId}" tabindex="-1">${module.title}</h2>
+          <p>${module.intro}</p>
+          <div class="section">
+            <h3>Learning Objectives</h3>
+            <ul>${objectives}</ul>
           </div>
-        </div>
-      </article>
+          ${sections}
+          <div class="section callout">
+            <strong>Visual/Diagram Descriptions:</strong>
+            <ul>${module.sections.map(s => s.bullets.find(b => b.toLowerCase().includes('diagram') || b.toLowerCase().includes('visual'))).filter(Boolean).map(item => `<li>${item}</li>`).join('') || '<li>See notes above.</li>'}</ul>
+          </div>
+          <div class="quiz" aria-label="quiz for ${module.title}">
+            <h3>Knowledge Check</h3>
+            ${quiz}
+            <div class="quiz-footer">
+              <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
+              <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
+            </div>
+          </div>
+        </article>
+      </section>
     `;
   }
 
@@ -657,10 +665,13 @@
     `).join('');
     const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
 
+    const sectionId = `module-${module.id}`;
+    const headingId = `${sectionId}-title`;
     return `
-      <article class="module" id="${module.id}">
+      <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
+        <article class="module" id="${module.id}">
         <span class="pill">Module ${module.id.replace('M','')}</span>
-        <h2>${module.title}</h2>
+        <h2 id="${headingId}" tabindex="-1">${module.title}</h2>
         <p>${module.intro}</p>
 
         <div class="section">
@@ -736,7 +747,8 @@
             <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
           </div>
         </div>
-      </article>
+        </article>
+      </section>
     `;
   }
 
@@ -796,10 +808,13 @@
     const checklist = module.noteChecklist.map(item => `<li>${item}</li>`).join('');
     const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
 
+    const sectionId = `module-${module.id}`;
+    const headingId = `${sectionId}-title`;
     return `
-      <article class="module module-four" id="${module.id}">
+      <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
+        <article class="module module-four" id="${module.id}">
         <span class="pill">Module ${module.id.replace('M','')}</span>
-        <h2>${module.title}</h2>
+        <h2 id="${headingId}" tabindex="-1">${module.title}</h2>
         <p>${module.intro}</p>
 
         <div class="section">
@@ -885,7 +900,8 @@
             <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
           </div>
         </div>
-      </article>
+        </article>
+      </section>
     `;
   }
 
@@ -915,10 +931,13 @@
 
     const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
 
+    const sectionId = `module-${module.id}`;
+    const headingId = `${sectionId}-title`;
     return `
-      <article class="module" id="${module.id}">
+      <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
+        <article class="module" id="${module.id}">
         <span class="pill">Module ${module.id.replace('M','')}</span>
-        <h2>${module.title}</h2>
+        <h2 id="${headingId}" tabindex="-1">${module.title}</h2>
         <p>${module.intro}</p>
 
         <div class="section">
@@ -984,7 +1003,8 @@
             <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
           </div>
         </div>
-      </article>
+        </article>
+      </section>
     `;
   }
 
@@ -1021,10 +1041,13 @@
     const quickChecklist = module.quickChecklist.map(item => `<li>${item}</li>`).join('');
     const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
 
+    const sectionId = `module-${module.id}`;
+    const headingId = `${sectionId}-title`;
     return `
-      <article class="module" id="${module.id}">
+      <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
+        <article class="module" id="${module.id}">
         <span class="pill">Module ${module.id.replace('M','')}</span>
-        <h2>${module.title}</h2>
+        <h2 id="${headingId}" tabindex="-1">${module.title}</h2>
         <p>${module.intro}</p>
 
         <div class="section">
@@ -1110,7 +1133,8 @@
             <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
           </div>
         </div>
-      </article>
+        </article>
+      </section>
     `;
   }
 
@@ -1156,10 +1180,13 @@
     const boundaryList = module.boundaryStatements.map(item => `<li>${item}</li>`).join('');
     const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
 
+    const sectionId = `module-${module.id}`;
+    const headingId = `${sectionId}-title`;
     return `
-      <article class="module module-five" id="${module.id}">
+      <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
+        <article class="module module-five" id="${module.id}">
         <span class="pill">Module ${module.id.replace('M','')}</span>
-        <h2>${module.title}</h2>
+        <h2 id="${headingId}" tabindex="-1">${module.title}</h2>
         <p>${module.intro}</p>
 
         <div class="section">
@@ -1225,7 +1252,8 @@
             <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
           </div>
         </div>
-      </article>
+        </article>
+      </section>
     `;
   }
 
@@ -1275,8 +1303,10 @@
 
     if (google.script && google.script.run) {
       google.script.run.withSuccessHandler(() => {
+        showToast('Module result saved', 'success');
         loadCertificationStatus();
       }).withFailureHandler(err => {
+        showToast('Error saving result. Please retry.', 'error');
         updateModuleResultText(moduleId, false, score, correct, module.quiz.length, `Error saving: ${err}`);
       }).saveModuleResult(moduleId, name, location, score, passed);
     }
@@ -1303,17 +1333,24 @@
   }
 
   function renderCertificationStatus(status) {
+    lastCertificationStatus = status;
     const badge = document.getElementById('certBadge');
     const title = document.getElementById('certStatus');
     const sub = document.getElementById('certSubstatus');
     const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
     const moduleProgress = document.getElementById('moduleProgress');
+    const moduleList = document.getElementById('module-status-list');
     if (!status) return;
 
     const completed = status.completedModules || [];
     const missing = status.missingModules || [];
     const percent = Math.round((completed.length / modules.length) * 100);
     progressFill.style.width = `${percent}%`;
+    const estimatedMinutes = missing.length * 6;
+    if (progressText) {
+      progressText.textContent = `${completed.length} / ${modules.length} modules complete • Estimated ${estimatedMinutes} minutes to finish`;
+    }
 
     if (status.isCertified) {
       badge.textContent = 'Certified Alteration Pinner';
@@ -1336,22 +1373,141 @@
         <p class="status">${isDone ? 'Passed' : 'Pending'}</p>
       </div>`;
     }).join('');
+
+    if (moduleList) {
+      moduleList.innerHTML = modules.map(mod => {
+        const isDone = completed.includes(mod.id);
+        return `<li class="module-status-item ${isDone ? 'status-complete' : 'status-missing'}">${mod.title} — ${isDone ? 'Completed ✅' : 'Not completed ❌'}</li>`;
+      }).join('');
+    }
   }
 
-  function scrollToModule(id) {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  function navigateToSection(sectionId, trigger) {
+    const sections = document.querySelectorAll('.main-section');
+    sections.forEach(section => {
+      if (section.id === sectionId || (sectionId.startsWith('module-') && (section.id === 'modules' || section.id === sectionId))) {
+        section.hidden = false;
+      } else {
+        section.hidden = true;
+      }
+    });
+
+    if (sectionId.startsWith('module-')) {
+      const targetModule = document.getElementById(sectionId);
+      if (targetModule) {
+        targetModule.hidden = false;
+        document.getElementById('modules')?.removeAttribute('hidden');
+        const heading = document.getElementById(`${sectionId}-title`);
+        heading?.focus();
+      }
+    } else if (sectionId === 'dashboard') {
+      document.getElementById('certStatus')?.focus();
+    }
+
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+      const isActive = item.dataset.target === sectionId;
+      item.classList.toggle('active', isActive);
+      if (isActive) {
+        item.setAttribute('aria-current', 'page');
+      } else {
+        item.removeAttribute('aria-current');
+      }
+    });
+
+    if (trigger && typeof trigger.blur === 'function') {
+      trigger.blur();
+    }
   }
 
   function scrollToStatus() {
-    const el = document.getElementById('statusPanel');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    navigateToSection('dashboard');
   }
 
-  function openPrintCertificate() {
+  function openCertificatePrint() {
+    if (lastCertificationStatus && !lastCertificationStatus.isCertified) {
+      showToast('Complete all modules before printing your certificate.', 'info');
+      navigateToSection('dashboard');
+      return;
+    }
     const name = getEmployeeName();
     const location = getEmployeeLocation();
     const url = `print.html?name=${encodeURIComponent(name || '')}&location=${encodeURIComponent(location || '')}`;
     window.open(url, '_blank');
+  }
+
+  function openPrintCertificate() {
+    openCertificatePrint();
+  }
+
+  function bindIdentityPersistence() {
+    const nameInput = document.getElementById('employeeName');
+    const locationInput = document.getElementById('employeeLocation');
+    nameInput?.addEventListener('input', () => persistIdentity());
+    locationInput?.addEventListener('input', () => persistIdentity());
+  }
+
+  function persistIdentity() {
+    try {
+      localStorage.setItem('dublinCertEmployeeName', getEmployeeName());
+      localStorage.setItem('dublinCertEmployeeLocation', getEmployeeLocation());
+    } catch (err) {
+      console.log('Local storage unavailable', err);
+    }
+  }
+
+  function restoreIdentityFromStorage() {
+    try {
+      const name = localStorage.getItem('dublinCertEmployeeName');
+      const location = localStorage.getItem('dublinCertEmployeeLocation');
+      if (name) {
+        document.getElementById('employeeName').value = name;
+      }
+      if (location) {
+        document.getElementById('employeeLocation').value = location;
+      }
+      if (name) {
+        loadCertificationStatus();
+      }
+    } catch (err) {
+      console.log('Local storage unavailable', err);
+    }
+  }
+
+  function showToast(message, type = 'info') {
+    const toast = document.getElementById('global-toast');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.className = `toast toast--${type}`;
+    toast.style.opacity = '1';
+    setTimeout(() => {
+      toast.style.opacity = '0';
+    }, 3200);
+  }
+
+  function loadAdminSummary() {
+    const tbody = document.getElementById('admin-summary-body');
+    if (google.script && google.script.run) {
+      google.script.run.withSuccessHandler(rows => {
+        if (!Array.isArray(rows) || rows.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No results yet.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = rows.map(row => `
+          <tr>
+            <td>${row.employeeName || ''}</td>
+            <td>${row.employeeLocationOrId || ''}</td>
+            <td>${(row.modulesPassed || []).join(', ') || '—'}</td>
+            <td>${(row.modulesFailed || []).join(', ') || '—'}</td>
+            <td>${row.isCertified ? 'Yes' : 'No'}</td>
+            <td>${row.lastUpdated ? new Date(row.lastUpdated).toLocaleString() : ''}</td>
+          </tr>
+        `).join('');
+        showToast('Admin summary loaded', 'success');
+      }).withFailureHandler(err => {
+        showToast('Error loading summary', 'error');
+        tbody.innerHTML = `<tr><td colspan="6">${err}</td></tr>`;
+      }).getSummaryByEmployee();
+    }
   }
 </script>
