@@ -1,7 +1,12 @@
 const SPREADSHEET_NAME = 'Alterations Pinning Certification';
 const MODULE_RESULTS_SHEET = 'ModuleResults';
 const MODULE_HEADERS = ['Timestamp', 'EmployeeName', 'LocationOrID', 'ModuleID', 'Score', 'Passed'];
-const CERTIFICATE_FOLDER_NAME = 'Alterations Pinning Certificates';
+
+// Reusable Google Doc certificate template for Dublin Cleaners
+var CERTIFICATE_TEMPLATE_ID = '17yjalGF_nZEw_mWVQm9vlme_eoAYHLbBPw7nruiG1QQ';
+
+// Folder to store generated certificates
+var CERTIFICATE_FOLDER_NAME = 'Alterations Pinning Certificates';
 
 function include(filename) {
   const name = (filename || '').toString().trim();
@@ -111,6 +116,50 @@ function getOrCreateCertificateFolder_() {
     return folders.next();
   }
   return DriveApp.createFolder(CERTIFICATE_FOLDER_NAME);
+}
+
+function generateCertificateFromTemplate(employeeName, employeeLocation) {
+  if (!employeeName || !employeeName.trim()) {
+    throw new Error('Employee name is required to generate a certificate.');
+  }
+
+  const cleanName = employeeName.trim();
+  const cleanLocation = employeeLocation ? String(employeeLocation).trim() : '';
+  const folder = getOrCreateCertificateFolder_();
+
+  const status = getEmployeeCertificationStatus(cleanName);
+  const isCertified = status && status.isCertified;
+
+  const templateFile = DriveApp.getFileById(CERTIFICATE_TEMPLATE_ID);
+  const today = new Date();
+  const tz = Session.getScriptTimeZone();
+  const dateStamp = Utilities.formatDate(today, tz, 'yyyy-MM-dd');
+  const docName = 'Alterations Pinning Certificate - ' + cleanName + ' - ' + dateStamp;
+
+  const newFile = templateFile.makeCopy(docName, folder);
+  const newDoc = DocumentApp.openById(newFile.getId());
+  const body = newDoc.getBody();
+
+  const prettyDate = Utilities.formatDate(today, tz, 'MMMM d, yyyy');
+
+  body.replaceText('{{EMPLOYEE_NAME}}', cleanName);
+  body.replaceText('{{CERTIFICATE_DATE}}', prettyDate);
+  body.replaceText('{{STORE_LOCATION}}', cleanLocation || '');
+  body.replaceText('{{PROGRAM_NAME}}', 'Alterations Pinning Certification Program');
+
+  newDoc.saveAndClose();
+
+  const pdfBlob = newFile.getAs('application/pdf');
+  pdfBlob.setName(docName + '.pdf');
+  const pdfFile = folder.createFile(pdfBlob);
+
+  return {
+    docFileId: newFile.getId(),
+    docFileUrl: newFile.getUrl(),
+    pdfFileId: pdfFile.getId(),
+    pdfFileUrl: pdfFile.getUrl(),
+    isCertified: !!isCertified
+  };
 }
 
 function buildCertificateContent_(body, employeeName, employeeLocationOrId, status, issuedOn) {

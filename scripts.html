@@ -599,6 +599,7 @@
     renderModules();
     bindIdentityPersistence();
     restoreIdentityFromStorage();
+    setupPrintCertificateButton();
     loadCertificationStatus();
   });
 
@@ -1566,42 +1567,63 @@
     navigateToSection('dashboard');
   }
 
-  function openPrintCertificate() {
+  function handlePrintCertificate() {
     const name = getEmployeeName();
     if (!name) {
-      showToast('Enter employee name before printing a certificate.', 'error');
+      showToast('Enter employee name before generating a certificate.', 'error');
       document.getElementById('employeeName')?.focus();
       return;
     }
 
     const location = getEmployeeLocation();
     const printButton = document.getElementById('print-certificate-button');
+    const originalLabel = printButton ? printButton.textContent : '';
 
     if (!google.script || !google.script.run) {
       showToast('Certificate creation is only available when running in Google Apps Script.', 'error');
       return;
     }
 
-    printButton?.setAttribute('disabled', 'disabled');
-    showToast('Creating your certificate in Google Drive…', 'info');
+    if (printButton) {
+      printButton.setAttribute('disabled', 'disabled');
+      printButton.textContent = 'Generating…';
+    }
+    showToast('Generating your certificate from the Dublin Cleaners template…', 'info');
 
     google.script.run
       .withSuccessHandler(result => {
-        printButton?.removeAttribute('disabled');
-        if (result?.fileUrl) {
-          const action = result.status === 'existing' ? 'Found your saved certificate in Drive. Opening now.' : 'Certificate created and saved to Drive. Opening now.';
-          showToast(action, 'success');
-          window.open(result.fileUrl, '_blank', 'noopener');
+        if (printButton) {
+          printButton.removeAttribute('disabled');
+          printButton.textContent = originalLabel || 'Generate Certificate';
+        }
+
+        if (result?.pdfFileUrl) {
+          showToast('Certificate generated and saved to Drive. Opening PDF…', 'success');
+          window.open(result.pdfFileUrl, '_blank', 'noopener');
         } else {
-          showToast('Certificate created, but no file link was returned.', 'info');
+          showToast('Certificate generated, but no PDF link was returned.', 'info');
+        }
+
+        if (result && result.isCertified === false) {
+          showToast('Note: This employee is not fully certified according to records.', 'warning');
         }
       })
       .withFailureHandler(err => {
-        printButton?.removeAttribute('disabled');
+        if (printButton) {
+          printButton.removeAttribute('disabled');
+          printButton.textContent = originalLabel || 'Generate Certificate';
+        }
         const message = err && err.message ? err.message : 'Could not create certificate. Please try again.';
         showToast(message, 'error');
       })
-      .ensureCertificateFile(name, location);
+      .generateCertificateFromTemplate(name, location);
+  }
+
+  function setupPrintCertificateButton() {
+    const btn = document.getElementById('print-certificate-button');
+    if (btn) {
+      btn.addEventListener('click', handlePrintCertificate);
+    }
   }
 
   function bindIdentityPersistence() {
