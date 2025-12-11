@@ -212,54 +212,117 @@
       title: 'Pinning by Garment Type',
       intro: 'Apply garment-specific pinning with smooth fabric, balanced measurements, and verified customer pins.',
       objectives: [
+        'Pin pants, skirts, simple dresses, and sleeves in the correct location and orientation.',
         'Smooth fabric before measuring—never stretch.',
-        'Ask handedness to balance men’s inseams.',
-        'Verify customer-pinned garments with a tape measure and record objective numbers.',
-        'Enforce one patch per garment and pin placement clarity.'
+        'Ask male customers if they are left- or right-handed to balance inseams.',
+        'Pair one patch to one garment and avoid loose patches.',
+        'Guide customers to pick a specific patch spot—no “wherever it looks best.”',
+        'Verify customer-pinned garments with a tape measure and confirm the final measurement.',
+        'Record objective final dimensions for every pinned garment.'
       ],
-      sections: [
+      garmentTypes: [
         {
-          title: 'Garment Guidance',
-          bullets: [
-            'Pants: smooth both legs, measure inseam, pin horizontally at hem and knee if needed.',
-            'Skirts/Dresses: check hang, pin hem evenly, avoid pulling bias fabrics.',
-            'Jackets: pin sleeve length at wrist bone; note lining if present.'
-          ]
+          name: 'Pants (hems + simple waist)',
+          csrScope: 'CSR approved',
+          pinning: 'Pin horizontally at the new hem line on both legs; add 1–2 pins near side seams for waist adjusts.',
+          pins: '3–5 pins around each hem keeps the line straight.',
+          record: '“Shorten inseam to 30 inches.” “Take in waist to 34 inches.”',
+          balance: 'Smooth both legs first; ask handedness to avoid left/right imbalance.'
         },
         {
-          title: 'Customer Fit & Patches',
-          bullets: [
-            'Ask “Are you left- or right-handed? This helps us balance your inseam.”',
-            'If customer pins at home: bring tape measure, verify final length, repin with safety pins.',
-            'Patch protocol: pin each patch to its garment; never bulk-send loose patches.'
-          ]
+          name: 'Skirts (hems)',
+          csrScope: 'CSR approved',
+          pinning: 'Pin evenly around the hem; keep bias fabrics flat without pulling.',
+          pins: '4–6 pins spaced evenly at seams and front/back centers.',
+          record: '“Shorten hem to 38 inches from waist to floor with heels.”',
+          balance: 'Check skirt hangs level on platform; smooth before each pin.'
         },
         {
-          title: 'Visual Description',
-          bullets: [
-            'Side-by-side: smoothed pant leg with horizontal pins vs. stretched fabric with diagonal pins.',
-            'Patch placement card taped to garment with arrow to pinned patch location.'
-          ]
+          name: 'Simple dresses (length only)',
+          csrScope: 'CSR approved — escalate complex bodice or beading to Module 5.',
+          pinning: 'Pin horizontally at the new length; avoid stretching knit or bias fabric.',
+          pins: '3–5 pins across front/back; mirror left/right heights.',
+          record: '“Finished length 40 inches shoulder to hem.”',
+          balance: 'Keep dress straight on hanger or platform; smooth along the hang line.'
+        },
+        {
+          name: 'Simple sleeves (length)',
+          csrScope: 'CSR approved',
+          pinning: 'Pin at wrist bone parallel to cuff; note lining if present.',
+          pins: '2–3 pins around the sleeve circumference.',
+          record: '“Shorten sleeves to 23 inches from shoulder seam.”',
+          balance: 'Check both sleeves match and hang evenly when arms relaxed.'
         }
       ],
+      smoothRules: {
+        headline: 'Smooth, Don’t Stretch',
+        bullets: [
+          'Before measuring, smooth the fabric along the body line or hem so it lies flat.',
+          'Never tug to “help” the measuring tape—stretching adds 1/2”–1” and ruins accuracy.',
+          'If fabric rebounds when you let go, you stretched it. Reset, smooth, and re-measure.'
+        ]
+      },
+      handedness: {
+        prompt: 'Ask male customers: “Are you left- or right-handed? It helps us balance your inseam.”',
+        reason: 'Right-handed customers often load weight on the right leg. Knowing this keeps hems balanced across both legs.',
+        action: 'Smooth both legs, pin both hems, and double-check the measured inseam on each side.'
+      },
+      patchProtocol: {
+        pairing: [
+          'One patch must be pinned to one garment—no loose patches in a bag.',
+          'If three uniforms arrive with three patches, each patch gets pinned to its exact uniform.',
+          'Leave a small note or tape arrow showing which pocket/panel the patch belongs to.'
+        ],
+        placement: [
+          'If a customer says “wherever it looks best,” guide them to pick a spot now.',
+          'Have the customer pin while wearing or on a flat surface, or assist them and pin that exact location.',
+          'Avoid vague notes like “patch on front.” Choose side/height and secure it with a safety pin.'
+        ]
+      },
+      customerPinned: {
+        steps: [
+          'Bring out a tape measure and measure the pinned length/spot.',
+          'Confirm verbally: “You want the inseam to be 29 inches at this pin, correct?”',
+          'Replace loose straight pins with closed safety pins if the garment is leaving the store.',
+          'Record the final measurement in notes: “Shorten inseam to 29 inches (customer pinned).”'
+        ],
+        reason: 'Verification prevents miscommunication and documents the exact, objective request.'
+      },
+      recording: [
+        { item: 'Pants', examples: ['Shorten inseam to 30 inches.', 'Take in waist to 34 inches.'] },
+        { item: 'Skirts/Dresses', examples: ['Shorten hem to 38 inches waist-to-floor in heels.', 'Finished length 40 inches shoulder to hem.'] },
+        { item: 'Sleeves', examples: ['Shorten sleeves to 23 inches from shoulder seam.', 'Match both sleeves at the wrist bone.'] },
+        { item: 'Patches', examples: ['Patch pinned to right chest above pocket.', 'One patch per garment; location noted.'] }
+      ],
+      quickChecklist: [
+        'Smooth then measure; never stretch to reach the tape.',
+        'Pin horizontally and mirror left/right sides.',
+        'Ask handedness for men and double-check both legs.',
+        'One patch per garment with a chosen spot, not a guess later.',
+        'Customer-pinned? Verify with tape and write the final dimension.'
+      ],
       quiz: [
-        { type: 'mcq', question: 'What must you do with a customer-pinned garment?', options: [
-          { label: 'Trust the pinning and skip measuring', correct: false },
-          { label: 'Verify with a tape measure and note final length', correct: true },
-          { label: 'Remove all pins and guess', correct: false }
+        { type: 'mcq', question: 'How should hems be pinned for pants or skirts?', options: [
+          { label: 'Vertically with one pin', correct: false },
+          { label: 'Horizontally at the new hem with multiple pins to keep it straight', correct: true },
+          { label: 'No pins—just fold the fabric', correct: false }
         ]},
-        { type: 'mcq', question: 'How do you balance inseams for men?', options: [
-          { label: 'Ask handedness and measure both sides', correct: true },
-          { label: 'Pin only the right leg', correct: false },
-          { label: 'Use vertical pins on the long leg', correct: false }
+        { type: 'mcq', question: 'Why ask male customers if they are left- or right-handed?', options: [
+          { label: 'It changes the fabric type', correct: false },
+          { label: 'It helps balance inseams because weight often favors one leg', correct: true },
+          { label: 'It is required for payment', correct: false }
         ]},
-        { type: 'tf', question: 'Stretching fabric while measuring improves accuracy.', answer: false },
+        { type: 'tf', question: 'Stretching fabric while measuring can add extra length and make the result wrong.', answer: true },
         { type: 'mcq', question: 'Patch handling rule:', options: [
-          { label: 'Send patches loose; tailor will sort', correct: false },
-          { label: 'Pin each patch to its correct garment', correct: true },
-          { label: 'Tape all patches together', correct: false }
+          { label: 'Send patches loose and sort later', correct: false },
+          { label: 'Pin each patch to its specific garment and mark the spot', correct: true },
+          { label: 'Stack patches together for speed', correct: false }
         ]},
-        { type: 'short', question: 'Where should pins sit on hems?', answers: ['horizontally', 'horizontal', 'parallel to the floor'] }
+        { type: 'mcq', question: 'When a customer brings in a pinned garment, you must…', options: [
+          { label: 'Trust the pin and skip measuring', correct: false },
+          { label: 'Measure the pinned spot, confirm the number aloud, and record the final measurement', correct: true },
+          { label: 'Remove pins to avoid confusion', correct: false }
+        ]}
       ]
     },
     {
@@ -396,6 +459,9 @@
     }
     if (module.id === 'M2') {
       return moduleTwoTemplate(module);
+    }
+    if (module.id === 'M3') {
+      return moduleThreeTemplate(module);
     }
     const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
     const sections = module.sections.map(section => `
@@ -634,6 +700,132 @@
         <div class="section scenario-grid" aria-label="Pin safety scenarios">
           <h3>Pin Safety Scenarios</h3>
           ${scenarios}
+        </div>
+
+        <div class="quiz" aria-label="quiz for ${module.title}">
+          <h3>Knowledge Check</h3>
+          ${quiz}
+          <div class="quiz-footer">
+            <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
+            <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  // Module 3 focuses on garment-specific pinning, smoothing fabric, handedness, patches, and customer-pinned verification.
+  // New layout classes are defined in styles.html and scoped with the prefix module-three- where applicable.
+  function moduleThreeTemplate(module) {
+    const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
+
+    const garmentCards = module.garmentTypes.map(type => `
+      <div class="garment-card">
+        <div class="garment-card__header">
+          <span class="pill pill-quiet">${type.csrScope}</span>
+          <h3>${type.name}</h3>
+        </div>
+        <ul>
+          <li><strong>Where to pin:</strong> ${type.pinning}</li>
+          <li><strong>Recommended pins:</strong> ${type.pins}</li>
+          <li><strong>Record it as:</strong> ${type.record}</li>
+          <li><strong>Stay balanced:</strong> ${type.balance}</li>
+        </ul>
+      </div>
+    `).join('');
+
+    const smoothList = module.smoothRules.bullets.map(item => `<li>${item}</li>`).join('');
+    const pairingList = module.patchProtocol.pairing.map(item => `<li>${item}</li>`).join('');
+    const placementList = module.patchProtocol.placement.map(item => `<li>${item}</li>`).join('');
+    const verificationSteps = module.customerPinned.steps.map((step, idx) => `<li><strong>Step ${idx + 1}:</strong> ${step}</li>`).join('');
+    const recordingRows = module.recording.map(row => `
+      <div class="metric-row">
+        <div class="metric-label">${row.item}</div>
+        <div class="metric-examples">${row.examples.map(ex => `<p>${ex}</p>`).join('')}</div>
+      </div>
+    `).join('');
+    const quickChecklist = module.quickChecklist.map(item => `<li>${item}</li>`).join('');
+    const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
+
+    return `
+      <article class="module" id="${module.id}">
+        <span class="pill">Module ${module.id.replace('M','')}</span>
+        <h2>${module.title}</h2>
+        <p>${module.intro}</p>
+
+        <div class="section">
+          <h3>Learning Objectives</h3>
+          <ul>${objectives}</ul>
+        </div>
+
+        <div class="section garment-grid" aria-label="Garment pinning guidance">
+          ${garmentCards}
+        </div>
+
+        <div class="section callout-card" aria-label="Smooth fabric guidance">
+          <div>
+            <p class="eyebrow">Accuracy Rule</p>
+            <h3>${module.smoothRules.headline}</h3>
+            <ul>${smoothList}</ul>
+          </div>
+          <div class="stretch-risk">
+            <p class="badge-lite">Do not stretch</p>
+            <p>Stretching a pant leg can add 1/2”–1” instantly. Smooth first, then measure.</p>
+          </div>
+        </div>
+
+        <div class="section two-column" aria-label="Handedness and balance">
+          <div class="card-lite">
+            <p class="eyebrow">Balance tip for men</p>
+            <h3>Left- vs Right-Handed Inseam Check</h3>
+            <p class="micro-copy">${module.handedness.prompt}</p>
+            <ul>
+              <li>${module.handedness.reason}</li>
+              <li>${module.handedness.action}</li>
+            </ul>
+          </div>
+          <div class="card-lite">
+            <p class="eyebrow">Pin orientation</p>
+            <h3>Keep pins horizontal</h3>
+            <p>Mirror pins on both sides so hems stay even when the garment hangs or travels.</p>
+          </div>
+        </div>
+
+        <div class="section two-column" aria-label="Patch protocol and placement">
+          <div class="card-lite">
+            <p class="eyebrow">Patch protocol</p>
+            <h3>One Patch, One Garment</h3>
+            <ul>${pairingList}</ul>
+          </div>
+          <div class="card-lite">
+            <p class="eyebrow">Placement coaching</p>
+            <h3>Pick the Exact Spot</h3>
+            <ul>${placementList}</ul>
+          </div>
+        </div>
+
+        <div class="section verification" aria-label="Customer pinned garment verification">
+          <div>
+            <p class="eyebrow">Customer-pinned garments</p>
+            <h3>Verify Before You Save</h3>
+            <ul>${verificationSteps}</ul>
+            <p class="micro-copy">${module.customerPinned.reason}</p>
+          </div>
+          <div class="verification-note">
+            <p class="badge-lite">Script</p>
+            <p>“You want this hem at <strong>29 inches</strong> right where you pinned it, correct? I’ll note <em>‘shorten inseam to 29 inches (customer pinned)’</em>.”</p>
+          </div>
+        </div>
+
+        <div class="section metric-table" aria-label="Recording final measurements">
+          <h3>Recording Final, Objective Measurements</h3>
+          <p class="micro-copy">Use final numbers, not guesses or plus/minus shorthand.</p>
+          ${recordingRows}
+        </div>
+
+        <div class="section checklist-lite" aria-label="Quick checklist">
+          <h3>Quick Pinning Checklist</h3>
+          <ul>${quickChecklist}</ul>
         </div>
 
         <div class="quiz" aria-label="quiz for ${module.title}">
