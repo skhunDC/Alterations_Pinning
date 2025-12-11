@@ -123,6 +123,40 @@
   .quiz-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
   .status-text { font-weight: 700; }
 
+  /* Module 1 specific additions */
+  .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .concept-card { padding: 14px; border: 1px solid #e5e7eb; border-radius: 12px; background: #f9fafb; box-shadow: inset 0 1px 0 #fff; }
+  .concept-card.highlight { background: #fff7ed; border-color: #fcd34d; }
+  .list-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  .concept-card ul { margin: 4px 0; }
+  .tip { margin-top: 8px; font-size: 0.95rem; color: #374151; }
+
+  .rule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+  .rule-card { padding: 12px; border-radius: 10px; background: #eef2f7; border: 1px solid #dbe0e6; }
+  .rule-card h4 { margin: 0 0 6px 0; }
+
+  .hem-callout { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; align-items: center; padding: 14px; border-radius: 12px; background: linear-gradient(135deg, #ecfdf3, #fefce8); border: 1px solid #c5e1a5; }
+  .hem-callout ul { margin: 6px 0; }
+  .hem-visual { text-align: center; border-left: 1px dashed #c9c9c9; padding-left: 12px; }
+  .badge-lite { display: inline-block; padding: 6px 10px; border-radius: 999px; background: #0f5132; color: #fff; font-weight: 700; }
+
+  .scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+  .scenario-card { padding: 12px; border-radius: 10px; border: 1px solid #e5e7eb; background: #fff; box-shadow: var(--card-shadow); }
+  .scenario-card .bad { color: #991b1b; font-weight: 700; }
+  .scenario-card .good { color: #0f5132; font-weight: 700; }
+
+  .practice-grid { background: #fff; border-radius: 12px; border: 1px solid #e5e7eb; padding: 12px; }
+  .practice-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; }
+  .practice-card { padding: 12px; border-radius: 10px; border: 1px solid #dbe0e6; background: #f8fafc; }
+  .practice-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .practice-card input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; margin: 8px 0; }
+  .tag { background: #e7f4f1; color: #0b5f52; padding: 4px 8px; border-radius: 999px; font-weight: 700; font-size: 0.85rem; }
+  .hint { margin: 0; font-size: 0.9rem; color: #374151; }
+
+  .script-card { padding: 12px; border-radius: 12px; border: 1px solid #e5e7eb; background: #fff7ed; }
+
+  .sr-only { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
   @media (max-width: 960px) {
     .dashboard { grid-template-columns: 1fr; }
     .layout { grid-template-columns: 1fr; }
