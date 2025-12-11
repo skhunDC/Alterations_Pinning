@@ -1575,41 +1575,32 @@
     }
 
     const location = getEmployeeLocation();
+    const printButton = document.getElementById('print-certificate-button');
 
     if (!google.script || !google.script.run) {
-      openCertificatePrintWindow(name, location);
+      showToast('Certificate creation is only available when running in Google Apps Script.', 'error');
       return;
     }
 
-    fetchCertificationStatusByName(name)
-      .then(status => {
-        if (!status) {
-          showToast('Click Save/Refresh to load your certification status before printing.', 'info');
-          loadCertificationStatus();
-          return;
-        }
+    printButton?.setAttribute('disabled', 'disabled');
+    showToast('Creating your certificate in Google Drive…', 'info');
 
-        if (!status.isCertified) {
-          showToast('Complete all modules before printing your certificate.', 'info');
-          navigateToSection('dashboard');
-          return;
+    google.script.run
+      .withSuccessHandler(result => {
+        printButton?.removeAttribute('disabled');
+        if (result?.fileUrl) {
+          showToast('Certificate created and saved to Drive. Opening now.', 'success');
+          window.open(result.fileUrl, '_blank', 'noopener');
+        } else {
+          showToast('Certificate created, but no file link was returned.', 'info');
         }
-
-        openCertificatePrintWindow(name, location);
       })
-      .catch(err => {
-        console.log('Certificate status check failed', err);
-        openCertificatePrintWindow(name, location);
-      });
-  }
-
-  function openCertificatePrintWindow(name, location) {
-    const url = `print.html?name=${encodeURIComponent(name)}&location=${encodeURIComponent(location || '')}`;
-    window.open(url, '_blank', 'noopener');
-  }
-
-  function openCertificatePrint() {
-    openPrintCertificate();
+      .withFailureHandler(err => {
+        printButton?.removeAttribute('disabled');
+        const message = err && err.message ? err.message : 'Could not create certificate. Please try again.';
+        showToast(message, 'error');
+      })
+      .createCertificateFile(name, location);
   }
 
   function bindIdentityPersistence() {
