@@ -135,13 +135,13 @@ function applyCertificateBands_(doc, borderBlob) {
   header.clear();
   const headerPara = header.appendParagraph('');
   headerPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  headerPara.appendInlineImage(safeBlob).setWidth(650);
+  headerPara.appendInlineImage(safeBlob).setWidth(600);
 
   const footer = doc.getFooter() || doc.addFooter();
   footer.clear();
   const footerPara = footer.appendParagraph('');
   footerPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  footerPara.appendInlineImage(safeBlob).setWidth(650);
+  footerPara.appendInlineImage(safeBlob).setWidth(600);
 }
 
 function findExistingCertificateArtifacts_(employeeName) {
@@ -279,8 +279,10 @@ function generateCertificatePDF(employeeName, employeeLocationOrId) {
   logoBlob.setName('logo.png');
   const logoPara = cell.appendParagraph('');
   const logoImage = logoPara.appendInlineImage(logoBlob);
-  logoImage.setWidth(120);
-  logoPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  logoImage.setWidth(160).setHeight(90);
+  logoPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER)
+    .setSpacingBefore(6)
+    .setSpacingAfter(0);
 
   doc.saveAndClose();
 
