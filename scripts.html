@@ -3,56 +3,103 @@
     {
       id: 'M1',
       title: 'Customer Instruction & Measurement Philosophy',
-      intro: 'Teach customers and CSRs to speak in objective, final measurements so tailors deliver the exact outcome.',
+      intro: 'Shift every conversation from “a bit” or “2 inches” to precise, final measurements that tailors can trust.',
       objectives: [
-        'Differentiate subjective vs. objective notes and always capture final measurements.',
-        'Replace +/- shorthand with statements like “shorten inseam to 30 inches.”',
-        'Clarify that “hem” is a garment part, not a measurement or verb.',
-        'Prevent complaints by repeating back exact measurements before logging.'
+        'Explain subjective vs. objective alteration language.',
+        'Avoid +/- shorthand and capture the final measurement instead.',
+        'Use phrases like “INSEAM 32” or “Shorten inseam to 30 inches.”',
+        'Describe “hem” correctly as the folded, sewn edge—not a verb or a measurement.',
+        'Spot and rewrite vague notes into clear instructions that prevent complaints.',
+        'Model confirmation scripts so customers agree to the recorded measurement.'
       ],
-      sections: [
+      vocabulary: {
+        subjective: [
+          'Shorten a bit',
+          'Take in a little',
+          'Fix the hem',
+          'Make it tighter'
+        ],
+        objective: [
+          'Shorten inseam to 30 inches',
+          'Take in waist to 34 inches',
+          'Shorten sleeves to 23 inches from shoulder seam',
+          'Finished hem should measure 30 inches inseam'
+        ]
+      },
+      measurementRules: [
         {
-          title: 'Overview & Vocabulary',
-          bullets: [
-            'Objective notes remove guesswork: ✅ “Shorten inseam to 30 inches.”',
-            'Subjective notes cause rework: ❌ “Hem 2 inches,” “Shorten a bit.”',
-            'Standard phrasing: “INSEAM 32” instantly conveys how to measure.'
-          ]
+          title: 'No Plus/Minus Shorthand',
+          details: '“-2 inches” or “+1 inch” only describe the change. Tailors need the final number: “Shorten hem to 36 inches from floor.”'
         },
         {
-          title: 'Examples & Callouts',
-          bullets: [
-            'Complaint prevention: vague requests like “fix the hem” lead to re-dos.',
-            'Sample form notes: garment + part + final measurement + balance check.',
-            'Repeat-back script: “I’ll note ‘shorten inseam to 30 inches.’ Is that right?”'
-          ]
+          title: 'Final Measurement Language',
+          details: 'Record what the customer wants to end up with. Example: “Take in waist to 36 inches” instead of “Take in 2 inches.”'
         },
         {
-          title: 'Visual Description',
-          bullets: [
-            'Diagram: side-by-side note cards labeled “Good: inseam 30” vs “Bad: -2 hem.”',
-            'Highlight “hem” as the folded sewn edge, not a number.'
-          ]
+          title: 'Standard Format',
+          details: 'Use clear formats that travel well: “INSEAM 32,” “OUTSEAM 40,” “WAIST 36.”'
+        }
+      ],
+      hemCallout: {
+        heading: '“Hem” means the finished edge',
+        points: [
+          'It is a part of the garment, not a measurement.',
+          'Wrong: “Hem pants,” “Hem 2 inches.”',
+          'Right: “Shorten pants so finished hem is 30 inches inseam.”'
+        ]
+      },
+      complaintScenarios: [
+        {
+          bad: '“Hem pants.”',
+          result: 'Pants end up shorter than the customer expected; tailor guessed the target length.',
+          fix: '“Shorten inseam to 30 inches; customer wearing normal shoes.”'
+        },
+        {
+          bad: '“-2 inches from existing hem.”',
+          result: 'Two staff members measure differently; finished length is uneven.',
+          fix: '“Finished hem 36 inches from the floor; measure with customer standing straight.”'
+        },
+        {
+          bad: '“Take in waist a little.”',
+          result: 'Waist too tight; customer cannot button comfortably.',
+          fix: '“Take in waist to 34 inches; confirm comfortable when seated.”'
+        }
+      ],
+      practicePrompts: [
+        {
+          bad: '“Shorten a bit.”',
+          placeholder: 'Rewrite with a final inseam measurement…',
+          example: '“Shorten inseam to 29 inches; balanced on both legs.”'
+        },
+        {
+          bad: '“Hem 2 inches.”',
+          placeholder: 'State the final length instead of the change…',
+          example: '“Finished hem 37 inches from floor with dress shoes.”'
+        },
+        {
+          bad: '“Take in 2 inches.”',
+          placeholder: 'Record the target waist size…',
+          example: '“Take in waist to 36 inches; customer can sit comfortably.”'
         }
       ],
       quiz: [
         { type: 'mcq', question: 'Which is an objective alteration note?', options: [
           { label: 'Hem 2 inches', correct: false },
           { label: 'Shorten inseam to 30 inches', correct: true },
-          { label: 'Take in slightly', correct: false }
+          { label: 'Make it tighter', correct: false }
         ]},
         { type: 'tf', question: '“Hem 2 inches” is a clear, objective instruction.', answer: false },
-        { type: 'mcq', question: 'Best rewrite for “shorten a bit”?', options: [
-          { label: 'Shorten inseam to 29 inches', correct: true },
-          { label: 'Shorten slightly', correct: false },
-          { label: 'Leave it to the tailor', correct: false }
+        { type: 'mcq', question: 'Why do we avoid +/- shorthand like “-2”?', options: [
+          { label: 'Tailors enjoy guessing the final length', correct: false },
+          { label: 'It hides the final measurement the tailor must sew to', correct: true },
+          { label: 'It is harder to type', correct: false }
         ]},
-        { type: 'short', question: 'What measurement style should you record?', answers: ['final objective measurement', 'objective measurement', 'final measurement'] },
-        { type: 'mcq', question: 'Why avoid +/- shorthand?', options: [
-          { label: 'Tailors enjoy guessing', correct: false },
-          { label: 'It hides the final desired length', correct: true },
-          { label: 'It is faster for data entry', correct: false }
-        ]}
+        { type: 'mcq', question: 'Correct meaning of “hem”:', options: [
+          { label: 'A verb meaning shorten', correct: false },
+          { label: 'The folded and sewn edge of the garment', correct: true },
+          { label: 'Any measurement on pants', correct: false }
+        ]},
+        { type: 'short', question: 'Rewrite “Take in 2 inches” as a final measurement.', answers: ['take in waist to', 'waist to', 'take waist to'] }
       ]
     },
     {
@@ -285,6 +332,9 @@
   }
 
   function moduleTemplate(module) {
+    if (module.id === 'M1') {
+      return moduleOneTemplate(module);
+    }
     const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
     const sections = module.sections.map(section => `
       <div class="section">
@@ -307,6 +357,124 @@
           <strong>Visual/Diagram Descriptions:</strong>
           <ul>${module.sections.map(s => s.bullets.find(b => b.toLowerCase().includes('diagram') || b.toLowerCase().includes('visual'))).filter(Boolean).map(item => `<li>${item}</li>`).join('') || '<li>See notes above.</li>'}</ul>
         </div>
+        <div class="quiz" aria-label="quiz for ${module.title}">
+          <h3>Knowledge Check</h3>
+          ${quiz}
+          <div class="quiz-footer">
+            <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
+            <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function moduleOneTemplate(module) {
+    const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
+    const subjectiveList = module.vocabulary.subjective.map(item => `<li>❌ ${item}</li>`).join('');
+    const objectiveList = module.vocabulary.objective.map(item => `<li>✅ ${item}</li>`).join('');
+    const rules = module.measurementRules.map(rule => `
+      <div class="rule-card">
+        <h4>${rule.title}</h4>
+        <p>${rule.details}</p>
+      </div>
+    `).join('');
+    const hemPoints = module.hemCallout.points.map(point => `<li>${point}</li>`).join('');
+    const scenarios = module.complaintScenarios.map(scenario => `
+      <div class="scenario-card">
+        <p class="eyebrow">Bad Note</p>
+        <p class="bad">${scenario.bad}</p>
+        <p class="eyebrow">Complaint</p>
+        <p>${scenario.result}</p>
+        <p class="eyebrow">Corrected Note</p>
+        <p class="good">${scenario.fix}</p>
+      </div>
+    `).join('');
+    const practices = module.practicePrompts.map((prompt, idx) => `
+      <div class="practice-card">
+        <div class="practice-header">
+          <p class="eyebrow">Rewrite Prompt ${idx + 1}</p>
+          <span class="tag">Practice</span>
+        </div>
+        <p class="bad">${prompt.bad}</p>
+        <label class="sr-only" for="practice-${idx}">Rewrite prompt ${idx + 1}</label>
+        <input id="practice-${idx}" type="text" placeholder="${prompt.placeholder}" />
+        <p class="hint">Example: ${prompt.example}</p>
+      </div>
+    `).join('');
+    const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
+
+    return `
+      <article class="module" id="${module.id}">
+        <span class="pill">Module ${module.id.replace('M','')}</span>
+        <h2>${module.title}</h2>
+        <p>${module.intro}</p>
+
+        <div class="section">
+          <h3>Learning Objectives</h3>
+          <ul>${objectives}</ul>
+        </div>
+
+        <div class="section concept-grid">
+          <div class="concept-card">
+            <h3>Subjective vs Objective</h3>
+            <div class="list-row">
+              <div>
+                <p class="eyebrow">Avoid</p>
+                <ul>${subjectiveList}</ul>
+              </div>
+              <div>
+                <p class="eyebrow">Use Instead</p>
+                <ul>${objectiveList}</ul>
+              </div>
+            </div>
+            <p class="tip">Ask the customer to stand naturally, measure the preferred fit, and document the final number.</p>
+          </div>
+          <div class="concept-card highlight">
+            <h3>Standard Measurement Language</h3>
+            <p>Use formats that travel clearly to the tailor:</p>
+            <ul>
+              <li>INSEAM 30 / INSEAM 32</li>
+              <li>OUTSEAM 40</li>
+              <li>WAIST 36</li>
+              <li>“Shorten sleeves to 23 inches from shoulder seam.”</li>
+            </ul>
+            <p class="tip">Never record “a little” or “+/-” values—capture the final measurement instead.</p>
+          </div>
+        </div>
+
+        <div class="section rule-grid">
+          ${rules}
+        </div>
+
+        <div class="section hem-callout">
+          <div>
+            <p class="eyebrow">Hem Reminder</p>
+            <h3>${module.hemCallout.heading}</h3>
+            <ul>${hemPoints}</ul>
+          </div>
+          <div class="hem-visual">
+            <p class="badge-lite">Garment Part</p>
+            <p>The hem is the folded, sewn edge. It needs a target length to make sense.</p>
+          </div>
+        </div>
+
+        <div class="section scenario-grid">
+          <h3>Complaint Prevention Examples</h3>
+          ${scenarios}
+        </div>
+
+        <div class="section practice-grid" aria-label="Rewrite practice for clearer notes">
+          <h3>Rewrite Practice (not graded)</h3>
+          <p class="subtitle">Rewrite each vague note as a final, objective instruction. Use the examples as guidance.</p>
+          <div class="practice-list">${practices}</div>
+        </div>
+
+        <div class="section script-card">
+          <h3>Confirmation Script</h3>
+          <p>“I’ll note <strong>‘shorten inseam to 30 inches’</strong>. Is that exactly what you want?” Repeat back the final measurement before saving it.</p>
+        </div>
+
         <div class="quiz" aria-label="quiz for ${module.title}">
           <h3>Knowledge Check</h3>
           ${quiz}
