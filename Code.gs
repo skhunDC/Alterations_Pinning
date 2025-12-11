@@ -39,11 +39,13 @@ function getOrCreateCertificationSpreadsheet_() {
   if (existing.hasNext()) {
     return SpreadsheetApp.open(existing.next());
   }
-  return SpreadsheetApp.create(SPREADSHEET_NAME);
+  const created = SpreadsheetApp.create(SPREADSHEET_NAME);
+  getOrCreateModuleResultsSheet_(created);
+  return created;
 }
 
-function getOrCreateModuleResultsSheet_() {
-  const ss = getOrCreateCertificationSpreadsheet_();
+function getOrCreateModuleResultsSheet_(spreadsheet) {
+  const ss = spreadsheet || getOrCreateCertificationSpreadsheet_();
   let sheet = ss.getSheetByName(MODULE_RESULTS_SHEET);
   if (!sheet) {
     sheet = ss.insertSheet(MODULE_RESULTS_SHEET);
