@@ -184,9 +184,7 @@ function replacePlaceholderAcrossDoc_(doc, placeholder, replacement) {
       text.insertText(start, safeValue);
 
       if (safeValue.length > 0) {
-        if (!attrs.foregroundColor) {
-          attrs.foregroundColor = '#000000';
-        }
+        attrs.foregroundColor = '#000000';
         text.setAttributes(start, start + safeValue.length - 1, attrs);
       }
     }
