@@ -84,22 +84,30 @@
       ],
       quiz: [
         { type: 'mcq', question: 'Which is an objective alteration note?', options: [
-          { label: 'Hem 2 inches', correct: false },
-          { label: 'Shorten inseam to 30 inches', correct: true },
-          { label: 'Make it tighter', correct: false }
+          { label: 'Hem 2 inches', value: 'a', correct: false },
+          { label: 'Shorten inseam to 30 inches', value: 'b', correct: true },
+          { label: 'Make it tighter', value: 'c', correct: false }
         ]},
-        { type: 'tf', question: '“Hem 2 inches” is a clear, objective instruction.', answer: false },
-        { type: 'mcq', question: 'Why do we avoid +/- shorthand like “-2”?', options: [
-          { label: 'Tailors enjoy guessing the final length', correct: false },
-          { label: 'It hides the final measurement the tailor must sew to', correct: true },
-          { label: 'It is harder to type', correct: false }
+        { type: 'mcq', question: 'Which note follows the no plus/minus rule?', options: [
+          { label: 'Take in waist 2 inches', value: 'a', correct: false },
+          { label: 'Take in waist to 34 inches', value: 'b', correct: true },
+          { label: 'Waist -2', value: 'c', correct: false }
         ]},
-        { type: 'mcq', question: 'Correct meaning of “hem”:', options: [
-          { label: 'A verb meaning shorten', correct: false },
-          { label: 'The folded and sewn edge of the garment', correct: true },
-          { label: 'Any measurement on pants', correct: false }
+        { type: 'mcq', question: 'What does “hem” refer to?', options: [
+          { label: 'A verb that means shorten', value: 'a', correct: false },
+          { label: 'The folded and sewn edge of the garment', value: 'b', correct: true },
+          { label: 'Any measurement on pants', value: 'c', correct: false }
         ]},
-        { type: 'short', question: 'Rewrite “Take in 2 inches” as a final measurement.', answers: ['take in waist to', 'waist to', 'take waist to'] }
+        { type: 'mcq', question: 'Which format best matches the standard measurement language?', options: [
+          { label: 'Shorten a bit', value: 'a', correct: false },
+          { label: 'INSEAM 32', value: 'b', correct: true },
+          { label: 'Hem pants', value: 'c', correct: false }
+        ]},
+        { type: 'mcq', question: 'What should you confirm aloud before recording the note?', options: [
+          { label: 'That the customer wants “a little shorter”', value: 'a', correct: false },
+          { label: 'The exact final measurement such as inseam 30 inches', value: 'b', correct: true },
+          { label: 'Whether the tailor can guess the length later', value: 'c', correct: false }
+        ]}
       ]
     },
     {
@@ -185,26 +193,30 @@
       ],
       quiz: [
         { type: 'mcq', question: 'Which pin must be used for any garment traveling to the plant?', options: [
-          { label: 'Straight dressmaker pin', correct: false },
-          { label: 'Safety pin that is closed', correct: true },
-          { label: 'No pins—just fold the fabric', correct: false }
+          { label: 'Straight dressmaker pin', value: 'a', correct: false },
+          { label: 'Safety pin that is closed', value: 'b', correct: true },
+          { label: 'No pins—just fold the fabric', value: 'c', correct: false }
         ]},
         { type: 'mcq', question: 'Why is vertical pinning not acceptable?', options: [
-          { label: 'It looks nicer in photos', correct: false },
-          { label: 'It distorts hems and can slip, changing the length', correct: true },
-          { label: 'It uses fewer pins', correct: false }
+          { label: 'It looks nicer in photos', value: 'a', correct: false },
+          { label: 'It distorts hems and can slip, changing the length', value: 'b', correct: true },
+          { label: 'It uses fewer pins', value: 'c', correct: false }
         ]},
         { type: 'mcq', question: 'What orientation should safety pins have on a hem?', options: [
-          { label: 'Horizontal, parallel to the floor', correct: true },
-          { label: 'Vertical like a nail', correct: false },
-          { label: 'Diagonal to save time', correct: false }
+          { label: 'Horizontal, parallel to the floor', value: 'a', correct: true },
+          { label: 'Vertical like a nail', value: 'b', correct: false },
+          { label: 'Diagonal to save time', value: 'c', correct: false }
         ]},
         { type: 'mcq', question: 'Before sending a garment to the plant you must…', options: [
-          { label: 'Confirm pins are closed, horizontal, and counted', correct: true },
-          { label: 'Switch to vertical pins to speed up', correct: false },
-          { label: 'Skip telling the customer about the pins', correct: false }
+          { label: 'Confirm pins are closed, horizontal, and counted', value: 'a', correct: true },
+          { label: 'Switch to vertical pins to speed up', value: 'b', correct: false },
+          { label: 'Skip telling the customer about the pins', value: 'c', correct: false }
         ]},
-        { type: 'short', question: 'Name one step from the pin safety checklist.', answers: ['count pins', 'check pin count', 'avoid sharp ends sticking out', 'do not pin through skin', 'keep sharp points away from skin', 'confirm pins are closed', 'inform the customer where pins are placed', 'replace straight pins with safety pins'] }
+        { type: 'mcq', question: 'When can straight pins be used?', options: [
+          { label: 'Only while the customer is present and you will replace them before the garment travels', value: 'a', correct: true },
+          { label: 'Anytime because they are faster', value: 'b', correct: false },
+          { label: 'Never replace them with safety pins', value: 'c', correct: false }
+        ]}
       ]
     },
     {
@@ -303,25 +315,29 @@
       ],
       quiz: [
         { type: 'mcq', question: 'How should hems be pinned for pants or skirts?', options: [
-          { label: 'Vertically with one pin', correct: false },
-          { label: 'Horizontally at the new hem with multiple pins to keep it straight', correct: true },
-          { label: 'No pins—just fold the fabric', correct: false }
+          { label: 'Vertically with one pin', value: 'a', correct: false },
+          { label: 'Horizontally at the new hem with multiple pins to keep it straight', value: 'b', correct: true },
+          { label: 'No pins—just fold the fabric', value: 'c', correct: false }
         ]},
         { type: 'mcq', question: 'Why ask male customers if they are left- or right-handed?', options: [
-          { label: 'It changes the fabric type', correct: false },
-          { label: 'It helps balance inseams because weight often favors one leg', correct: true },
-          { label: 'It is required for payment', correct: false }
+          { label: 'It changes the fabric type', value: 'a', correct: false },
+          { label: 'It helps balance inseams because weight often favors one leg', value: 'b', correct: true },
+          { label: 'It is required for payment', value: 'c', correct: false }
         ]},
-        { type: 'tf', question: 'Stretching fabric while measuring can add extra length and make the result wrong.', answer: true },
+        { type: 'mcq', question: 'What should you do before measuring fabric?', options: [
+          { label: 'Stretch it tight to keep it still', value: 'a', correct: false },
+          { label: 'Smooth it flat without stretching', value: 'b', correct: true },
+          { label: 'Leave wrinkles because the tailor will press it', value: 'c', correct: false }
+        ]},
         { type: 'mcq', question: 'Patch handling rule:', options: [
-          { label: 'Send patches loose and sort later', correct: false },
-          { label: 'Pin each patch to its specific garment and mark the spot', correct: true },
-          { label: 'Stack patches together for speed', correct: false }
+          { label: 'Send patches loose and sort later', value: 'a', correct: false },
+          { label: 'Pin each patch to its specific garment and mark the spot', value: 'b', correct: true },
+          { label: 'Stack patches together for speed', value: 'c', correct: false }
         ]},
         { type: 'mcq', question: 'When a customer brings in a pinned garment, you must…', options: [
-          { label: 'Trust the pin and skip measuring', correct: false },
-          { label: 'Measure the pinned spot, confirm the number aloud, and record the final measurement', correct: true },
-          { label: 'Remove pins to avoid confusion', correct: false }
+          { label: 'Trust the pin and skip measuring', value: 'a', correct: false },
+          { label: 'Measure the pinned spot, confirm the number aloud, and record the final measurement', value: 'b', correct: true },
+          { label: 'Remove pins to avoid confusion', value: 'c', correct: false }
         ]}
       ]
     },
@@ -417,22 +433,30 @@
       ],
       quiz: [
         { type: 'mcq', question: 'Which SPOT note is correct?', options: [
-          { label: 'Hem pants', correct: false },
-          { label: 'Shorten inseam to 30 inches. Customer approved.', correct: true },
-          { label: 'Take in 2 inches', correct: false }
+          { label: 'Hem pants', value: 'a', correct: false },
+          { label: 'Shorten inseam to 30 inches. Customer approved.', value: 'b', correct: true },
+          { label: 'Take in 2 inches', value: 'c', correct: false }
         ]},
-        { type: 'tf', question: '“Hem to 36 inches” is acceptable SPOT language.', answer: false },
+        { type: 'mcq', question: 'Which phrasing avoids using “hem” as a verb?', options: [
+          { label: 'Hem to 36 inches', value: 'a', correct: false },
+          { label: 'Shorten so finished hem is 36 inches from shoulder to hem', value: 'b', correct: true },
+          { label: 'Hem a bit', value: 'c', correct: false }
+        ]},
         { type: 'mcq', question: 'Best rewrite for “take in a bit”?', options: [
-          { label: 'Take in waist to 34 inches', correct: true },
-          { label: 'Take in slightly', correct: false },
-          { label: 'Adjust if needed', correct: false }
+          { label: 'Take in waist to 34 inches', value: 'a', correct: true },
+          { label: 'Take in slightly', value: 'b', correct: false },
+          { label: 'Adjust if needed', value: 'c', correct: false }
         ]},
-        { type: 'mcq', question: 'Why avoid using “hem” as a verb?', options: [
-          { label: 'It confuses the final measurement and action needed', correct: true },
-          { label: 'Customers dislike the word', correct: false },
-          { label: 'It takes too long to type', correct: false }
+        { type: 'mcq', question: 'What must every note mirror back to the customer?', options: [
+          { label: 'A vague sense of the change', value: 'a', correct: false },
+          { label: 'The exact final measurement they approved', value: 'b', correct: true },
+          { label: 'Whatever the CSR thinks is best', value: 'c', correct: false }
         ]},
-        { type: 'short', question: 'What must every note mirror back to the customer?', answers: ['final measurement', 'final measurements', 'the final measurement', 'objective measurement'] }
+        { type: 'mcq', question: 'Which format matches SPOT standards?', options: [
+          { label: 'INSEAM 30 with customer approval noted', value: 'a', correct: true },
+          { label: 'Shorten a bit if possible', value: 'b', correct: false },
+          { label: 'Hem 2 inches', value: 'c', correct: false }
+        ]}
       ]
     },
     {
@@ -528,21 +552,29 @@
       ],
       quiz: [
         { type: 'mcq', question: 'Which garment must be escalated to the tailor?', options: [
-          { label: 'Simple cotton chinos needing a hem', correct: false },
-          { label: 'Wedding dress with beading and multiple layers', correct: true },
-          { label: 'Casual skirt needing a basic waist take-in', correct: false }
+          { label: 'Simple cotton chinos needing a hem', value: 'a', correct: false },
+          { label: 'Wedding dress with beading and multiple layers', value: 'b', correct: true },
+          { label: 'Casual skirt needing a basic waist take-in', value: 'c', correct: false }
         ]},
         { type: 'mcq', question: 'Customer pinned a delicate, beaded gown. What should you do first?', options: [
-          { label: 'Accept the pins and send to the plant', correct: false },
-          { label: 'Escalate to tailor review before altering', correct: true },
-          { label: 'Remove all pins and start over without notes', correct: false }
+          { label: 'Accept the pins and send to the plant', value: 'a', correct: false },
+          { label: 'Escalate to tailor review before altering', value: 'b', correct: true },
+          { label: 'Remove all pins and start over without notes', value: 'c', correct: false }
         ]},
-        { type: 'tf', question: 'Feeling unsure about a complex garment is a valid trigger to escalate.', answer: true },
-        { type: 'short', question: 'What documentation should you add for customer-pinned complex garments?', answers: ['tailor to review before proceeding', 'tailor to review', 'do not alter until tailor approves'] },
+        { type: 'mcq', question: 'Feeling unsure about a complex garment is…', options: [
+          { label: 'A signal to escalate to the tailor', value: 'a', correct: true },
+          { label: 'A reason to keep pinning anyway', value: 'b', correct: false },
+          { label: 'A chance to ask the customer to guess', value: 'c', correct: false }
+        ]},
+        { type: 'mcq', question: 'What documentation should you add for customer-pinned complex garments?', options: [
+          { label: 'Note that a tailor must review before proceeding', value: 'a', correct: true },
+          { label: 'Say nothing because pins explain it', value: 'b', correct: false },
+          { label: 'Promise to sew exactly as pinned without review', value: 'c', correct: false }
+        ]},
         { type: 'mcq', question: 'Which escalation script tone best matches policy?', options: [
-          { label: 'Polite, confident explanation that a tailor will review for safety', correct: true },
-          { label: 'Telling the customer the garment is too hard to handle', correct: false },
-          { label: 'Promising to try pinning quickly anyway', correct: false }
+          { label: 'Polite, confident explanation that a tailor will review for safety', value: 'a', correct: true },
+          { label: 'Telling the customer the garment is too hard to handle', value: 'b', correct: false },
+          { label: 'Promising to try pinning quickly anyway', value: 'c', correct: false }
         ]}
       ]
     }
@@ -1308,48 +1340,65 @@
   }
 
   function renderQuestion(moduleId, idx, q) {
-    const name = `${moduleId}-q${idx}`;
-    if (q.type === 'short') {
-      return `<div class="quiz-question"><strong>${q.question}</strong><input type="text" name="${name}" placeholder="Type your answer" /></div>`;
+    const questionNumber = idx + 1;
+    const name = `module${moduleId.replace('M','')}-q${questionNumber}`;
+    const options = q.options || [];
+    const optionHtml = options.map(opt => {
+      const value = opt.value || opt.letter || opt.label;
+      return `
+      <label><input type="radio" name="${name}" value="${value}"> ${opt.label}</label>
+    `; }).join('');
+    return `<div class="quiz-question"><strong>${questionNumber}. ${q.question}</strong><div class="quiz-options">${optionHtml}</div></div>`;
+  }
+
+  function getSelectedRadioValue(name) {
+    const radios = document.querySelectorAll(`input[name="${name}"]`);
+    for (let i = 0; i < radios.length; i++) {
+      if (radios[i].checked) return radios[i].value;
     }
-    const options = q.options || [{ label: 'True', correct: q.answer === true }, { label: 'False', correct: q.answer === false }];
-    const optionHtml = options.map((opt, oi) => `
-      <label><input type="radio" name="${name}" value="${oi}"> ${opt.label}</label>
-    `).join('');
-    return `<div class="quiz-question"><strong>${q.question}</strong><div class="quiz-options">${optionHtml}</div></div>`;
+    return null;
+  }
+
+  const MODULE1_ANSWER_KEY = { q1: 'b', q2: 'b', q3: 'b', q4: 'b', q5: 'b' };
+  const MODULE2_ANSWER_KEY = { q1: 'b', q2: 'b', q3: 'a', q4: 'a', q5: 'a' };
+  const MODULE3_ANSWER_KEY = { q1: 'b', q2: 'b', q3: 'b', q4: 'b', q5: 'b' };
+  const MODULE4_ANSWER_KEY = { q1: 'b', q2: 'b', q3: 'a', q4: 'b', q5: 'a' };
+  const MODULE5_ANSWER_KEY = { q1: 'b', q2: 'b', q3: 'a', q4: 'a', q5: 'a' };
+
+  function evaluateModuleQuiz(moduleId) {
+    const answerKey = {
+      M1: MODULE1_ANSWER_KEY,
+      M2: MODULE2_ANSWER_KEY,
+      M3: MODULE3_ANSWER_KEY,
+      M4: MODULE4_ANSWER_KEY,
+      M5: MODULE5_ANSWER_KEY
+    }[moduleId];
+    const moduleNumber = moduleId.replace('M', '');
+    const namePrefix = `module${moduleNumber}`;
+    let correct = 0;
+    const total = Object.keys(answerKey).length;
+
+    Object.entries(answerKey).forEach(([key, value]) => {
+      const selected = getSelectedRadioValue(`${namePrefix}-${key}`);
+      if (selected === value) {
+        correct += 1;
+      }
+    });
+
+    const score = Math.round((correct / total) * 100);
+    return { score, correct, total };
   }
 
   function submitQuiz(moduleId) {
-    const module = modules.find(m => m.id === moduleId);
     const name = getEmployeeName();
     if (!name) {
       alert('Enter your employee name before submitting.');
       return;
     }
     const location = getEmployeeLocation();
-    let correct = 0;
-
-    module.quiz.forEach((q, idx) => {
-      const fieldName = `${moduleId}-q${idx}`;
-      if (q.type === 'short') {
-        const value = (document.querySelector(`input[name="${fieldName}"]`)?.value || '').trim().toLowerCase();
-        if (q.answers.some(ans => value === ans.toLowerCase())) {
-          correct += 1;
-        }
-      } else {
-        const selected = document.querySelector(`input[name="${fieldName}"]:checked`);
-        if (selected) {
-          const option = (q.options || [{ label: 'True', correct: q.answer === true }, { label: 'False', correct: q.answer === false }])[Number(selected.value)];
-          if (option && option.correct) {
-            correct += 1;
-          }
-        }
-      }
-    });
-
-    const score = Math.round((correct / module.quiz.length) * 100);
-    const passed = score >= 80;
-    updateModuleResultText(moduleId, passed, score, correct, module.quiz.length);
+    const results = evaluateModuleQuiz(moduleId);
+    const passed = results.score >= 80;
+    updateModuleResultText(moduleId, passed, results.score, results.correct, results.total);
 
     if (google.script && google.script.run) {
       google.script.run.withSuccessHandler(() => {
@@ -1357,8 +1406,8 @@
         loadCertificationStatus();
       }).withFailureHandler(err => {
         showToast('Error saving result. Please retry.', 'error');
-        updateModuleResultText(moduleId, false, score, correct, module.quiz.length, `Error saving: ${err}`);
-      }).saveModuleResult(moduleId, name, location, score, passed);
+        updateModuleResultText(moduleId, false, results.score, results.correct, results.total, `Error saving: ${err}`);
+      }).saveModuleResult(moduleId, name, location, results.score, passed);
     }
   }
 
