@@ -325,37 +325,100 @@
         ]}
       ]
     },
-    {
+    { 
       id: 'M4',
       title: 'SPOT POS Notes & Communication',
-      intro: 'Document clear alteration notes in SPOT and confirm them with customers.',
+      intro: 'Document clear, objective alteration notes in SPOT that mirror the customer’s expectations and the tailor’s needs.',
       objectives: [
-        'Log final measurements, not vague verbs.',
-        'Avoid misusing “hem” as a measurement term.',
-        'Use confirmation scripts to align expectations.'
+        'Enter clear, objective alteration notes in SPOT using final measurements.',
+        'Avoid using “hem” as a verb or measurement.',
+        'Use phrases like “shorten to 36 inches” instead of “hem to 36 inches” or “shorten a bit”.',
+        'Mirror the customer’s expectations back to them verbally and in the written note.',
+        'Identify and correct vague, incomplete, or risky POS notes.',
+        'Use SPOT fields consistently (item description vs. notes) to convey alterations to the tailor.'
       ],
-      sections: [
+      objectiveNotes: {
+        correct: [
+          '✅ Shorten inseam to 30 inches. Customer tried on and approved.',
+          '✅ Take in waist to 34 inches. Measure flat at waistband.',
+          '✅ Shorten sleeves to 23 inches from shoulder seam; match both sleeves.'
+        ],
+        incorrect: [
+          '❌ Hem pants.',
+          '❌ Hem 2 inches.',
+          '❌ Take in 2 inches.',
+          '❌ Shorten a bit.'
+        ],
+        reminder: 'SPOT notes should read like the final measurement instruction the tailor will sew to — not a hint or a guess.'
+      },
+      hemGuidance: {
+        definition: '“Hem” refers to the folded and sewn edge of the garment. It is not a measurement or a verb.',
+        wrong: ['Hem dress 2 inches.', 'Hem to 36 inches.'],
+        better: ['Shorten dress so finished hem is 36 inches from shoulder to hem.', 'Shorten pants so inseam finishes at 30 inches.'],
+        reminder: 'Replace “hem to” with “shorten to” plus the final dimension.'
+      },
+      comparisons: [
+        { bad: 'Hem to 36 inches', good: 'Shorten dress so finished hem is 36 inches from shoulder to hem.' },
+        { bad: 'Hem pants 2 inches', good: 'Shorten inseam to 30 inches.' },
+        { bad: 'Hem sleeves', good: 'Shorten sleeves to 23 inches from shoulder seam.' }
+      ],
+      standardFormats: [
+        { label: 'INSEAM', example: 'INSEAM 30', note: 'Final inseam measurement after hemming. Avoid +/- shorthand.' },
+        { label: 'WAIST', example: 'WAIST 34', note: 'State the finished waist size after taking in or letting out.' },
+        { label: 'SLEEVE', example: 'SLEEVE 23 from shoulder seam', note: 'Include the reference point so tailors know where to measure.' },
+        { label: 'HEM LENGTH', example: 'Finished hem 36 from floor with flats', note: 'Spell out the measurement and shoe type if relevant.' }
+      ],
+      fieldUsage: [
+        'Item/Service lines describe the garment and service (e.g., “Men’s Pants — Dry Clean + Hem”).',
+        'Use the Notes field for the exact alteration and final measurement.',
+        'Mirror approvals: “Customer tried on and approved length with normal shoes.”',
+        'Tag customer-pinned garments: “Shorten inseam to 29 inches (customer pinned, verified).”'
+      ],
+      posExamples: [
         {
-          title: 'SPOT Input Examples',
-          bullets: [
-            '✅ “Shorten inseam to 30 inches.”',
-            '✅ “Take in waist to 34 inches.”',
-            '❌ “Hem pants.”  ❌ “Take in 2 inches.”'
-          ]
+          item: 'Men’s Pants',
+          service: 'Dry Clean + Hem',
+          before: 'Hem pants.',
+          after: 'Shorten inseam to 30 inches. Customer tried on and approved.',
+          why: 'Before is vague and missing the target length. After states the finished inseam and approval.'
         },
         {
-          title: 'Communication Scripts',
-          bullets: [
-            '“To make sure we get this right, I’m writing ‘shorten inseam to 30 inches.’ Does that match what you expect?”',
-            '“Because hem is the finished edge, I’ll note the final length instead.”',
-            'Text mockup: SPOT note field showing garment part, final measurement, and safety pin confirmation.'
-          ]
+          item: 'Knee-length Dress',
+          service: 'Press + Hem',
+          before: 'Hem to 36 inches.',
+          after: 'Shorten dress so finished hem is 36 inches from shoulder to hem. Customer wearing flats.',
+          why: 'Replaces “hem to” with a clear action, final value, and context.'
+        },
+        {
+          item: 'Blazer',
+          service: 'Sleeve shorten',
+          before: 'Shorten sleeves a bit.',
+          after: 'Shorten sleeves to 23 inches from shoulder seam. Match both sleeves.',
+          why: 'Vague wording becomes a measurable instruction with a reference point.'
         }
+      ],
+      scripts: {
+        confirm: '“To make sure we get this right, I’m going to write: ‘Shorten inseam to 30 inches.’ Does that match what you’re expecting?”',
+        clarify: 'Customer: “Just a bit shorter.” CSR: “Perfect. Let me pin the length you like and then I’ll write ‘Shorten inseam to __ inches’ so our tailor knows exactly what you want.”',
+        hemFix: '“Because hem is the finished edge, I’ll note the action and final length: ‘Shorten so finished hem is 36 inches from shoulder to hem.’”'
+      },
+      corrections: [
+        { bad: 'Shorten a little', good: 'Shorten inseam to 29 inches.' },
+        { bad: 'Fix hem', good: 'Re-hem to 30-inch inseam; clean and press.' },
+        { bad: 'Take in', good: 'Take in waist to 34 inches.' },
+        { bad: 'Shorten sleeves some', good: 'Shorten sleeves to 23 inches from shoulder seam.' }
+      ],
+      noteChecklist: [
+        'Start with the garment area and final measurement: “INSEAM 30,” “WAIST 34.”',
+        'Avoid “hem” as a verb; use “shorten to” plus the finished length.',
+        'Capture approvals: “Customer tried on and approved.”',
+        'If customer pinned, verify with a tape and note “customer pinned/verified.”',
+        'Keep SPOT Notes factual and objective; no “a bit” or “as needed.”'
       ],
       quiz: [
         { type: 'mcq', question: 'Which SPOT note is correct?', options: [
           { label: 'Hem pants', correct: false },
-          { label: 'Shorten inseam to 30 inches, safety pinned', correct: true },
+          { label: 'Shorten inseam to 30 inches. Customer approved.', correct: true },
           { label: 'Take in 2 inches', correct: false }
         ]},
         { type: 'tf', question: '“Hem to 36 inches” is acceptable SPOT language.', answer: false },
@@ -364,12 +427,12 @@
           { label: 'Take in slightly', correct: false },
           { label: 'Adjust if needed', correct: false }
         ]},
-        { type: 'short', question: 'What must every note include?', answers: ['final measurement', 'objective measurement', 'final measurement in inches'] },
         { type: 'mcq', question: 'Why avoid using “hem” as a verb?', options: [
-          { label: 'It confuses the final measurement', correct: true },
+          { label: 'It confuses the final measurement and action needed', correct: true },
           { label: 'Customers dislike the word', correct: false },
           { label: 'It takes too long to type', correct: false }
-        ]}
+        ]},
+        { type: 'short', question: 'What must every note mirror back to the customer?', answers: ['final measurement', 'final measurements', 'the final measurement', 'objective measurement'] }
       ]
     },
     {
@@ -462,6 +525,9 @@
     }
     if (module.id === 'M3') {
       return moduleThreeTemplate(module);
+    }
+    if (module.id === 'M4') {
+      return moduleFourTemplate(module);
     }
     const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
     const sections = module.sections.map(section => `
@@ -601,6 +667,155 @@
         <div class="section script-card">
           <h3>Confirmation Script</h3>
           <p>“I’ll note <strong>‘shorten inseam to 30 inches’</strong>. Is that exactly what you want?” Repeat back the final measurement before saving it.</p>
+        </div>
+
+        <div class="quiz" aria-label="quiz for ${module.title}">
+          <h3>Knowledge Check</h3>
+          ${quiz}
+          <div class="quiz-footer">
+            <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
+            <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function moduleFourTemplate(module) {
+    const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
+    const correctList = module.objectiveNotes.correct.map(item => `<li>${item}</li>`).join('');
+    const incorrectList = module.objectiveNotes.incorrect.map(item => `<li>${item}</li>`).join('');
+    const hemWrong = module.hemGuidance.wrong.map(item => `<li>❌ ${item}</li>`).join('');
+    const hemBetter = module.hemGuidance.better.map(item => `<li>✅ ${item}</li>`).join('');
+    const comparisonRows = module.comparisons.map(pair => `
+      <div class="comparison-row">
+        <div class="bad">${pair.bad}</div>
+        <div class="good">${pair.good}</div>
+      </div>
+    `).join('');
+    const formatCards = module.standardFormats.map(format => `
+      <div class="format-card">
+        <div class="format-label">${format.label}</div>
+        <p class="format-example">${format.example}</p>
+        <p class="micro-copy">${format.note}</p>
+      </div>
+    `).join('');
+    const fieldUsage = module.fieldUsage.map(item => `<li>${item}</li>`).join('');
+    const posMockups = module.posExamples.map(example => `
+      <div class="pos-card">
+        <div class="pos-card__header">
+          <div>
+            <p class="eyebrow">Item</p>
+            <h4>${example.item}</h4>
+          </div>
+          <div class="pos-service">${example.service}</div>
+        </div>
+        <div class="pos-note-grid">
+          <div>
+            <p class="pill pill-quiet">Before</p>
+            <p class="bad">${example.before}</p>
+          </div>
+          <div>
+            <p class="pill">After</p>
+            <p class="good">${example.after}</p>
+          </div>
+        </div>
+        <p class="micro-copy">${example.why}</p>
+      </div>
+    `).join('');
+    const scripts = [
+      { title: 'Confirmation', line: module.scripts.confirm },
+      { title: 'Clarifying vague requests', line: module.scripts.clarify },
+      { title: 'Fixing “hem” language', line: module.scripts.hemFix }
+    ].map(script => `
+      <div class="script-card">
+        <p class="eyebrow">${script.title}</p>
+        <p>${script.line}</p>
+      </div>
+    `).join('');
+    const corrections = module.corrections.map(item => `<li><span class="bad">${item.bad}</span> → <span class="good">${item.good}</span></li>`).join('');
+    const checklist = module.noteChecklist.map(item => `<li>${item}</li>`).join('');
+    const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
+
+    return `
+      <article class="module module-four" id="${module.id}">
+        <span class="pill">Module ${module.id.replace('M','')}</span>
+        <h2>${module.title}</h2>
+        <p>${module.intro}</p>
+
+        <div class="section">
+          <h3>Learning Objectives</h3>
+          <ul>${objectives}</ul>
+        </div>
+
+        <div class="section module-four__grid" aria-label="Objective SPOT note examples">
+          <div class="note-card">
+            <p class="eyebrow">Objective Notes in SPOT POS</p>
+            <div class="note-columns">
+              <div>
+                <p class="badge-lite">Correct</p>
+                <ul>${correctList}</ul>
+              </div>
+              <div>
+                <p class="pill pill-quiet">Avoid</p>
+                <ul>${incorrectList}</ul>
+              </div>
+            </div>
+            <p class="tip">${module.objectiveNotes.reminder}</p>
+          </div>
+          <div class="note-card hem-guard">
+            <p class="eyebrow">Avoid Using “Hem” as a Verb</p>
+            <p>${module.hemGuidance.definition}</p>
+            <div class="note-columns">
+              <div>
+                <p class="pill pill-quiet">Wrong</p>
+                <ul>${hemWrong}</ul>
+              </div>
+              <div>
+                <p class="pill pill-quiet">Better</p>
+                <ul>${hemBetter}</ul>
+              </div>
+            </div>
+            <p class="tip">${module.hemGuidance.reminder}</p>
+          </div>
+        </div>
+
+        <div class="section comparison-table" aria-label="Shorten vs hem wording">
+          <h3>“Shorten to X” vs “Hem to X”</h3>
+          <div class="comparison-grid">${comparisonRows}</div>
+        </div>
+
+        <div class="section format-grid" aria-label="Standard POS formats">
+          <h3>Using Standard Formats in SPOT</h3>
+          <p class="micro-copy">Lead with the garment area and the final measurement so tailors can act without guessing.</p>
+          <div class="format-cards">${formatCards}</div>
+        </div>
+
+        <div class="section field-usage" aria-label="SPOT field usage guidance">
+          <h3>Use SPOT Fields Consistently</h3>
+          <ul>${fieldUsage}</ul>
+        </div>
+
+        <div class="section pos-mockups" aria-label="POS note walkthrough">
+          <h3>POS Screen Note Examples</h3>
+          <p class="micro-copy">These text mockups show how to capture the garment, service, and objective note the tailor will follow.</p>
+          <div class="mockup-grid">${posMockups}</div>
+        </div>
+
+        <div class="section script-grid" aria-label="Customer communication scripts">
+          <h3>Customer Communication Scripts</h3>
+          <p class="subtitle">Mirror the customer’s expectation verbally, then repeat it in the SPOT note.</p>
+          <div class="script-grid__inner">${scripts}</div>
+        </div>
+
+        <div class="section correction-list" aria-label="Correcting vague notes">
+          <h3>Correcting Bad Notes</h3>
+          <ul>${corrections}</ul>
+        </div>
+
+        <div class="section checklist-lite" aria-label="Note entry checklist">
+          <h3>Quick SPOT Note Checklist</h3>
+          <ul>${checklist}</ul>
         </div>
 
         <div class="quiz" aria-label="quiz for ${module.title}">
