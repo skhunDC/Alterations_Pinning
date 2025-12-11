@@ -105,47 +105,106 @@
     {
       id: 'M2',
       title: 'Pinning Tools & Safety',
-      intro: 'Choose the right pins and orient them safely to protect people, garments, and machinery.',
+      intro: 'Choose the right pins, lock them safely, and orient them horizontally so garments arrive at the plant without risk.',
       objectives: [
-        'Use safety pins for any garment traveling to the plant.',
-        'Pin horizontally, parallel to the floor, for accuracy and grip.',
-        'Apply pin safety checklist to avoid injury or fabric damage.'
+        'Identify and describe straight pins vs. safety pins.',
+        'State why safety pins are required for garments traveling to the plant.',
+        'Demonstrate correct horizontal pin orientation for hems and seams.',
+        'Explain why vertical pinning is not acceptable for alteration pinning.',
+        'Apply the pin safety checklist to protect customers, staff, and equipment.',
+        'Complete a pre-plant checklist to confirm safe, accurate pinning.'
       ],
-      sections: [
+      pinTypes: [
         {
-          title: 'Tools & Rules',
-          bullets: [
-            'Differentiate straight pins vs. safety pins; plant-bound garments require safety pins.',
-            'Orientation rule: pins run horizontally; vertical pins distort hems and slip.',
-            'Checklist: count pins, avoid sharp ends sticking out, never pin through skin.'
-          ]
+          name: 'Straight pins',
+          description: 'Simple needle with a colored head at one end; open and sharp at the other.',
+          useCases: [
+            'On-the-spot fitting while the customer is present.',
+            'Quick, temporary holds when you are watching and can remove immediately.',
+            'Not safe for garments traveling through bags, racks, and plant equipment.'
+          ],
+          caution: 'Never send straight pins to the plant. Replace them with closed safety pins before the garment leaves the store.'
         },
         {
-          title: 'Visual Description',
+          name: 'Safety pins',
+          description: 'Pin with a clasp that closes and covers the sharp point when locked.',
+          useCases: [
+            'Required for any garment leaving the store and going to the plant.',
+            'Locks closed so pins cannot fall out or snag machinery.',
+            'Best for secure travel in garment bags and racks.'
+          ],
+          caution: 'Always lock the clasp and place pins horizontally at the measurement line.'
+        }
+      ],
+      policy: {
+        headline: 'Non-Negotiable: Safety Pins for Plant-Bound Garments',
+        rules: [
+          'Any garment traveling to the plant must be secured with closed safety pins.',
+          'Prevents loose pins from injuring staff, customers, or tailors.',
+          'Protects plant equipment and other garments from snags or jams.',
+          'Confirms a stable, readable reference line for the tailor.'
+        ],
+        note: 'Always warn the customer where pins are placed before they leave, even when using safety pins.'
+      },
+      orientation: {
+        correct: {
+          title: 'Horizontal Pinning (Correct)',
           bullets: [
-            'Text diagram: horizontal pin aligned with hem edge vs. vertical “nail” causing puckers.',
-            'Graphic callout: closed safety pin icon beside “Plant Travel Approved.”'
-          ]
+            'Pins run parallel to the floor/hem line and create a clear reference for tailors.',
+            'Holds fabric securely during handling and transport.',
+            'Maintains the requested length if the garment shifts in the bag.'
+          ],
+          description: 'Imagine the hem as a line. The pin should lie along that line, like a rail on the hem.'
+        },
+        incorrect: {
+          title: 'Vertical Pinning (Incorrect)',
+          bullets: [
+            'Pins sit like a fence post crossing the hem and can distort the line.',
+            'More likely to slip or change the marked length.',
+            'Harder for tailors to read consistently and unsafe for travel.'
+          ],
+          description: 'Vertical pins cross the hem like a nail; they bend fabric and do not survive transit.'
+        }
+      },
+      safetyChecklist: [
+        'Keep sharp points away from skin; never pin through skin or too close to the body.',
+        'Confirm pins are horizontal and, if safety pins, fully closed.',
+        'Inform the customer where pins are placed before they leave.',
+        'Count pins so none are left loose in bags or garments.',
+        'Replace any straight pins with safety pins before the garment goes to the plant.'
+      ],
+      scenarios: [
+        {
+          prompt: 'You pinned pants for hemming and the customer is leaving them for cleaning and alterations. What type of pin should be in the garment before it goes to the plant?',
+          answer: 'Closed safety pins placed horizontally at the new hem line.'
+        },
+        {
+          prompt: 'You quickly pinned a hem while the customer stood on the platform using straight pins. Before sending to the plant, what must you do?',
+          answer: 'Replace straight pins with closed safety pins and double-check horizontal orientation.'
         }
       ],
       quiz: [
-        { type: 'mcq', question: 'Which pin is required for plant-bound garments?', options: [
+        { type: 'mcq', question: 'Which pin must be used for any garment traveling to the plant?', options: [
           { label: 'Straight dressmaker pin', correct: false },
-          { label: 'Safety pin, closed', correct: true },
-          { label: 'No pin, just fold', correct: false }
+          { label: 'Safety pin that is closed', correct: true },
+          { label: 'No pins—just fold the fabric', correct: false }
         ]},
-        { type: 'tf', question: 'Vertical pinning is preferred because it is faster.', answer: false },
-        { type: 'mcq', question: 'Best orientation when pinning a hem?', options: [
-          { label: 'Horizontal, parallel to floor', correct: true },
+        { type: 'mcq', question: 'Why is vertical pinning not acceptable?', options: [
+          { label: 'It looks nicer in photos', correct: false },
+          { label: 'It distorts hems and can slip, changing the length', correct: true },
+          { label: 'It uses fewer pins', correct: false }
+        ]},
+        { type: 'mcq', question: 'What orientation should safety pins have on a hem?', options: [
+          { label: 'Horizontal, parallel to the floor', correct: true },
           { label: 'Vertical like a nail', correct: false },
-          { label: 'Diagonal for style', correct: false }
+          { label: 'Diagonal to save time', correct: false }
         ]},
-        { type: 'mcq', question: 'What should you check before sending to the plant?', options: [
-          { label: 'Pins are closed and horizontal', correct: true },
-          { label: 'Pins are vertical to save time', correct: false },
-          { label: 'No pins used at all', correct: false }
+        { type: 'mcq', question: 'Before sending a garment to the plant you must…', options: [
+          { label: 'Confirm pins are closed, horizontal, and counted', correct: true },
+          { label: 'Switch to vertical pins to speed up', correct: false },
+          { label: 'Skip telling the customer about the pins', correct: false }
         ]},
-        { type: 'short', question: 'Name one step from the pin safety checklist.', answers: ['check pin count', 'avoid sharp ends', 'avoid sharp ends sticking out', 'do not pin through skin'] }
+        { type: 'short', question: 'Name one step from the pin safety checklist.', answers: ['count pins', 'check pin count', 'avoid sharp ends sticking out', 'do not pin through skin', 'keep sharp points away from skin', 'confirm pins are closed', 'inform the customer where pins are placed', 'replace straight pins with safety pins'] }
       ]
     },
     {
@@ -335,6 +394,9 @@
     if (module.id === 'M1') {
       return moduleOneTemplate(module);
     }
+    if (module.id === 'M2') {
+      return moduleTwoTemplate(module);
+    }
     const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
     const sections = module.sections.map(section => `
       <div class="section">
@@ -473,6 +535,105 @@
         <div class="section script-card">
           <h3>Confirmation Script</h3>
           <p>“I’ll note <strong>‘shorten inseam to 30 inches’</strong>. Is that exactly what you want?” Repeat back the final measurement before saving it.</p>
+        </div>
+
+        <div class="quiz" aria-label="quiz for ${module.title}">
+          <h3>Knowledge Check</h3>
+          ${quiz}
+          <div class="quiz-footer">
+            <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
+            <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  // Module 2 uses custom layout classes (pin-grid, policy-card, orientation-grid) defined in styles.html.
+  function moduleTwoTemplate(module) {
+    const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
+    const pinCards = module.pinTypes.map(pin => `
+      <div class="pin-card">
+        <div class="pin-card__header">
+          <span class="pill pill-quiet">Pin Type</span>
+          <h3>${pin.name}</h3>
+        </div>
+        <p class="micro-copy">${pin.description}</p>
+        <ul>${pin.useCases.map(use => `<li>${use}</li>`).join('')}</ul>
+        <div class="note-line">${pin.caution}</div>
+      </div>
+    `).join('');
+
+    const checklist = module.safetyChecklist.map(item => `<li>${item}</li>`).join('');
+    const scenarios = module.scenarios.map((s, idx) => `
+      <div class="scenario-card">
+        <p class="eyebrow">Scenario ${idx + 1}</p>
+        <p><strong>${s.prompt}</strong></p>
+        <p class="answer">Answer: ${s.answer}</p>
+      </div>
+    `).join('');
+
+    const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
+
+    return `
+      <article class="module" id="${module.id}">
+        <span class="pill">Module ${module.id.replace('M','')}</span>
+        <h2>${module.title}</h2>
+        <p>${module.intro}</p>
+
+        <div class="section">
+          <h3>Learning Objectives</h3>
+          <ul>${objectives}</ul>
+        </div>
+
+        <div class="section pin-grid" aria-label="Pin type comparison">
+          ${pinCards}
+        </div>
+
+        <div class="section policy-card" aria-label="Safety pin policy">
+          <div>
+            <p class="eyebrow">Plant Travel Rule</p>
+            <h3>${module.policy.headline}</h3>
+            <ul>${module.policy.rules.map(rule => `<li>${rule}</li>`).join('')}</ul>
+            <p class="note-line">${module.policy.note}</p>
+          </div>
+          <div class="policy-badge">
+            <div class="badge-warning">Safety pins only</div>
+            <p class="micro-copy">Closed clasps prevent injuries and protect machinery.</p>
+          </div>
+        </div>
+
+        <div class="section orientation-grid" aria-label="Pin orientation examples">
+          <div class="orientation-card good">
+            <p class="pill pill-quiet">Correct</p>
+            <h3>${module.orientation.correct.title}</h3>
+            <ul>${module.orientation.correct.bullets.map(item => `<li>${item}</li>`).join('')}</ul>
+            <p class="micro-copy">${module.orientation.correct.description}</p>
+          </div>
+          <div class="orientation-card risk">
+            <p class="pill pill-quiet">Incorrect</p>
+            <h3>${module.orientation.incorrect.title}</h3>
+            <ul>${module.orientation.incorrect.bullets.map(item => `<li>${item}</li>`).join('')}</ul>
+            <p class="micro-copy">${module.orientation.incorrect.description}</p>
+          </div>
+        </div>
+
+        <div class="section checklist" aria-label="Pin safety checklist">
+          <div>
+            <p class="eyebrow">Quick Safety</p>
+            <h3>Pin Safety Checklist</h3>
+            <ul>${checklist}</ul>
+          </div>
+          <div class="checklist-note">
+            <p class="badge-lite">Checklist Reminder</p>
+            <p>Use this before every plant-bound garment leaves the counter.</p>
+            <p class="micro-copy">Imagine the hem as a line — pins should sit on that line (horizontal), never crossing it like a fence post (vertical).</p>
+          </div>
+        </div>
+
+        <div class="section scenario-grid" aria-label="Pin safety scenarios">
+          <h3>Pin Safety Scenarios</h3>
+          ${scenarios}
         </div>
 
         <div class="quiz" aria-label="quiz for ${module.title}">
