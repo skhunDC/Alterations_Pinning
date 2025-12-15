@@ -671,6 +671,739 @@
     }
   ];
 
+  const moduleQuestionPools = {
+    M1: [
+      {
+        id: 'M1-Q01',
+        prompt: 'Which note is objective and ready for a tailor to act on?',
+        options: [
+          { id: 'a', label: 'Hem pants a bit' },
+          { id: 'b', label: 'Shorten inseam to 30 inches (customer approved)' },
+          { id: 'c', label: 'Fix the hem' },
+          { id: 'd', label: 'Take in waist some' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Use final measurements instead of vague requests.'
+      },
+      {
+        id: 'M1-Q02',
+        prompt: 'Which note should you AVOID because it hides the final measurement?',
+        options: [
+          { id: 'a', label: 'Shorten sleeves to 23 inches from shoulder seam' },
+          { id: 'b', label: 'Shorten hem to 36 inches from floor' },
+          { id: 'c', label: 'Hem 2 inches' },
+          { id: 'd', label: 'INSEAM 30 (measured)' }
+        ],
+        correctOptionId: 'c',
+        tip: 'Replace “hem X inches” with the final dimension you measured.'
+      },
+      {
+        id: 'M1-Q03',
+        prompt: 'When a tag says INSEAM 32 but the customer wants it shorter, what is the safest note?',
+        options: [
+          { id: 'a', label: 'Use tag inseam 32' },
+          { id: 'b', label: 'Shorten inseam to 30.5 inches (measured, customer approved)' },
+          { id: 'c', label: 'Hem about 2 inches' },
+          { id: 'd', label: 'Match existing hem' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Ignore tag sizes and document the measured final length.'
+      },
+      {
+        id: 'M1-Q04',
+        prompt: 'Which statement correctly defines “hem” for this program?',
+        options: [
+          { id: 'a', label: 'A verb that replaces “shorten”' },
+          { id: 'b', label: 'The folded, sewn edge that needs a target length' },
+          { id: 'c', label: 'Any change to a garment' },
+          { id: 'd', label: 'A temporary pinning term' }
+        ],
+        correctOptionId: 'b',
+        tip: 'State the finished length at the hem instead of using “hem” as a verb.'
+      },
+      {
+        id: 'M1-Q05',
+        prompt: 'A customer says, “Make it a little shorter.” What is the MOST risky next step?',
+        options: [
+          { id: 'a', label: 'Ask follow-up questions and measure the exact inseam they want' },
+          { id: 'b', label: 'Record “shorten inseam to 29.5 inches” after confirming with them' },
+          { id: 'c', label: 'Write “shorten a bit” and send to the tailor' },
+          { id: 'd', label: 'Show the customer the measuring tape before writing the note' }
+        ],
+        correctOptionId: 'c',
+        tip: 'Vague notes create complaints; capture the final number instead.'
+      },
+      {
+        id: 'M1-Q06',
+        prompt: 'Which option is NOT acceptable when documenting a waist take-in?',
+        options: [
+          { id: 'a', label: 'Take in waist to 34 inches' },
+          { id: 'b', label: 'Waist -2' },
+          { id: 'c', label: 'Finished waist 36 inches (customer seated test complete)' },
+          { id: 'd', label: 'Customer requests waist 33.5 inches, measured flat' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Replace plus/minus shorthand with the final waist size.'
+      },
+      {
+        id: 'M1-Q07',
+        prompt: 'For customer-pinned garments, what should you do before saving the note?',
+        options: [
+          { id: 'a', label: 'Trust the pins and skip measuring' },
+          { id: 'b', label: 'Measure at the pins, confirm the final number aloud, and record it' },
+          { id: 'c', label: 'Remove the pins and guess the length' },
+          { id: 'd', label: 'Write “as pinned” with no measurement' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Verification protects the customer and the tailor from guesswork.'
+      },
+      {
+        id: 'M1-Q08',
+        prompt: 'Which phrasing best mirrors the “no plus/minus” rule?',
+        options: [
+          { id: 'a', label: 'Hem +1 inch' },
+          { id: 'b', label: 'Shorten dress so finished hem is 36 inches from shoulder to hem' },
+          { id: 'c', label: 'Take up sleeves 1 inch' },
+          { id: 'd', label: 'Hem pants 2 inches' }
+        ],
+        correctOptionId: 'b',
+        tip: 'State the final length or size instead of the change amount.'
+      },
+      {
+        id: 'M1-Q09',
+        prompt: 'Which instruction should you AVOID because it is most likely to be misread?',
+        options: [
+          { id: 'a', label: 'Finished hem 37 inches from floor with dress shoes' },
+          { id: 'b', label: 'Shorten inseam to 30 inches; customer approved' },
+          { id: 'c', label: 'Take in waist a little' },
+          { id: 'd', label: 'Left inseam 29.5; Right inseam 30' }
+        ],
+        correctOptionId: 'c',
+        tip: 'Avoid vague language; record the actual measurement.'
+      },
+      {
+        id: 'M1-Q10',
+        prompt: 'When confirming a measurement aloud, which script is best?',
+        options: [
+          { id: 'a', label: '“I’ll note shorten inseam to 30 inches. Is that exactly what you want?”' },
+          { id: 'b', label: '“Hem 2 inches like normal?”' },
+          { id: 'c', label: '“Want it shorter or longer?”' },
+          { id: 'd', label: '“You want tag size, right?”' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Repeat the final measurement, not the change amount.'
+      },
+      {
+        id: 'M1-Q11',
+        prompt: 'Which measurement note is MOST risky for the tailor?',
+        options: [
+          { id: 'a', label: 'Customer wearing flats: finished hem 35 inches from floor' },
+          { id: 'b', label: 'Hem pants' },
+          { id: 'c', label: 'Shorten sleeves to 23 inches from shoulder seam' },
+          { id: 'd', label: 'Take in waist to 33 inches (customer can sit comfortably)' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Avoid using “hem” alone; always share the final dimension.'
+      },
+      {
+        id: 'M1-Q12',
+        prompt: 'Which option is NOT acceptable when teaching a new CSR?',
+        options: [
+          { id: 'a', label: 'Encourage them to rewrite “shorten a bit” into an inseam number' },
+          { id: 'b', label: 'Let them save “-2 inches” because the tailor will figure it out' },
+          { id: 'c', label: 'Remind them that hems need a final target length' },
+          { id: 'd', label: 'Have them confirm the measurement aloud with the customer' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Do not rely on minus/plus shorthand; use final measurements.'
+      }
+    ],
+    M2: [
+      {
+        id: 'M2-Q01',
+        prompt: 'Which pin choice is required for garments traveling to the plant?',
+        options: [
+          { id: 'a', label: 'Closed safety pins placed horizontally' },
+          { id: 'b', label: 'Straight pins left in from fitting' },
+          { id: 'c', label: 'No pins—just folding the fabric' },
+          { id: 'd', label: 'Paper clips for quick holds' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Traveling garments must use locked safety pins.'
+      },
+      {
+        id: 'M2-Q02',
+        prompt: 'Which option is NOT acceptable before sending a garment to the plant?',
+        options: [
+          { id: 'a', label: 'Replacing straight pins with safety pins' },
+          { id: 'b', label: 'Leaving vertical straight pins in the hem' },
+          { id: 'c', label: 'Counting pins so none are loose' },
+          { id: 'd', label: 'Closing each safety pin clasp' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Vertical straight pins can slip, poke, and shift the hem.'
+      },
+      {
+        id: 'M2-Q03',
+        prompt: 'Why is vertical pinning risky?',
+        options: [
+          { id: 'a', label: 'It distorts hems and can slip, changing the length' },
+          { id: 'b', label: 'It uses more pins' },
+          { id: 'c', label: 'It is required for dress shirts' },
+          { id: 'd', label: 'It is slower to insert' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Pins should run parallel to the hem line to hold the measurement.'
+      },
+      {
+        id: 'M2-Q04',
+        prompt: 'Which statement is true about straight pins?',
+        options: [
+          { id: 'a', label: 'They can travel to the plant if taped' },
+          { id: 'b', label: 'Use them only while supervising the garment, then swap to safety pins' },
+          { id: 'c', label: 'They are safer than safety pins' },
+          { id: 'd', label: 'They remove the need to count pins' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Straight pins are temporary; swap before the garment leaves.'
+      },
+      {
+        id: 'M2-Q05',
+        prompt: 'Which step should you AVOID on the pin safety checklist?',
+        options: [
+          { id: 'a', label: 'Skip telling the customer where pins are placed' },
+          { id: 'b', label: 'Confirm pins are horizontal and closed' },
+          { id: 'c', label: 'Count pins before bagging' },
+          { id: 'd', label: 'Replace straight pins with safety pins' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Always inform customers about pin locations for safety.'
+      },
+      {
+        id: 'M2-Q06',
+        prompt: 'Which is the MOST risky next step after a quick fitting with straight pins?',
+        options: [
+          { id: 'a', label: 'Bagging the garment immediately with straight pins still in' },
+          { id: 'b', label: 'Switching to safety pins and locking them' },
+          { id: 'c', label: 'Smoothing the hem and verifying placement' },
+          { id: 'd', label: 'Counting pins before the customer leaves' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Garments should never travel with open straight pins.'
+      },
+      {
+        id: 'M2-Q07',
+        prompt: 'Which note should you AVOID when documenting pin choices?',
+        options: [
+          { id: 'a', label: 'Pins replaced with closed safety pins at hem line' },
+          { id: 'b', label: 'Safety pins locked, horizontal at inseam 30' },
+          { id: 'c', label: 'Left straight pins to save time' },
+          { id: 'd', label: 'Customer informed about pin placement' }
+        ],
+        correctOptionId: 'c',
+        tip: 'Leaving straight pins is unsafe for transport.'
+      },
+      {
+        id: 'M2-Q08',
+        prompt: 'Which question should you ask yourself before a garment leaves the store?',
+        options: [
+          { id: 'a', label: 'Are all pins horizontal and locked closed?' },
+          { id: 'b', label: 'Did I use enough vertical pins to hold it?' },
+          { id: 'c', label: 'Can I skip counting pins if I am rushed?' },
+          { id: 'd', label: 'Should I remove all pins before the plant sees it?' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Orientation and closure prevent shifting and injuries.'
+      },
+      {
+        id: 'M2-Q09',
+        prompt: 'Which is NOT acceptable for garments headed through racks and machinery?',
+        options: [
+          { id: 'a', label: 'Closed safety pins placed horizontally' },
+          { id: 'b', label: 'Loose straight pins with sharp points exposed' },
+          { id: 'c', label: 'Informing the customer where pins are' },
+          { id: 'd', label: 'Counting and checking pin security' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Exposed points can injure people and damage garments.'
+      },
+      {
+        id: 'M2-Q10',
+        prompt: 'Which orientation helps hems survive transit?',
+        options: [
+          { id: 'a', label: 'Horizontal pins following the hem line' },
+          { id: 'b', label: 'Vertical pins pointing toward the floor' },
+          { id: 'c', label: 'Diagonal pins to speed up' },
+          { id: 'd', label: 'No pins—just hope the fold stays' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Horizontal pins protect the measurement and reduce snags.'
+      },
+      {
+        id: 'M2-Q11',
+        prompt: 'Which statement shows good communication with customers about pins?',
+        options: [
+          { id: 'a', label: '“Pins are in; be careful.”' },
+          { id: 'b', label: '“I placed closed safety pins horizontally at the new hem here.”' },
+          { id: 'c', label: '“We used straight pins; hope they stay.”' },
+          { id: 'd', label: '“We skipped pins to save time.”' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Tell customers what kind of pins you used and where.'
+      },
+      {
+        id: 'M2-Q12',
+        prompt: 'Which option is MOST risky during a rush?',
+        options: [
+          { id: 'a', label: 'Skipping the pin count and leaving straight pins in' },
+          { id: 'b', label: 'Closing safety pins after replacing the straight pins' },
+          { id: 'c', label: 'Checking that the hem stays level after pinning' },
+          { id: 'd', label: 'Reminding the customer about pin placement' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Never sacrifice safety steps when busy.'
+      }
+    ],
+    M3: [
+      {
+        id: 'M3-Q01',
+        prompt: 'How should hems be pinned for pants or skirts?',
+        options: [
+          { id: 'a', label: 'Vertically with one pin' },
+          { id: 'b', label: 'Horizontally at the new hem with multiple pins to keep it straight' },
+          { id: 'c', label: 'No pins—just fold the fabric' },
+          { id: 'd', label: 'Only pin one leg and copy the number' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Use multiple horizontal pins to hold the line.'
+      },
+      {
+        id: 'M3-Q02',
+        prompt: 'Which is the MOST risky next step when a customer mentions one leg is shorter?',
+        options: [
+          { id: 'a', label: 'Pin and measure each leg separately, then record both numbers' },
+          { id: 'b', label: 'Assume they match and average the lengths' },
+          { id: 'c', label: 'Confirm the customer’s preferred balance if requested' },
+          { id: 'd', label: 'Document left vs. right inseam if different' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Never average or assume symmetry—measure both legs.'
+      },
+      {
+        id: 'M3-Q03',
+        prompt: 'Why ask male customers about handedness?',
+        options: [
+          { id: 'a', label: 'It helps balance inseams because weight often favors one leg' },
+          { id: 'b', label: 'It changes the fabric type' },
+          { id: 'c', label: 'It determines the pin color' },
+          { id: 'd', label: 'It is required for payment' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Handedness influences weight distribution and hem balance.'
+      },
+      {
+        id: 'M3-Q04',
+        prompt: 'Which option should you AVOID when customers bring patches?',
+        options: [
+          { id: 'a', label: 'Pin each patch to its specific garment' },
+          { id: 'b', label: 'Leave patches loose in the bag to sort later' },
+          { id: 'c', label: 'Mark the pocket or panel the patch belongs to' },
+          { id: 'd', label: 'Ask the customer to choose the exact spot' }
+        ],
+        correctOptionId: 'b',
+        tip: 'One patch should be pinned to one garment with a clear location.'
+      },
+      {
+        id: 'M3-Q05',
+        prompt: 'What should you do before measuring any garment?',
+        options: [
+          { id: 'a', label: 'Stretch the fabric to make it tight' },
+          { id: 'b', label: 'Smooth the fabric so it lies flat without pulling' },
+          { id: 'c', label: 'Skip smoothing if rushed' },
+          { id: 'd', label: 'Measure only one side' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Smooth, don’t stretch—stretching adds error.'
+      },
+      {
+        id: 'M3-Q06',
+        prompt: 'Which note is NOT acceptable for garment recording?',
+        options: [
+          { id: 'a', label: 'Jeans: shorten inseam to 30.0 (customer wearing dress shoes).' },
+          { id: 'b', label: 'Shorten sleeves to 23 inches from shoulder seam.' },
+          { id: 'c', label: 'Take up inseam like usual.' },
+          { id: 'd', label: 'Left inseam to 29.5; Right inseam to 30 (confirmed).' }
+        ],
+        correctOptionId: 'c',
+        tip: 'Replace vague notes with final, measured dimensions.'
+      },
+      {
+        id: 'M3-Q07',
+        prompt: 'Which is the MOST risky next step after a customer pins their own garment?',
+        options: [
+          { id: 'a', label: 'Measure at the pin, confirm aloud, and rewrite as a final measurement' },
+          { id: 'b', label: 'Swap loose straight pins for safety pins if it is leaving' },
+          { id: 'c', label: 'Send it as pinned without measuring' },
+          { id: 'd', label: 'Note “customer pinned” and the final number' }
+        ],
+        correctOptionId: 'c',
+        tip: 'Always verify customer pins with a tape measure.'
+      },
+      {
+        id: 'M3-Q08',
+        prompt: 'Which option is NOT acceptable when handling bias or knit fabric?',
+        options: [
+          { id: 'a', label: 'Smooth the hang line before pinning' },
+          { id: 'b', label: 'Stretch the fabric to speed up pinning' },
+          { id: 'c', label: 'Use multiple pins to keep the hem level' },
+          { id: 'd', label: 'Confirm balance on both sides' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Stretching bias or knit fabric ruins accuracy.'
+      },
+      {
+        id: 'M3-Q09',
+        prompt: 'Which scenario requires separate measurements?',
+        options: [
+          { id: 'a', label: 'Customer says right leg feels longer' },
+          { id: 'b', label: 'Both legs look even' },
+          { id: 'c', label: 'Skirt hem with no balance concerns' },
+          { id: 'd', label: 'Sleeves that match in length' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Document individual inseams when customers flag differences.'
+      },
+      {
+        id: 'M3-Q10',
+        prompt: 'Which note should you AVOID for sleeve pinning?',
+        options: [
+          { id: 'a', label: 'Shorten sleeves to 23 inches from shoulder seam' },
+          { id: 'b', label: 'Match both sleeves at wrist bone' },
+          { id: 'c', label: 'Hem sleeves' },
+          { id: 'd', label: 'Check lining before pinning' }
+        ],
+        correctOptionId: 'c',
+        tip: '“Hem sleeves” is vague—include the final length.'
+      },
+      {
+        id: 'M3-Q11',
+        prompt: 'Which is the correct workflow for pants hems?',
+        options: [
+          { id: 'a', label: 'Pin left leg, measure, pin right leg, measure, confirm both' },
+          { id: 'b', label: 'Pin one leg and assume the other matches' },
+          { id: 'c', label: 'Skip measuring if the tag is visible' },
+          { id: 'd', label: 'Measure after sewing' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Always pin and measure each leg separately.'
+      },
+      {
+        id: 'M3-Q12',
+        prompt: 'Which is NOT acceptable when documenting drape differences?',
+        options: [
+          { id: 'a', label: 'Note pant type and shoe choice if it affects length' },
+          { id: 'b', label: 'Write “take up inseam like usual”' },
+          { id: 'c', label: 'Record exact inseam numbers for both legs if different' },
+          { id: 'd', label: 'Mention customer’s preference for a slightly longer side if confirmed' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Avoid casual phrases—use specific measurements and context.'
+      }
+    ],
+    M4: [
+      {
+        id: 'M4-Q01',
+        prompt: 'Which SPOT note format is objective and clear?',
+        options: [
+          { id: 'a', label: 'Hem pants' },
+          { id: 'b', label: 'Shorten inseam to 30 inches. Customer tried on and approved.' },
+          { id: 'c', label: 'Take in a little' },
+          { id: 'd', label: 'Use tag 32' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Use final measurements and note the approval.'
+      },
+      {
+        id: 'M4-Q02',
+        prompt: 'Which note should you AVOID because it uses “hem” as a verb?',
+        options: [
+          { id: 'a', label: 'Shorten sleeves to 23 inches from shoulder seam.' },
+          { id: 'b', label: 'Hem dress 2 inches.' },
+          { id: 'c', label: 'Finished hem 36 inches from floor with flats.' },
+          { id: 'd', label: 'INSEAM 30 (measured, not tag).' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Replace “hem” with “shorten to” plus the final dimension.'
+      },
+      {
+        id: 'M4-Q03',
+        prompt: 'Which is the MOST risky next step after seeing “Use tag length 32” in notes?',
+        options: [
+          { id: 'a', label: 'Measure the inseam and rewrite with the real number' },
+          { id: 'b', label: 'Leave the tag length because it is fast' },
+          { id: 'c', label: 'Confirm the customer’s preferred final length' },
+          { id: 'd', label: 'Note shoe type if it affects drape' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Tag sizes are not reliable; measure and record the final number.'
+      },
+      {
+        id: 'M4-Q04',
+        prompt: 'Which option is NOT acceptable in the Notes field?',
+        options: [
+          { id: 'a', label: 'Shorten inseam to 29 inches (customer pinned, verified).' },
+          { id: 'b', label: 'Hem to whatever you think looks best.' },
+          { id: 'c', label: 'Jeans: shorten inseam to 30.0 (measured).' },
+          { id: 'd', label: 'Take in waist to 34 inches; customer can sit comfortably.' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Avoid vague instructions; state the final measurement and context.'
+      },
+      {
+        id: 'M4-Q05',
+        prompt: 'Which note mirrors the customer’s expectation and the tailor’s need?',
+        options: [
+          { id: 'a', label: 'Hem pants a bit' },
+          { id: 'b', label: 'Finished hem 36 inches from floor with flats' },
+          { id: 'c', label: 'Take in some' },
+          { id: 'd', label: 'Shorten like last time' }
+        ],
+        correctOptionId: 'b',
+        tip: 'State the finished measurement and any shoe or drape context.'
+      },
+      {
+        id: 'M4-Q06',
+        prompt: 'Which option is NOT acceptable when training a new CSR on SPOT notes?',
+        options: [
+          { id: 'a', label: 'Approve “hem sleeves” as a final note' },
+          { id: 'b', label: 'Show them how to use INSEAM 30 format' },
+          { id: 'c', label: 'Model repeating the measurement back to the customer' },
+          { id: 'd', label: 'Remind them to include garment type when relevant' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Avoid “hem” as a verb; use objective language.'
+      },
+      {
+        id: 'M4-Q07',
+        prompt: 'Which statement should be avoided because it leaves gaps?',
+        options: [
+          { id: 'a', label: 'Customer tried on and approved length with normal shoes.' },
+          { id: 'b', label: 'Shorten inseam to 30 inches.' },
+          { id: 'c', label: 'Hem it' },
+          { id: 'd', label: 'Measured and confirmed inseam to 30.5.' }
+        ],
+        correctOptionId: 'c',
+        tip: 'Notes should stand alone without guessing.'
+      },
+      {
+        id: 'M4-Q08',
+        prompt: 'Which is the MOST risky next step after reading “Hem to 36 inches”?',
+        options: [
+          { id: 'a', label: 'Rewrite as “Finished hem 36 inches from floor” and confirm with customer' },
+          { id: 'b', label: 'Assume it means shorten to 36 inches without context' },
+          { id: 'c', label: 'Check if shoe type affects the length' },
+          { id: 'd', label: 'Verify the measurement with the customer' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Clarify wording and context instead of assuming.'
+      },
+      {
+        id: 'M4-Q09',
+        prompt: 'Which option is NOT acceptable for customer-pinned garments in SPOT?',
+        options: [
+          { id: 'a', label: 'Shorten inseam to 29 inches (customer pinned, verified).' },
+          { id: 'b', label: 'Note tailor review if garment is complex' },
+          { id: 'c', label: 'Record “as pinned” with no measurement' },
+          { id: 'd', label: 'Confirm final measurement aloud before saving' }
+        ],
+        correctOptionId: 'c',
+        tip: 'Include the verified measurement even when the customer pinned.'
+      },
+      {
+        id: 'M4-Q10',
+        prompt: 'Which note best uses the standard format?',
+        options: [
+          { id: 'a', label: 'Hem pants 2 inches' },
+          { id: 'b', label: 'INSEAM 30; customer wearing dress shoes' },
+          { id: 'c', label: 'Shorten some' },
+          { id: 'd', label: 'Use tag 34' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Lead with INSEAM/WAIST/SLEEVE + number and context.'
+      },
+      {
+        id: 'M4-Q11',
+        prompt: 'Which option is NOT acceptable when correcting vague notes?',
+        options: [
+          { id: 'a', label: 'Change “hem pants” to “Shorten inseam to 30 inches.”' },
+          { id: 'b', label: 'Leave “take in 2 inches” as-is' },
+          { id: 'c', label: 'Replace “use tag size” with the measured inseam' },
+          { id: 'd', label: 'Add garment type when drape matters' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Convert change amounts into final measurements.'
+      },
+      {
+        id: 'M4-Q12',
+        prompt: 'Which note supports the tailor MOST clearly?',
+        options: [
+          { id: 'a', label: 'Hem sleeves' },
+          { id: 'b', label: 'Shorten sleeves to 23 inches from shoulder seam; match both sleeves.' },
+          { id: 'c', label: 'Shorter sleeves please' },
+          { id: 'd', label: 'Use previous length' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Specific measurements and match instructions remove guesswork.'
+      }
+    ],
+    M5: [
+      {
+        id: 'M5-Q01',
+        prompt: 'Which garment must be escalated to the tailor?',
+        options: [
+          { id: 'a', label: 'Simple cotton chinos needing a hem' },
+          { id: 'b', label: 'Wedding dress with beading and multiple layers' },
+          { id: 'c', label: 'Casual skirt needing a basic waist take-in' },
+          { id: 'd', label: 'Jeans with small patch request' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Complex, delicate garments require tailor-only handling.'
+      },
+      {
+        id: 'M5-Q02',
+        prompt: 'Which note should you AVOID when unsure about a complex garment?',
+        options: [
+          { id: 'a', label: '“Tailor to review before any pinning; delicate beading.”' },
+          { id: 'b', label: '“Customer pinned; tailor to confirm before sewing.”' },
+          { id: 'c', label: '“I will guess the pinning to save time.”' },
+          { id: 'd', label: '“Escalated to tailor for plan and approval.”' }
+        ],
+        correctOptionId: 'c',
+        tip: 'Never guess on complex garments—escalate instead.'
+      },
+      {
+        id: 'M5-Q03',
+        prompt: 'Which is the MOST risky next step when a customer pins a delicate gown?',
+        options: [
+          { id: 'a', label: 'Escalate to tailor review before altering' },
+          { id: 'b', label: 'Accept the pins and send to the plant without review' },
+          { id: 'c', label: 'Document that tailor must review before sewing' },
+          { id: 'd', label: 'Thank the customer and explain the review process' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Customer pins on delicate garments still need tailor approval.'
+      },
+      {
+        id: 'M5-Q04',
+        prompt: 'Which statement reflects the escalation mindset?',
+        options: [
+          { id: 'a', label: 'If you feel unsure, ask the tailor to review and pin' },
+          { id: 'b', label: 'Pin it quickly so the line moves' },
+          { id: 'c', label: 'Assume the customer’s pins are enough for any fabric' },
+          { id: 'd', label: 'Skip documentation to avoid scaring the customer' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Escalate when uncomfortable instead of guessing.'
+      },
+      {
+        id: 'M5-Q05',
+        prompt: 'Which note should you AVOID because it omits a safety check?',
+        options: [
+          { id: 'a', label: 'Tailor-only: beaded bodice; review before pinning.' },
+          { id: 'b', label: 'Customer pinned train; tailor to confirm length before sewing.' },
+          { id: 'c', label: 'Proceed without tailor even though fabric is fragile.' },
+          { id: 'd', label: 'Escalate leather jacket shoulder reshape to tailor for plan.' }
+        ],
+        correctOptionId: 'c',
+        tip: 'High-risk fabric demands tailor oversight.'
+      },
+      {
+        id: 'M5-Q06',
+        prompt: 'Which communication is MOST aligned with policy?',
+        options: [
+          { id: 'a', label: '“Because of the detail, our tailor will review this to keep it safe.”' },
+          { id: 'b', label: '“This is too hard; I guess we will try.”' },
+          { id: 'c', label: '“We will sew it exactly as pinned without looking.”' },
+          { id: 'd', label: '“I am not sure, but I will just pin something.”' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Be confident and clear about tailor review for safety.'
+      },
+      {
+        id: 'M5-Q07',
+        prompt: 'Which is NOT acceptable when documenting boundary statements?',
+        options: [
+          { id: 'a', label: 'Say “This needs a tailor” instead of guessing on risky garments.' },
+          { id: 'b', label: 'Promise to pin quickly even if unsure.' },
+          { id: 'c', label: 'Note that complex fabrics require tailor review.' },
+          { id: 'd', label: 'Explain that slowing down prevents damage.' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Never promise to guess; escalate instead.'
+      },
+      {
+        id: 'M5-Q08',
+        prompt: 'Which option is MOST risky when a garment feels fragile?',
+        options: [
+          { id: 'a', label: 'Escalate to tailor for plan before any pinning' },
+          { id: 'b', label: 'Document the risk and ask the tailor to review' },
+          { id: 'c', label: 'Proceed with pins even though you feel uncomfortable' },
+          { id: 'd', label: 'Thank the customer and explain the review step' }
+        ],
+        correctOptionId: 'c',
+        tip: 'Discomfort is a sign to stop and escalate.'
+      },
+      {
+        id: 'M5-Q09',
+        prompt: 'Which note protects both the garment and the team?',
+        options: [
+          { id: 'a', label: 'Tailor-only: delicate lace; no alterations until tailor confirms plan.' },
+          { id: 'b', label: 'Do whatever seems fastest' },
+          { id: 'c', label: 'Skip notes; tailor will guess' },
+          { id: 'd', label: 'Promise to sew it today without review' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Documentation should direct the tailor and guard against risk.'
+      },
+      {
+        id: 'M5-Q10',
+        prompt: 'Which option is NOT acceptable after seeing a customer-pin on a leather jacket?',
+        options: [
+          { id: 'a', label: 'Escalate to tailor for structural plan before any pinning' },
+          { id: 'b', label: 'Document that tailor must review customer pins' },
+          { id: 'c', label: 'Tell customer you will guess the pinning to keep things moving' },
+          { id: 'd', label: 'Protect the garment and reputation by slowing down' }
+        ],
+        correctOptionId: 'c',
+        tip: 'Guessing on leather risks damage; tailor must lead.'
+      },
+      {
+        id: 'M5-Q11',
+        prompt: 'Which is the MOST risky next step when you feel unsure about the fabric?',
+        options: [
+          { id: 'a', label: 'Stop and ask the tailor to review' },
+          { id: 'b', label: 'Document the risk and defer to tailor' },
+          { id: 'c', label: 'Keep pinning anyway to avoid delay' },
+          { id: 'd', label: 'Explain to the customer that the tailor will advise' }
+        ],
+        correctOptionId: 'c',
+        tip: 'Uncertainty means escalate, not proceed.'
+      },
+      {
+        id: 'M5-Q12',
+        prompt: 'Which communication best sets expectations for tailor review?',
+        options: [
+          { id: 'a', label: '“Our tailor will double-check this delicate fabric before we pin anything.”' },
+          { id: 'b', label: '“We will guess the fit now to save time.”' },
+          { id: 'c', label: '“We do not have time to escalate.”' },
+          { id: 'd', label: '“Pins are already in; no need for review.”' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Set a confident, safety-focused expectation for tailor review.'
+      }
+    ]
+  };
+
   const moduleTimeEstimates = {
     M1: 20,
     M2: 15,
@@ -682,12 +1415,14 @@
   const totalProgramMinutes = Object.values(moduleTimeEstimates).reduce((sum, minutes) => sum + minutes, 0);
 
   let lastCertificationStatus = null;
+  const activeQuizState = {};
 
   document.addEventListener('DOMContentLoaded', () => {
     setTotalEstimateText();
     setRemainingEstimatePlaceholder();
     renderNavigation();
     renderModules();
+    initializeModuleQuizzes();
     bindIdentityPersistence();
     restoreIdentityFromStorage();
     updateCertificateButtonState(lastCertificationStatus);
@@ -791,6 +1526,21 @@
             </div>`;
   }
 
+  function quizHostTemplate(module) {
+    const moduleNumber = module.id.replace('M', '');
+    return `
+      <div class="quiz quiz-card" aria-label="quiz for ${module.title}">
+        <h3>Module ${moduleNumber} Quiz</h3>
+        <div id="module${moduleNumber}-quiz-host" class="quiz-host"></div>
+        <div class="quiz-footer">
+          <button type="button" class="primary" id="module${moduleNumber}-quiz-submit">Submit Quiz</button>
+          <div class="quiz-feedback status-text" id="module${moduleNumber}-quiz-feedback">Score a minimum of 80% to pass.</div>
+        </div>
+        ${renderModuleNavigation(module.id)}
+      </div>
+    `;
+  }
+
   function moduleTemplate(module) {
     if (module.id === 'M1') {
       return moduleOneTemplate(module);
@@ -813,8 +1563,6 @@
         <h3>${section.title}</h3>
         <ul>${section.bullets.map(b => `<li>${b}</li>`).join('')}</ul>
       </div>`).join('');
-    const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
-
     const sectionId = `module-${module.id}`;
     const headingId = `${sectionId}-title`;
     return `
@@ -832,15 +1580,7 @@
             <strong>Visual/Diagram Descriptions:</strong>
             <ul>${module.sections.map(s => s.bullets.find(b => b.toLowerCase().includes('diagram') || b.toLowerCase().includes('visual'))).filter(Boolean).map(item => `<li>${item}</li>`).join('') || '<li>See notes above.</li>'}</ul>
           </div>
-          <div class="quiz" aria-label="quiz for ${module.title}">
-            <h3>Knowledge Check</h3>
-            ${quiz}
-          <div class="quiz-footer">
-            <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
-            <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
-          </div>
-          ${renderModuleNavigation(module.id)}
-        </div>
+          ${quizHostTemplate(module)}
       </article>
     </section>
   `;
@@ -879,8 +1619,6 @@
         <p class="hint">Example: ${prompt.example}</p>
       </div>
     `).join('');
-    const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
-
     const sectionId = `module-${module.id}`;
     const headingId = `${sectionId}-title`;
     return `
@@ -955,15 +1693,7 @@
           <p>“I’ll note <strong>‘shorten inseam to 30 inches’</strong>. Is that exactly what you want?” Repeat back the final measurement before saving it.</p>
         </div>
 
-        <div class="quiz" aria-label="quiz for ${module.title}">
-          <h3>Knowledge Check</h3>
-          ${quiz}
-          <div class="quiz-footer">
-            <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
-            <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
-          </div>
-          ${renderModuleNavigation(module.id)}
-        </div>
+        ${quizHostTemplate(module)}
         </article>
       </section>
     `;
@@ -1023,8 +1753,6 @@
     `).join('');
     const corrections = module.corrections.map(item => `<li><span class="bad">${item.bad}</span> → <span class="good">${item.good}</span></li>`).join('');
     const checklist = module.noteChecklist.map(item => `<li>${item}</li>`).join('');
-    const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
-
     const sectionId = `module-${module.id}`;
     const headingId = `${sectionId}-title`;
     return `
@@ -1109,15 +1837,7 @@
           <ul>${checklist}</ul>
         </div>
 
-        <div class="quiz" aria-label="quiz for ${module.title}">
-          <h3>Knowledge Check</h3>
-          ${quiz}
-          <div class="quiz-footer">
-            <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
-            <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
-          </div>
-          ${renderModuleNavigation(module.id)}
-        </div>
+        ${quizHostTemplate(module)}
         </article>
       </section>
     `;
@@ -1146,8 +1866,6 @@
         <p class="answer">Answer: ${s.answer}</p>
       </div>
     `).join('');
-
-    const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
 
     const sectionId = `module-${module.id}`;
     const headingId = `${sectionId}-title`;
@@ -1213,15 +1931,7 @@
           ${scenarios}
         </div>
 
-        <div class="quiz" aria-label="quiz for ${module.title}">
-          <h3>Knowledge Check</h3>
-          ${quiz}
-          <div class="quiz-footer">
-            <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
-            <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
-          </div>
-          ${renderModuleNavigation(module.id)}
-        </div>
+        ${quizHostTemplate(module)}
         </article>
       </section>
     `;
@@ -1272,8 +1982,6 @@
       </div>
     `).join('');
     const quickChecklist = module.quickChecklist.map(item => `<li>${item}</li>`).join('');
-    const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
-
     const sectionId = `module-${module.id}`;
     const headingId = `${sectionId}-title`;
     return `
@@ -1392,15 +2100,7 @@
           <ul>${quickChecklist}</ul>
         </div>
 
-        <div class="quiz" aria-label="quiz for ${module.title}">
-          <h3>Knowledge Check</h3>
-          ${quiz}
-          <div class="quiz-footer">
-            <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
-            <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
-          </div>
-          ${renderModuleNavigation(module.id)}
-        </div>
+        ${quizHostTemplate(module)}
         </article>
       </section>
     `;
@@ -1446,8 +2146,6 @@
     `).join('');
     const documentationList = module.documentationNotes.map(note => `<li>${note}</li>`).join('');
     const boundaryList = module.boundaryStatements.map(item => `<li>${item}</li>`).join('');
-    const quiz = module.quiz.map((q, idx) => renderQuestion(module.id, idx, q)).join('');
-
     const sectionId = `module-${module.id}`;
     const headingId = `${sectionId}-title`;
     return `
@@ -1512,30 +2210,89 @@
           <p>Safety and garment integrity take priority over speed. Escalate early rather than risk damage.</p>
         </div>
 
-        <div class="quiz" aria-label="quiz for ${module.title}">
-          <h3>Knowledge Check</h3>
-          ${quiz}
-          <div class="quiz-footer">
-            <button class="primary" onclick="submitQuiz('${module.id}')">Submit Quiz</button>
-            <div class="status-text" id="${module.id}-result">Score a minimum of 80% to pass.</div>
-          </div>
-          ${renderModuleNavigation(module.id)}
-        </div>
+        ${quizHostTemplate(module)}
         </article>
       </section>
     `;
   }
 
-  function renderQuestion(moduleId, idx, q) {
+  function getModuleNumber(moduleId) {
+    return moduleId.replace('M', '');
+  }
+
+  function getQuizHostId(moduleId) {
+    return `module${getModuleNumber(moduleId)}-quiz-host`;
+  }
+
+  function getQuizButtonId(moduleId) {
+    return `module${getModuleNumber(moduleId)}-quiz-submit`;
+  }
+
+  function getQuizFeedbackId(moduleId) {
+    return `module${getModuleNumber(moduleId)}-quiz-feedback`;
+  }
+
+  function getFeedbackElement(moduleId) {
+    return document.getElementById(getQuizFeedbackId(moduleId)) || document.getElementById(`${moduleId}-result`);
+  }
+
+  function getQuestionInputName(moduleId, questionId) {
+    return `module${getModuleNumber(moduleId)}-q-${questionId}`;
+  }
+
+  function shuffleArray(list) {
+    const array = [...list];
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  function renderDynamicQuestion(moduleId, idx, question) {
     const questionNumber = idx + 1;
-    const name = `module${moduleId.replace('M','')}-q${questionNumber}`;
-    const options = q.options || [];
-    const optionHtml = options.map(opt => {
-      const value = opt.value || opt.letter || opt.label;
-      return `
-      <label><input type="radio" name="${name}" value="${value}"> ${opt.label}</label>
-    `; }).join('');
-    return `<div class="quiz-question"><strong>${questionNumber}. ${q.question}</strong><div class="quiz-options">${optionHtml}</div></div>`;
+    const options = question.options || [];
+    const name = getQuestionInputName(moduleId, question.id);
+    const optionHtml = options.map(opt => `
+      <label><input type="radio" name="${name}" value="${opt.id}"> ${opt.label}</label>
+    `).join('');
+    return `<div class="quiz-question"><strong>${questionNumber}. ${question.prompt}</strong><div class="quiz-options">${optionHtml}</div></div>`;
+  }
+
+  function renderQuizForModule(moduleId) {
+    const host = document.getElementById(getQuizHostId(moduleId));
+    if (!host) return;
+
+    const pool = moduleQuestionPools[moduleId] || [];
+    if (!pool.length) {
+      host.innerHTML = '<p class="status-text">Quiz questions are loading. Please refresh.</p>';
+      activeQuizState[moduleId] = { questions: [] };
+      return;
+    }
+
+    const selectedQuestions = shuffleArray(pool).slice(0, Math.min(6, pool.length)).map(question => ({
+      ...question,
+      options: shuffleArray((question.options || []).map(opt => ({ ...opt })))
+    }));
+
+    activeQuizState[moduleId] = { questions: selectedQuestions };
+    host.innerHTML = selectedQuestions.map((q, idx) => renderDynamicQuestion(moduleId, idx, q)).join('');
+
+    const feedbackEl = getFeedbackElement(moduleId);
+    if (feedbackEl) {
+      feedbackEl.textContent = 'Score a minimum of 80% to pass.';
+      feedbackEl.style.color = '';
+    }
+  }
+
+  function initializeModuleQuizzes() {
+    modules.forEach(module => {
+      renderQuizForModule(module.id);
+      const submitButton = document.getElementById(getQuizButtonId(module.id));
+      if (submitButton) {
+        submitButton.addEventListener('click', () => submitQuiz(module.id));
+      }
+    });
   }
 
   function getSelectedRadioValue(name) {
@@ -1546,34 +2303,33 @@
     return null;
   }
 
-  const MODULE1_ANSWER_KEY = { q1: 'b', q2: 'b', q3: 'b', q4: 'b', q5: 'b' };
-  const MODULE2_ANSWER_KEY = { q1: 'b', q2: 'b', q3: 'a', q4: 'a', q5: 'a' };
-  const MODULE3_ANSWER_KEY = { q1: 'b', q2: 'b', q3: 'b', q4: 'b', q5: 'b' };
-  const MODULE4_ANSWER_KEY = { q1: 'b', q2: 'b', q3: 'a', q4: 'b', q5: 'a' };
-  const MODULE5_ANSWER_KEY = { q1: 'b', q2: 'b', q3: 'a', q4: 'a', q5: 'a' };
-
   function evaluateModuleQuiz(moduleId) {
-    const answerKey = {
-      M1: MODULE1_ANSWER_KEY,
-      M2: MODULE2_ANSWER_KEY,
-      M3: MODULE3_ANSWER_KEY,
-      M4: MODULE4_ANSWER_KEY,
-      M5: MODULE5_ANSWER_KEY
-    }[moduleId];
-    const moduleNumber = moduleId.replace('M', '');
-    const namePrefix = `module${moduleNumber}`;
-    let correct = 0;
-    const total = Object.keys(answerKey).length;
+    const state = activeQuizState[moduleId];
+    const questions = state?.questions || [];
+    if (!questions.length) {
+      return { score: 0, correct: 0, total: 0, incorrectDetails: [] };
+    }
 
-    Object.entries(answerKey).forEach(([key, value]) => {
-      const selected = getSelectedRadioValue(`${namePrefix}-${key}`);
-      if (selected === value) {
+    let correct = 0;
+    const incorrectDetails = [];
+
+    questions.forEach((question, idx) => {
+      const selected = getSelectedRadioValue(getQuestionInputName(moduleId, question.id));
+      const isCorrect = selected === question.correctOptionId;
+      if (isCorrect) {
         correct += 1;
+      } else {
+        incorrectDetails.push({
+          number: idx + 1,
+          prompt: question.prompt,
+          tip: question.tip
+        });
       }
     });
 
-    const score = Math.round((correct / total) * 100);
-    return { score, correct, total };
+    const total = questions.length;
+    const score = total ? Math.round((correct / total) * 100) : 0;
+    return { score, correct, total, incorrectDetails };
   }
 
   function submitQuiz(moduleId) {
@@ -1582,32 +2338,62 @@
       alert('Enter your employee name before submitting.');
       return;
     }
+
     const location = getEmployeeLocation();
     const results = evaluateModuleQuiz(moduleId);
+
+    if (!results.total) {
+      updateModuleResultText(moduleId, false, 0, 0, 0, [], 'Quiz questions were not loaded. Please try again.');
+      renderQuizForModule(moduleId);
+      return;
+    }
+
     const passed = results.score >= 80;
-    updateModuleResultText(moduleId, passed, results.score, results.correct, results.total);
+    updateModuleResultText(moduleId, passed, results.score, results.correct, results.total, results.incorrectDetails);
+
+    const regenerateQuiz = () => renderQuizForModule(moduleId);
 
     if (google.script && google.script.run) {
       google.script.run.withSuccessHandler(() => {
         showToast('Module result saved', 'success');
         loadCertificationStatus();
+        regenerateQuiz();
       }).withFailureHandler(err => {
         showToast('Error saving result. Please retry.', 'error');
-        updateModuleResultText(moduleId, false, results.score, results.correct, results.total, `Error saving: ${err}`);
+        updateModuleResultText(moduleId, false, results.score, results.correct, results.total, results.incorrectDetails, `Error saving: ${err}`);
+        regenerateQuiz();
       }).saveModuleResult(moduleId, name, location, results.score, passed);
+    } else {
+      regenerateQuiz();
     }
   }
 
-  function updateModuleResultText(moduleId, passed, score, correct, total, errorText) {
-    const el = document.getElementById(`${moduleId}-result`);
+  function updateModuleResultText(moduleId, passed, score, correct, total, incorrectDetails = [], errorText) {
+    const el = getFeedbackElement(moduleId);
     if (!el) return;
+
     if (errorText) {
       el.textContent = errorText;
       el.style.color = '#991b1b';
       return;
     }
-    el.textContent = `${passed ? 'PASS' : 'Review content and retry'} — ${correct}/${total} correct (${score}%).`;
+
+    const summary = `${passed ? 'PASS' : 'Review content and retry'} — ${correct}/${total} correct (${score}%).`;
+    const tips = (incorrectDetails || []).map(item => `<li><strong>Q${item.number}</strong>: ${item.tip || 'Review this topic again.'}</li>`).join('');
+
+    if (tips) {
+      el.innerHTML = `<p>${summary}</p><ul class="quiz-review">${tips}</ul>`;
+    } else {
+      el.textContent = summary;
+    }
+
     el.style.color = passed ? '#0f5132' : '#991b1b';
+
+    const legacyEl = document.getElementById(`${moduleId}-result`);
+    if (legacyEl && legacyEl !== el) {
+      legacyEl.textContent = el.textContent || el.innerText || summary;
+      legacyEl.style.color = el.style.color;
+    }
   }
 
   function loadCertificationStatus() {
