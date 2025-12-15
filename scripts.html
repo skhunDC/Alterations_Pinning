@@ -38,6 +38,10 @@
         {
           title: 'Standard Format',
           details: 'Use clear formats that travel well: “INSEAM 32,” “OUTSEAM 40,” “WAIST 36.”'
+        },
+        {
+          title: 'Tag sizes are NOT measurements',
+          details: 'Never rely on the tag for inseam or waist. BAD: “Inseam 32 (tag says 32).” GOOD: “Measured and confirmed: inseam to 30.5 (customer approved).”'
         }
       ],
       hemCallout: {
@@ -63,6 +67,11 @@
           bad: '“Take in waist a little.”',
           result: 'Waist too tight; customer cannot button comfortably.',
           fix: '“Take in waist to 34 inches; confirm comfortable when seated.”'
+        },
+        {
+          bad: '“Use tag size 32.”',
+          result: 'Tag was wrong from a previous alteration; hem finishes an inch too long.',
+          fix: '“Measured and confirmed: shorten inseam to 30.5; customer approved.”'
         }
       ],
       practicePrompts: [
@@ -80,6 +89,11 @@
           bad: '“Take in 2 inches.”',
           placeholder: 'Record the target waist size…',
           example: '“Take in waist to 36 inches; customer can sit comfortably.”'
+        },
+        {
+          bad: '“Use tag inseam 32.”',
+          placeholder: 'Replace the tag reference with the measured final number…',
+          example: '“Measure and confirm: shorten inseam to 30.5 (customer approved).”'
         }
       ],
       quiz: [
@@ -102,6 +116,11 @@
           { label: 'Shorten a bit', value: 'a', correct: false },
           { label: 'INSEAM 32', value: 'b', correct: true },
           { label: 'Hem pants', value: 'c', correct: false }
+        ]},
+        { type: 'mcq', question: 'Why can’t you rely on the tag size?', options: [
+          { label: 'Tags always match the tailor’s tools', value: 'a', correct: false },
+          { label: 'Tags can be wrong from prior alterations or manufacturing; measure and record the confirmed final number instead', value: 'b', correct: true },
+          { label: 'Tags are only for dry cleaning codes', value: 'c', correct: false }
         ]},
         { type: 'mcq', question: 'What should you confirm aloud before recording the note?', options: [
           { label: 'That the customer wants “a little shorter”', value: 'a', correct: false },
@@ -226,20 +245,21 @@
       objectives: [
         'Pin pants, skirts, simple dresses, and sleeves in the correct location and orientation.',
         'Smooth fabric before measuring—never stretch.',
-        'Ask male customers if they are left- or right-handed to balance inseams.',
+        'Ask male customers if they are left- or right-handed to balance inseams and confirm any preferred drape.',
+        'Pin each pant leg separately; document leg length differences instead of assuming symmetry.',
         'Pair one patch to one garment and avoid loose patches.',
         'Guide customers to pick a specific patch spot—no “wherever it looks best.”',
         'Verify customer-pinned garments with a tape measure and confirm the final measurement.',
-        'Record objective final dimensions for every pinned garment.'
+        'Record objective final dimensions for every pinned garment, including pant type when relevant.'
       ],
       garmentTypes: [
         {
           name: 'Pants (hems + simple waist)',
           csrScope: 'CSR approved',
-          pinning: 'Pin horizontally at the new hem line on both legs; add 1–2 pins near side seams for waist adjusts.',
+          pinning: 'Pin horizontally at the new hem line on the left leg first, then repeat on the right—never assume they match. Add 1–2 pins near side seams for waist adjusts.',
           pins: '3–5 pins around each hem keeps the line straight.',
-          record: '“Shorten inseam to 30 inches.” “Take in waist to 34 inches.”',
-          balance: 'Smooth both legs first; ask handedness to avoid left/right imbalance.'
+          record: '“Shorten inseam to 30 inches.” If legs differ: “Left inseam to 29.5; Right inseam to 30 (confirmed).”',
+          balance: 'Smooth both legs first; ask about handedness and leg length differences to avoid imbalance.'
         },
         {
           name: 'Skirts (hems)',
@@ -277,7 +297,32 @@
       handedness: {
         prompt: 'Ask male customers: “Are you left- or right-handed? It helps us balance your inseam.”',
         reason: 'Right-handed customers often load weight on the right leg. Knowing this keeps hems balanced across both legs.',
-        action: 'Smooth both legs, pin both hems, and double-check the measured inseam on each side.'
+        action: 'Smooth both legs, pin both hems, and double-check the measured inseam on each side. If customer wants a slightly longer side for balance, leave a small allowance only after measuring and confirming with them.',
+        cautions: [
+          'Do not invent an adjustment amount. Pin, measure, and confirm with the customer before noting anything extra.',
+          'If a customer requests a preferred drape on one side, leave a little extra only on that side and record the measured final length.',
+          'Example note: “Right-handed; customer prefers slightly longer right leg. Right inseam = 30.0; Left inseam = 29.75 (confirmed at fitting).”'
+        ]
+      },
+      legLengthCallout: {
+        headline: 'Leg Length Differences Are Common',
+        bullets: [
+          'Customers may already know one leg runs longer or shorter—listen for it and ask follow-up questions.',
+          'Pin and measure each leg independently instead of assuming symmetry.',
+          'Document differences clearly so the tailor can match the customer’s body.'
+        ],
+        notes: ['Left inseam to 29.5”', 'Right inseam to 30”'],
+        scenario: 'Customer says, “My left leg is shorter, please hem accordingly.”'
+      },
+      pantsWorkflow: {
+        title: 'Pants Hem Workflow',
+        steps: [
+          'Pin the left leg at the requested length.',
+          'Measure and capture the final left inseam.',
+          'Pin the right leg separately.',
+          'Measure and capture the final right inseam.',
+          'Confirm both numbers with the customer and record both if they differ.'
+        ]
       },
       patchProtocol: {
         pairing: [
@@ -301,15 +346,35 @@
         reason: 'Verification prevents miscommunication and documents the exact, objective request.'
       },
       recording: [
-        { item: 'Pants', examples: ['Shorten inseam to 30 inches.', 'Take in waist to 34 inches.'] },
+        { item: 'Pants', examples: ['Shorten inseam to 30 inches.', 'Take in waist to 34 inches.', 'Left inseam to 29.5; Right inseam to 30 (confirmed).'] },
+        { item: 'Pant Type', examples: ['Jeans: shorten inseam to 30.0.', 'Wool trousers: shorten inseam to 30.0 (customer wearing dress shoes).'] },
         { item: 'Skirts/Dresses', examples: ['Shorten hem to 38 inches waist-to-floor in heels.', 'Finished length 40 inches shoulder to hem.'] },
         { item: 'Sleeves', examples: ['Shorten sleeves to 23 inches from shoulder seam.', 'Match both sleeves at the wrist bone.'] },
         { item: 'Patches', examples: ['Patch pinned to right chest above pocket.', 'One patch per garment; location noted.'] }
       ],
+      drapeNotes: {
+        headline: 'Drape matters: Jeans vs Trousers',
+        bullets: [
+          'Denim, wool, and dress trousers hang differently. Note the fabric type so tailors account for drape.',
+          'Record the shoe type if it affects where the hem rests.'
+        ],
+        examples: ['Jeans: shorten inseam to 30.0.', 'Wool trousers: shorten inseam to 30.0 (customer wearing dress shoes).']
+      },
+      practiceScenarios: [
+        {
+          prompt: 'Customer says, “My left leg is shorter, please hem accordingly.”',
+          response: 'Pin and measure each leg separately, confirm both numbers, and note them individually.'
+        },
+        {
+          prompt: 'Customer mentions being right-handed and wanting the right leg to feel slightly heavier.',
+          response: 'Pin normally, measure both legs, leave only the slight confirmed allowance on the right, and record the measured values.'
+        }
+      ],
       quickChecklist: [
         'Smooth then measure; never stretch to reach the tape.',
-        'Pin horizontally and mirror left/right sides.',
-        'Ask handedness for men and double-check both legs.',
+        'Pin each pant leg separately: pin/measure left, then pin/measure right.',
+        'Ask handedness, measure both legs, and only add extra length if the customer confirms it.',
+        'Note pant type (jeans vs trousers) and shoe type if it affects drape.',
         'One patch per garment with a chosen spot, not a guess later.',
         'Customer-pinned? Verify with tape and write the final dimension.'
       ],
@@ -324,20 +389,30 @@
           { label: 'It helps balance inseams because weight often favors one leg', value: 'b', correct: true },
           { label: 'It is required for payment', value: 'c', correct: false }
         ]},
-        { type: 'mcq', question: 'What should you do before measuring fabric?', options: [
-          { label: 'Stretch it tight to keep it still', value: 'a', correct: false },
-          { label: 'Smooth it flat without stretching', value: 'b', correct: true },
-          { label: 'Leave wrinkles because the tailor will press it', value: 'c', correct: false }
+        { type: 'mcq', question: 'When legs differ, what is the correct workflow?', options: [
+          { label: 'Assume both legs match and average the lengths', value: 'a', correct: false },
+          { label: 'Pin and measure each leg separately, then record both numbers', value: 'b', correct: true },
+          { label: 'Ignore the difference and note only one inseam', value: 'c', correct: false }
+        ]},
+        { type: 'mcq', question: 'How do you handle a handedness request for balance?', options: [
+          { label: 'Guess an extra amount on the dominant side', value: 'a', correct: false },
+          { label: 'Pin normally, measure, confirm any extra length the customer wants, and record the measured result', value: 'b', correct: true },
+          { label: 'Add length to both sides evenly', value: 'c', correct: false }
+        ]},
+        { type: 'mcq', question: 'Pants hem workflow best practice is to…', options: [
+          { label: 'Pin one leg only and copy the number', value: 'a', correct: false },
+          { label: 'Pin left leg, measure, pin right leg, measure, then confirm both', value: 'b', correct: true },
+          { label: 'Skip measuring if the customer brought a tag', value: 'c', correct: false }
+        ]},
+        { type: 'mcq', question: 'Which note documents drape and garment type clearly?', options: [
+          { label: 'Hem pants', value: 'a', correct: false },
+          { label: 'Wool trousers: shorten inseam to 30.0 (customer wearing dress shoes).', value: 'b', correct: true },
+          { label: 'Take up inseam like usual', value: 'c', correct: false }
         ]},
         { type: 'mcq', question: 'Patch handling rule:', options: [
           { label: 'Send patches loose and sort later', value: 'a', correct: false },
           { label: 'Pin each patch to its specific garment and mark the spot', value: 'b', correct: true },
           { label: 'Stack patches together for speed', value: 'c', correct: false }
-        ]},
-        { type: 'mcq', question: 'When a customer brings in a pinned garment, you must…', options: [
-          { label: 'Trust the pin and skip measuring', value: 'a', correct: false },
-          { label: 'Measure the pinned spot, confirm the number aloud, and record the final measurement', value: 'b', correct: true },
-          { label: 'Remove pins to avoid confusion', value: 'c', correct: false }
         ]}
       ]
     },
@@ -351,19 +426,23 @@
         'Use phrases like “shorten to 36 inches” instead of “hem to 36 inches” or “shorten a bit”.',
         'Mirror the customer’s expectations back to them verbally and in the written note.',
         'Identify and correct vague, incomplete, or risky POS notes.',
-        'Use SPOT fields consistently (item description vs. notes) to convey alterations to the tailor.'
+        'Use SPOT fields consistently (item description vs. notes) to convey alterations to the tailor.',
+        'Include garment type and measured final inseam (not tag size) when drape or balance matters.'
       ],
       objectiveNotes: {
         correct: [
           '✅ Shorten inseam to 30 inches. Customer tried on and approved.',
           '✅ Take in waist to 34 inches. Measure flat at waistband.',
-          '✅ Shorten sleeves to 23 inches from shoulder seam; match both sleeves.'
+          '✅ Shorten sleeves to 23 inches from shoulder seam; match both sleeves.',
+          '✅ Jeans: shorten inseam to 30.0 (measured, not from tag).',
+          '✅ Wool trousers: shorten inseam to 30.0 (customer wearing dress shoes).'
         ],
         incorrect: [
           '❌ Hem pants.',
           '❌ Hem 2 inches.',
           '❌ Take in 2 inches.',
-          '❌ Shorten a bit.'
+          '❌ Shorten a bit.',
+          '❌ Inseam 32 (per tag).'
         ],
         reminder: 'SPOT notes should read like the final measurement instruction the tailor will sew to — not a hint or a guess.'
       },
@@ -376,19 +455,22 @@
       comparisons: [
         { bad: 'Hem to 36 inches', good: 'Shorten dress so finished hem is 36 inches from shoulder to hem.' },
         { bad: 'Hem pants 2 inches', good: 'Shorten inseam to 30 inches.' },
-        { bad: 'Hem sleeves', good: 'Shorten sleeves to 23 inches from shoulder seam.' }
+        { bad: 'Hem sleeves', good: 'Shorten sleeves to 23 inches from shoulder seam.' },
+        { bad: 'Use tag length 32', good: 'Measured and confirmed inseam to 30.5 (customer approved).' }
       ],
       standardFormats: [
         { label: 'INSEAM', example: 'INSEAM 30', note: 'Final inseam measurement after hemming. Avoid +/- shorthand.' },
         { label: 'WAIST', example: 'WAIST 34', note: 'State the finished waist size after taking in or letting out.' },
         { label: 'SLEEVE', example: 'SLEEVE 23 from shoulder seam', note: 'Include the reference point so tailors know where to measure.' },
-        { label: 'HEM LENGTH', example: 'Finished hem 36 from floor with flats', note: 'Spell out the measurement and shoe type if relevant.' }
+        { label: 'HEM LENGTH', example: 'Finished hem 36 from floor with flats', note: 'Spell out the measurement and shoe type if relevant.' },
+        { label: 'PANT TYPE', example: 'Jeans: shorten inseam to 30.0 (measured)', note: 'Include fabric type because denim vs trousers drape differently.' }
       ],
       fieldUsage: [
         'Item/Service lines describe the garment and service (e.g., “Men’s Pants — Dry Clean + Hem”).',
         'Use the Notes field for the exact alteration and final measurement.',
         'Mirror approvals: “Customer tried on and approved length with normal shoes.”',
-        'Tag customer-pinned garments: “Shorten inseam to 29 inches (customer pinned, verified).”'
+        'Tag customer-pinned garments: “Shorten inseam to 29 inches (customer pinned, verified).”',
+        'Note pant type and measured inseam instead of tag size when recording hems.'
       ],
       posExamples: [
         {
@@ -397,6 +479,13 @@
           before: 'Hem pants.',
           after: 'Shorten inseam to 30 inches. Customer tried on and approved.',
           why: 'Before is vague and missing the target length. After states the finished inseam and approval.'
+        },
+        {
+          item: 'Mens Jeans',
+          service: 'Hem only',
+          before: 'Use tag length 32.',
+          after: 'Jeans: measured and confirmed inseam to 30.5. Customer approved.',
+          why: 'Tag length is unreliable; final measured inseam and garment type are recorded.'
         },
         {
           item: 'Knee-length Dress',
@@ -422,13 +511,15 @@
         { bad: 'Shorten a little', good: 'Shorten inseam to 29 inches.' },
         { bad: 'Fix hem', good: 'Re-hem to 30-inch inseam; clean and press.' },
         { bad: 'Take in', good: 'Take in waist to 34 inches.' },
-        { bad: 'Shorten sleeves some', good: 'Shorten sleeves to 23 inches from shoulder seam.' }
+        { bad: 'Shorten sleeves some', good: 'Shorten sleeves to 23 inches from shoulder seam.' },
+        { bad: 'Use tag size for hem', good: 'Measured and confirmed inseam to 30.5; do not reference tag size.' }
       ],
       noteChecklist: [
         'Start with the garment area and final measurement: “INSEAM 30,” “WAIST 34.”',
         'Avoid “hem” as a verb; use “shorten to” plus the finished length.',
         'Capture approvals: “Customer tried on and approved.”',
         'If customer pinned, verify with a tape and note “customer pinned/verified.”',
+        'Include pant type when relevant (jeans vs trousers) and avoid tag references; record the measured final value.',
         'Keep SPOT Notes factual and objective; no “a bit” or “as needed.”'
       ],
       quiz: [
@@ -442,20 +533,20 @@
           { label: 'Shorten so finished hem is 36 inches from shoulder to hem', value: 'b', correct: true },
           { label: 'Hem a bit', value: 'c', correct: false }
         ]},
-        { type: 'mcq', question: 'Best rewrite for “take in a bit”?', options: [
-          { label: 'Take in waist to 34 inches', value: 'a', correct: true },
-          { label: 'Take in slightly', value: 'b', correct: false },
-          { label: 'Adjust if needed', value: 'c', correct: false }
+        { type: 'mcq', question: 'Which note correctly replaces a tag reference?', options: [
+          { label: 'Use tag inseam 32', value: 'a', correct: false },
+          { label: 'Measured and confirmed inseam to 30.5; customer approved.', value: 'b', correct: true },
+          { label: 'Shorten to whatever fits', value: 'c', correct: false }
         ]},
         { type: 'mcq', question: 'What must every note mirror back to the customer?', options: [
           { label: 'A vague sense of the change', value: 'a', correct: false },
           { label: 'The exact final measurement they approved', value: 'b', correct: true },
           { label: 'Whatever the CSR thinks is best', value: 'c', correct: false }
         ]},
-        { type: 'mcq', question: 'Which format matches SPOT standards?', options: [
-          { label: 'INSEAM 30 with customer approval noted', value: 'a', correct: true },
-          { label: 'Shorten a bit if possible', value: 'b', correct: false },
-          { label: 'Hem 2 inches', value: 'c', correct: false }
+        { type: 'mcq', question: 'Which format matches SPOT standards and records pant type?', options: [
+          { label: 'Jeans: shorten inseam to 30.0 (measured, customer approved)', value: 'a', correct: true },
+          { label: 'Hem jeans a bit shorter', value: 'b', correct: false },
+          { label: 'Use tag size since it is close', value: 'c', correct: false }
         ]}
       ]
     },
@@ -1156,6 +1247,9 @@
       </div>
     `).join('');
 
+    const legCalloutBullets = module.legLengthCallout.bullets.map(item => `<li>${item}</li>`).join('');
+    const legCalloutNotes = module.legLengthCallout.notes.map(note => `<span class="note-chip">${note}</span>`).join('');
+    const workflowSteps = module.pantsWorkflow.steps.map((step, idx) => `<li><strong>Step ${idx + 1}:</strong> ${step}</li>`).join('');
     const smoothList = module.smoothRules.bullets.map(item => `<li>${item}</li>`).join('');
     const pairingList = module.patchProtocol.pairing.map(item => `<li>${item}</li>`).join('');
     const placementList = module.patchProtocol.placement.map(item => `<li>${item}</li>`).join('');
@@ -1164,6 +1258,17 @@
       <div class="metric-row">
         <div class="metric-label">${row.item}</div>
         <div class="metric-examples">${row.examples.map(ex => `<p>${ex}</p>`).join('')}</div>
+      </div>
+    `).join('');
+    const handednessCautions = module.handedness.cautions.map(item => `<li>${item}</li>`).join('');
+    const drapeBullets = module.drapeNotes.bullets.map(item => `<li>${item}</li>`).join('');
+    const drapeExamples = module.drapeNotes.examples.map(example => `<span class="note-chip">${example}</span>`).join('');
+    const practiceScenarios = module.practiceScenarios.map(scenario => `
+      <div class="scenario-card">
+        <p class="eyebrow">Customer says</p>
+        <p class="bad">“${scenario.prompt}”</p>
+        <p class="eyebrow">You do</p>
+        <p class="good">${scenario.response}</p>
       </div>
     `).join('');
     const quickChecklist = module.quickChecklist.map(item => `<li>${item}</li>`).join('');
@@ -1187,6 +1292,22 @@
           ${garmentCards}
         </div>
 
+        <div class="section policy-callout" aria-label="Leg length differences">
+          <div>
+            <p class="eyebrow">Balance note</p>
+            <h3>${module.legLengthCallout.headline}</h3>
+            <ul>${legCalloutBullets}</ul>
+            <p class="micro-copy"><strong>Practice scenario:</strong> ${module.legLengthCallout.scenario}</p>
+          </div>
+          <div class="note-chip-row" aria-label="Note format examples">${legCalloutNotes}</div>
+        </div>
+
+        <div class="section workflow-card" aria-label="Pants hem workflow">
+          <p class="eyebrow">Repeatable steps</p>
+          <h3>${module.pantsWorkflow.title}</h3>
+          <ol>${workflowSteps}</ol>
+        </div>
+
         <div class="section callout-card" aria-label="Smooth fabric guidance">
           <div>
             <p class="eyebrow">Accuracy Rule</p>
@@ -1208,6 +1329,10 @@
               <li>${module.handedness.reason}</li>
               <li>${module.handedness.action}</li>
             </ul>
+            <div class="callout">
+              <p class="eyebrow">Handedness confirmations</p>
+              <ul>${handednessCautions}</ul>
+            </div>
           </div>
           <div class="card-lite">
             <p class="eyebrow">Pin orientation</p>
@@ -1246,6 +1371,20 @@
           <h3>Recording Final, Objective Measurements</h3>
           <p class="micro-copy">Use final numbers, not guesses or plus/minus shorthand.</p>
           ${recordingRows}
+        </div>
+
+        <div class="section callout-card" aria-label="Drape differences">
+          <div>
+            <p class="eyebrow">Fabric context</p>
+            <h3>${module.drapeNotes.headline}</h3>
+            <ul>${drapeBullets}</ul>
+          </div>
+          <div class="note-chip-row" aria-label="Drape note examples">${drapeExamples}</div>
+        </div>
+
+        <div class="section scenario-grid" aria-label="Practice scenarios for balance and drape">
+          <h3>Practice Scenarios</h3>
+          ${practiceScenarios}
         </div>
 
         <div class="section checklist-lite" aria-label="Quick checklist">
