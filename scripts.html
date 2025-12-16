@@ -256,7 +256,7 @@
         {
           name: 'Pants (hems + simple waist)',
           csrScope: 'CSR approved',
-          pinning: 'Pin horizontally at the desired hem while the customer wears the pants, ensuring pins do not touch skin. Then remove the pants to measure each inseam on a flat surface. Add 1–2 pins near side seams for waist adjusts.',
+          pinning: 'Mark the desired hem while the customer wears the pants using a gentle fold or shallow pin in loose fabric only—no tape measures on-body and no pins against skin. After the pants are off, place horizontal safety pins at the marked hem and add 1–2 pins near side seams for waist adjusts on the table.',
           pins: '3–5 pins around each hem keep the line straight; safety pins required if the garment will travel.',
           record: '“Shorten inseam to 30 inches.” If legs differ: “Left inseam to 29.5; Right inseam to 30 (confirmed off-body).”',
           balance: 'Smooth both legs first; ask about handedness and leg length differences, then verify measurements off-body.'
@@ -322,7 +322,7 @@
         headline: 'Leg Length Differences Are Common',
         bullets: [
           'Customers may already know one leg runs longer or shorter—listen for it and ask follow-up questions before pinning.',
-          'Pin both legs while worn, then remove the pants and measure each leg independently on the table.',
+          'Mark both legs while worn, then remove the pants and measure each leg independently on the table.',
           'Document differences clearly so the tailor can match the customer’s balance without guessing.'
         ],
         notes: ['Left inseam to 29.5”', 'Right inseam to 30”'],
@@ -331,14 +331,14 @@
       pantsWorkflow: {
         title: 'Pants Hem Workflow (Pin on Body, Measure Off Body)',
         steps: [
-          'Safe pinning while worn: customer stands naturally (shoes on as needed); smooth fabric without stretching; place pins to mark the desired hem without touching skin. Do NOT bring a tape measure to the inseam while worn.',
-          'Remove and measure off-body: have the customer step out; lay pants flat; align seams and smooth; measure each leg to the pinned finished point and record objective numbers.',
+          'Safe marking while worn: customer stands naturally (shoes on as needed); smooth fabric without stretching; lightly mark the desired hem using a fold or shallow pin in loose fabric only—never touching skin and never using a tape measure on-body.',
+          'Remove and measure off-body: have the customer step out; lay pants flat; align seams and smooth; place horizontal safety pins at the marked hem if needed, measure each leg to the pinned finished point, and record objective numbers.',
           'Confirm differences and notes: if legs differ, confirm aloud and record each inseam with garment type and shoe context—never rely on tag size.'
         ]
       },
       doDont: {
         do: [
-          'Pin hems while the customer wears the pants only to mark the line, keeping pins away from skin.',
+          'Mark hems while the customer wears the pants only to mark the line with a fold or shallow pin away from skin; lock in horizontal safety pins after the garment is off.',
           'Measure inseams on a flat surface after the pants are removed, using the pinned line as the reference.',
           'Record final objective measurements for each leg and note garment type when drape matters.'
         ],
@@ -396,7 +396,7 @@
       ],
       quickChecklist: [
         'Smooth fabric, then pin—never stretch to reach the tape.',
-        'Pin hems while the customer wears the pants, then remove and measure each leg flat; never measure on the body.',
+        'Mark hems while the customer wears the pants if needed, then place/verify pins and measure each leg flat; never measure on the body.',
         'Ask handedness, confirm leg differences, and record each inseam with garment/shoe context.',
         'Note pant type (jeans vs trousers) and shoe type if it affects drape.',
         'One patch per garment with a chosen spot, not a guess later.',
@@ -430,7 +430,7 @@
         ]},
         { type: 'mcq', question: 'Pants hem workflow best practice is to…', options: [
           { label: 'Measure inseam while the customer wears the pants for speed', value: 'a', correct: false },
-          { label: 'Pin hems while worn, then remove the pants and measure each leg flat before confirming', value: 'b', correct: true },
+          { label: 'Mark hems while worn, then remove the pants and measure each leg flat before confirming', value: 'b', correct: true },
           { label: 'Skip measuring if the customer brought a tag', value: 'c', correct: false }
         ]},
         { type: 'mcq', question: 'Which note documents drape and garment type clearly?', options: [
@@ -998,7 +998,7 @@
         id: 'M3-Q01',
         prompt: 'What is the correct workflow for hemming trouser inseams?',
         options: [
-          { id: 'a', label: 'Pin both hems while the customer wears the pants, then remove and measure each leg flat to the pinned line' },
+          { id: 'a', label: 'Mark both hems while the customer wears the pants (no on-body measuring), then remove and measure each leg flat to the marked line' },
           { id: 'b', label: 'Measure the left inseam while worn and copy it to the right' },
           { id: 'c', label: 'Use the tag size instead of measuring' },
           { id: 'd', label: 'Guess a 1/4-inch difference without confirming' }
@@ -1119,7 +1119,7 @@
         prompt: 'Which action is NOT allowed when handling trouser inseams?',
         options: [
           { id: 'a', label: 'Measuring the inseam on the customer while they are wearing the pants' },
-          { id: 'b', label: 'Pinning hems while worn, then measuring each leg on a flat surface' },
+          { id: 'b', label: 'Marking hems while worn, then measuring each leg on a flat surface' },
           { id: 'c', label: 'Confirming left vs. right inseam differences aloud' },
           { id: 'd', label: 'Recording the final numbers with garment type' }
         ],
