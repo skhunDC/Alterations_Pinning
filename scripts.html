@@ -241,12 +241,12 @@
     {
       id: 'M3',
       title: 'Pinning by Garment Type',
-      intro: 'Apply garment-specific pinning with smooth fabric, balanced measurements, and verified customer pins.',
+      intro: 'Apply garment-specific pinning with smooth fabric, balanced measurements, and verified customer pins without on-body inseam measuring.',
       objectives: [
-        'Pin pants, skirts, simple dresses, and sleeves in the correct location and orientation.',
+        'Pin pants, skirts, simple dresses, and sleeves in the correct location and orientation without measuring inseams on the body.',
         'Smooth fabric before measuring—never stretch.',
         'Ask male customers if they are left- or right-handed to balance inseams and confirm any preferred drape.',
-        'Pin each pant leg separately; document leg length differences instead of assuming symmetry.',
+        'Pin each pant leg separately; document leg length differences on a flat surface instead of assuming symmetry.',
         'Pair one patch to one garment and avoid loose patches.',
         'Guide customers to pick a specific patch spot—no “wherever it looks best.”',
         'Verify customer-pinned garments with a tape measure and confirm the final measurement.',
@@ -256,10 +256,10 @@
         {
           name: 'Pants (hems + simple waist)',
           csrScope: 'CSR approved',
-          pinning: 'Pin horizontally at the new hem line on the left leg first, then repeat on the right—never assume they match. Add 1–2 pins near side seams for waist adjusts.',
-          pins: '3–5 pins around each hem keeps the line straight.',
-          record: '“Shorten inseam to 30 inches.” If legs differ: “Left inseam to 29.5; Right inseam to 30 (confirmed).”',
-          balance: 'Smooth both legs first; ask about handedness and leg length differences to avoid imbalance.'
+          pinning: 'Pin horizontally at the desired hem while the customer wears the pants, ensuring pins do not touch skin. Then remove the pants to measure each inseam on a flat surface. Add 1–2 pins near side seams for waist adjusts.',
+          pins: '3–5 pins around each hem keep the line straight; safety pins required if the garment will travel.',
+          record: '“Shorten inseam to 30 inches.” If legs differ: “Left inseam to 29.5; Right inseam to 30 (confirmed off-body).”',
+          balance: 'Smooth both legs first; ask about handedness and leg length differences, then verify measurements off-body.'
         },
         {
           name: 'Skirts (hems)',
@@ -304,24 +304,48 @@
           'Example note: “Right-handed; customer prefers slightly longer right leg. Right inseam = 30.0; Left inseam = 29.75 (confirmed at fitting).”'
         ]
       },
+      pantsPolicy: {
+        headline: 'We do not measure inseams on the customer’s body.',
+        points: [
+          'Do not place a measuring tape at the inseam while the customer is wearing pants.',
+          'Pins must be placed in a way that avoids skin contact—pin fabric folds, not tight fabric against the leg.',
+          'Safety pins are preferred when the garment will travel to prevent shifting.'
+        ],
+        verification: [
+          'Measure inseams only after the pants are removed and laid flat.',
+          'Use the pinned hem line as your reference point on the table, not on the body.',
+          'If an existing measurement is provided, verify it off-body instead of re-measuring against the customer.'
+        ],
+        note: 'Objective numbers come from flat-surface measurements after safe pinning—not from on-body tape placement.'
+      },
       legLengthCallout: {
         headline: 'Leg Length Differences Are Common',
         bullets: [
-          'Customers may already know one leg runs longer or shorter—listen for it and ask follow-up questions.',
-          'Pin and measure each leg independently instead of assuming symmetry.',
-          'Document differences clearly so the tailor can match the customer’s body.'
+          'Customers may already know one leg runs longer or shorter—listen for it and ask follow-up questions before pinning.',
+          'Pin both legs while worn, then remove the pants and measure each leg independently on the table.',
+          'Document differences clearly so the tailor can match the customer’s balance without guessing.'
         ],
         notes: ['Left inseam to 29.5”', 'Right inseam to 30”'],
         scenario: 'Customer says, “My left leg is shorter, please hem accordingly.”'
       },
       pantsWorkflow: {
-        title: 'Pants Hem Workflow',
+        title: 'Pants Hem Workflow (Pin on Body, Measure Off Body)',
         steps: [
-          'Pin the left leg at the requested length.',
-          'Measure and capture the final left inseam.',
-          'Pin the right leg separately.',
-          'Measure and capture the final right inseam.',
-          'Confirm both numbers with the customer and record both if they differ.'
+          'Safe pinning while worn: customer stands naturally (shoes on as needed); smooth fabric without stretching; place pins to mark the desired hem without touching skin. Do NOT bring a tape measure to the inseam while worn.',
+          'Remove and measure off-body: have the customer step out; lay pants flat; align seams and smooth; measure each leg to the pinned finished point and record objective numbers.',
+          'Confirm differences and notes: if legs differ, confirm aloud and record each inseam with garment type and shoe context—never rely on tag size.'
+        ]
+      },
+      doDont: {
+        do: [
+          'Pin hems while the customer wears the pants only to mark the line, keeping pins away from skin.',
+          'Measure inseams on a flat surface after the pants are removed, using the pinned line as the reference.',
+          'Record final objective measurements for each leg and note garment type when drape matters.'
+        ],
+        dont: [
+          'Measure a trouser inseam while the customer is wearing the pants.',
+          'Place a tape measure near the crotch/inseam area on-body.',
+          'Pin through tight fabric that presses against skin or could cause discomfort.'
         ]
       },
       patchProtocol: {
@@ -338,12 +362,12 @@
       },
       customerPinned: {
         steps: [
-          'Bring out a tape measure and measure the pinned length/spot.',
+          'After the garment is off the customer, measure the pinned length/spot on a flat surface—never while the garment is on the body.',
           'Confirm verbally: “You want the inseam to be 29 inches at this pin, correct?”',
           'Replace loose straight pins with closed safety pins if the garment is leaving the store.',
-          'Record the final measurement in notes: “Shorten inseam to 29 inches (customer pinned).”'
+          'Record the final measurement in notes: “Shorten inseam to 29 inches (customer pinned, verified off-body).”'
         ],
-        reason: 'Verification prevents miscommunication and documents the exact, objective request.'
+        reason: 'Verification prevents miscommunication and documents the exact, objective request without on-body measuring.'
       },
       recording: [
         { item: 'Pants', examples: ['Shorten inseam to 30 inches.', 'Take in waist to 34 inches.', 'Left inseam to 29.5; Right inseam to 30 (confirmed).'] },
@@ -371,13 +395,18 @@
         }
       ],
       quickChecklist: [
-        'Smooth then measure; never stretch to reach the tape.',
-        'Pin each pant leg separately: pin/measure left, then pin/measure right.',
-        'Ask handedness, measure both legs, and only add extra length if the customer confirms it.',
+        'Smooth fabric, then pin—never stretch to reach the tape.',
+        'Pin hems while the customer wears the pants, then remove and measure each leg flat; never measure on the body.',
+        'Ask handedness, confirm leg differences, and record each inseam with garment/shoe context.',
         'Note pant type (jeans vs trousers) and shoe type if it affects drape.',
         'One patch per garment with a chosen spot, not a guess later.',
-        'Customer-pinned? Verify with tape and write the final dimension.'
+        'Customer-pinned? Verify off-body with a tape and write the final dimension.'
       ],
+      escalationNote: {
+        title: 'Escalate when on-body precision is requested.',
+        text: 'If a customer insists on an on-body inseam measurement or needs precision that cannot be achieved comfortably at the counter, pause and involve the tailor lead or schedule a private fitting.',
+        reminder: 'Keep wording calm and professional while protecting customer comfort and store policy.'
+      },
       quiz: [
         { type: 'mcq', question: 'How should hems be pinned for pants or skirts?', options: [
           { label: 'Vertically with one pin', value: 'a', correct: false },
@@ -400,8 +429,8 @@
           { label: 'Add length to both sides evenly', value: 'c', correct: false }
         ]},
         { type: 'mcq', question: 'Pants hem workflow best practice is to…', options: [
-          { label: 'Pin one leg only and copy the number', value: 'a', correct: false },
-          { label: 'Pin left leg, measure, pin right leg, measure, then confirm both', value: 'b', correct: true },
+          { label: 'Measure inseam while the customer wears the pants for speed', value: 'a', correct: false },
+          { label: 'Pin hems while worn, then remove the pants and measure each leg flat before confirming', value: 'b', correct: true },
           { label: 'Skip measuring if the customer brought a tag', value: 'c', correct: false }
         ]},
         { type: 'mcq', question: 'Which note documents drape and garment type clearly?', options: [
@@ -967,15 +996,15 @@
     M3: [
       {
         id: 'M3-Q01',
-        prompt: 'How should hems be pinned for pants or skirts?',
+        prompt: 'What is the correct workflow for hemming trouser inseams?',
         options: [
-          { id: 'a', label: 'Vertically with one pin' },
-          { id: 'b', label: 'Horizontally at the new hem with multiple pins to keep it straight' },
-          { id: 'c', label: 'No pins—just fold the fabric' },
-          { id: 'd', label: 'Only pin one leg and copy the number' }
+          { id: 'a', label: 'Pin both hems while the customer wears the pants, then remove and measure each leg flat to the pinned line' },
+          { id: 'b', label: 'Measure the left inseam while worn and copy it to the right' },
+          { id: 'c', label: 'Use the tag size instead of measuring' },
+          { id: 'd', label: 'Guess a 1/4-inch difference without confirming' }
         ],
-        correctOptionId: 'b',
-        tip: 'Use multiple horizontal pins to hold the line.'
+        correctOptionId: 'a',
+        tip: 'Pin on-body safely, then measure off-body for objective numbers.'
       },
       {
         id: 'M3-Q02',
@@ -1039,15 +1068,15 @@
       },
       {
         id: 'M3-Q07',
-        prompt: 'Which is the MOST risky next step after a customer pins their own garment?',
+        prompt: 'Customer asks you to measure his inseam while he is wearing the pants at the counter. What do you do?',
         options: [
-          { id: 'a', label: 'Measure at the pin, confirm aloud, and rewrite as a final measurement' },
-          { id: 'b', label: 'Swap loose straight pins for safety pins if it is leaving' },
-          { id: 'c', label: 'Send it as pinned without measuring' },
-          { id: 'd', label: 'Note “customer pinned” and the final number' }
+          { id: 'a', label: 'Explain the policy, pin safely to mark the hem, have him remove the pants, then measure on a flat surface' },
+          { id: 'b', label: 'Measure his inseam while he is wearing the pants for accuracy' },
+          { id: 'c', label: 'Use the tag size so no measuring is needed' },
+          { id: 'd', label: 'Guess a 1/4-inch difference between legs' }
         ],
-        correctOptionId: 'c',
-        tip: 'Always verify customer pins with a tape measure.'
+        correctOptionId: 'a',
+        tip: 'Use the pinned line as a guide, then measure off-body or escalate to a private fitting if needed.'
       },
       {
         id: 'M3-Q08',
@@ -1087,15 +1116,15 @@
       },
       {
         id: 'M3-Q11',
-        prompt: 'Which is the correct workflow for pants hems?',
+        prompt: 'Which action is NOT allowed when handling trouser inseams?',
         options: [
-          { id: 'a', label: 'Pin left leg, measure, pin right leg, measure, confirm both' },
-          { id: 'b', label: 'Pin one leg and assume the other matches' },
-          { id: 'c', label: 'Skip measuring if the tag is visible' },
-          { id: 'd', label: 'Measure after sewing' }
+          { id: 'a', label: 'Measuring the inseam on the customer while they are wearing the pants' },
+          { id: 'b', label: 'Pinning hems while worn, then measuring each leg on a flat surface' },
+          { id: 'c', label: 'Confirming left vs. right inseam differences aloud' },
+          { id: 'd', label: 'Recording the final numbers with garment type' }
         ],
         correctOptionId: 'a',
-        tip: 'Always pin and measure each leg separately.'
+        tip: 'Never take a tape measure to the customer’s inseam while worn.'
       },
       {
         id: 'M3-Q12',
@@ -1957,9 +1986,13 @@
       </div>
     `).join('');
 
+    const pantsPolicyPoints = module.pantsPolicy.points.map(item => `<li>${item}</li>`).join('');
+    const pantsPolicyVerification = module.pantsPolicy.verification.map(item => `<li>${item}</li>`).join('');
     const legCalloutBullets = module.legLengthCallout.bullets.map(item => `<li>${item}</li>`).join('');
     const legCalloutNotes = module.legLengthCallout.notes.map(note => `<span class="note-chip">${note}</span>`).join('');
     const workflowSteps = module.pantsWorkflow.steps.map((step, idx) => `<li><strong>Step ${idx + 1}:</strong> ${step}</li>`).join('');
+    const doList = module.doDont.do.map(item => `<li>${item}</li>`).join('');
+    const dontList = module.doDont.dont.map(item => `<li>${item}</li>`).join('');
     const smoothList = module.smoothRules.bullets.map(item => `<li>${item}</li>`).join('');
     const pairingList = module.patchProtocol.pairing.map(item => `<li>${item}</li>`).join('');
     const placementList = module.patchProtocol.placement.map(item => `<li>${item}</li>`).join('');
@@ -2000,6 +2033,19 @@
           ${garmentCards}
         </div>
 
+        <div class="section policy-callout" aria-label="Non-negotiable pants policy">
+          <div>
+            <p class="eyebrow">Non-Negotiable Policy</p>
+            <h3>${module.pantsPolicy.headline}</h3>
+            <ul>${pantsPolicyPoints}</ul>
+          </div>
+          <div>
+            <p class="eyebrow">How to verify without on-body measurement</p>
+            <ul>${pantsPolicyVerification}</ul>
+            <p class="micro-copy">${module.pantsPolicy.note}</p>
+          </div>
+        </div>
+
         <div class="section policy-callout" aria-label="Leg length differences">
           <div>
             <p class="eyebrow">Balance note</p>
@@ -2014,6 +2060,17 @@
           <p class="eyebrow">Repeatable steps</p>
           <h3>${module.pantsWorkflow.title}</h3>
           <ol>${workflowSteps}</ol>
+        </div>
+
+        <div class="section do-dont" aria-label="Do and don't for trouser pinning">
+          <div class="card-lite">
+            <p class="eyebrow">Do</p>
+            <ul>${doList}</ul>
+          </div>
+          <div class="card-lite risk">
+            <p class="eyebrow">Don't</p>
+            <ul>${dontList}</ul>
+          </div>
         </div>
 
         <div class="section callout-card" aria-label="Smooth fabric guidance">
@@ -2072,6 +2129,18 @@
           <div class="verification-note">
             <p class="badge-lite">Script</p>
             <p>“You want this hem at <strong>29 inches</strong> right where you pinned it, correct? I’ll note <em>‘shorten inseam to 29 inches (customer pinned)’</em>.”</p>
+          </div>
+        </div>
+
+        <div class="section callout-card" aria-label="Escalation for precision fittings">
+          <div>
+            <p class="eyebrow">Escalation</p>
+            <h3>${module.escalationNote.title}</h3>
+            <p>${module.escalationNote.text}</p>
+          </div>
+          <div class="stretch-risk">
+            <p class="badge-lite">Respect comfort</p>
+            <p>${module.escalationNote.reminder}</p>
           </div>
         </div>
 
