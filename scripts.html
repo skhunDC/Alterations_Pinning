@@ -1519,7 +1519,27 @@
     return true;
   }
 
+  function debounce(fn, delay = 150) {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => fn(...args), delay);
+    };
+  }
+
+  function updateStickyOffsets() {
+    const header = document.querySelector('.app-header');
+    if (!header) return;
+    const headerHeight = Math.ceil(header.getBoundingClientRect().height);
+    document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
+  }
+
+  const debouncedStickyUpdate = debounce(updateStickyOffsets, 150);
+  window.addEventListener('load', updateStickyOffsets);
+
   document.addEventListener('DOMContentLoaded', () => {
+    updateStickyOffsets();
+    window.addEventListener('resize', debouncedStickyUpdate);
     setTotalEstimateText();
     setRemainingEstimatePlaceholder();
     renderNavigation();
