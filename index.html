@@ -11,6 +11,7 @@
         <div>
           <p class="eyebrow">Dublin Cleaners | Employee Training</p>
           <h1>Alterations Pinning Certification Program</h1>
+          <p class="header-subtitle">Alterations Pinning Certification</p>
           <p class="subtitle">Five-module curriculum for CSRs and non-tailor staff to pin safely, document clearly, and communicate confidently.</p>
         </div>
       </div>
@@ -43,6 +44,7 @@
       <div class="field">
         <label>Employee Name *</label>
         <input type="text" id="employeeName" placeholder="e.g., Jordan Taylor" />
+        <div id="employee-input-error" class="inline-error" aria-live="polite"></div>
       </div>
       <div class="field">
         <label>Location or Employee ID</label>
@@ -50,7 +52,7 @@
       </div>
       <div class="field compact">
         <label>&nbsp;</label>
-        <button class="primary" onclick="loadCertificationStatus()">Save/Refresh</button>
+        <button class="primary" id="status-refresh-button" onclick="loadCertificationStatus()">Save/Refresh</button>
       </div>
       </section>
 
@@ -67,13 +69,17 @@
           <div class="progress-row">
             <div class="progress-bar" aria-label="Overall progress">
               <div id="progressFill" class="progress-bar-fill"></div>
+              <div id="progress-bar-fill" class="progress-bar-fill ghost-fill" aria-hidden="true"></div>
             </div>
-            <div class="progress-text" id="progressText">0 / 5 modules complete • Estimated 0 minutes to finish</div>
+            <div class="progress-text" id="progressText">
+              <span id="progress-text">0 / 5 modules complete • Estimated 0 minutes to finish</span>
+            </div>
           </div>
-          <div class="cert-estimates" aria-live="polite">
+          <div class="cert-estimates" aria-live="polite" id="time-estimates">
             <p id="total-time-estimate">Estimated time for full certification: ~1 hr 40 min.</p>
             <p id="remaining-time-estimate">Estimated time remaining: enter your name to calculate.</p>
           </div>
+          <div class="next-module" id="next-module-recommendation" aria-live="polite"></div>
           <div class="status-actions">
           <div class="status-actions__copy">
             <p class="eyebrow">Print-ready certificate</p>
