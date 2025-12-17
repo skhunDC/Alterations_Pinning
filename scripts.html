@@ -1442,9 +1442,82 @@
   };
 
   const totalProgramMinutes = Object.values(moduleTimeEstimates).reduce((sum, minutes) => sum + minutes, 0);
+  const autoAdvanceOnPass = false;
+  const toastDurationMs = 3800;
 
   let lastCertificationStatus = null;
   const activeQuizState = {};
+  let toastTimeoutRef = null;
+
+  function showToast(message, type = 'info') {
+    const toast = document.getElementById('global-toast');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.setAttribute('aria-live', 'polite');
+    toast.className = `toast toast--${type}`;
+    toast.style.opacity = '1';
+    if (toastTimeoutRef) {
+      clearTimeout(toastTimeoutRef);
+    }
+    toastTimeoutRef = setTimeout(() => {
+      toast.style.opacity = '0';
+    }, toastDurationMs);
+  }
+
+  function setLoading(elId, isLoading, loadingLabel = 'Loading…') {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    const originalLabel = el.dataset.originalLabel || el.textContent;
+    if (isLoading) {
+      el.dataset.originalLabel = originalLabel;
+      el.textContent = loadingLabel;
+      el.setAttribute('aria-busy', 'true');
+      el.setAttribute('disabled', 'disabled');
+    } else {
+      el.textContent = el.dataset.originalLabel || originalLabel;
+      el.removeAttribute('aria-busy');
+      el.removeAttribute('disabled');
+    }
+  }
+
+  function saveEmployeeInputsToLocal() {
+    try {
+      localStorage.setItem('dublinCertEmployeeName', getEmployeeName());
+      localStorage.setItem('dublinCertEmployeeLocation', getEmployeeLocation());
+    } catch (err) {
+      console.log('Local storage unavailable', err);
+    }
+  }
+
+  function loadEmployeeInputsFromLocal() {
+    try {
+      const name = localStorage.getItem('dublinCertEmployeeName');
+      const location = localStorage.getItem('dublinCertEmployeeLocation');
+      if (name) {
+        document.getElementById('employeeName').value = name;
+      }
+      if (location) {
+        document.getElementById('employeeLocation').value = location;
+      }
+      if (name) {
+        loadCertificationStatus();
+      }
+    } catch (err) {
+      console.log('Local storage unavailable', err);
+    }
+  }
+
+  function validateEmployeeName() {
+    const errorEl = document.getElementById('employee-input-error');
+    const name = getEmployeeName();
+    if (!errorEl) return !!name;
+    if (!name) {
+      errorEl.textContent = 'Employee name is required before saving or submitting quizzes.';
+      return false;
+    }
+    errorEl.textContent = '';
+    return true;
+  }
 
   document.addEventListener('DOMContentLoaded', () => {
     setTotalEstimateText();
@@ -1453,10 +1526,13 @@
     renderModules();
     initializeModuleQuizzes();
     bindIdentityPersistence();
-    restoreIdentityFromStorage();
+    loadEmployeeInputsFromLocal();
     updateCertificateButtonState(lastCertificationStatus);
     setupPrintCertificateButton();
-    loadCertificationStatus();
+    const initialHash = window.location.hash?.replace('#', '');
+    if (initialHash) {
+      navigateToSection(initialHash.startsWith('module-') ? initialHash : initialHash, null, true);
+    }
   });
 
   function setTotalEstimateText() {
@@ -1559,11 +1635,15 @@
     const moduleNumber = module.id.replace('M', '');
     return `
       <div class="quiz quiz-card" aria-label="quiz for ${module.title}">
+        <div class="quiz-context">You’re working on Module ${moduleNumber}</div>
         <h3>Module ${moduleNumber} Quiz</h3>
         <div id="module${moduleNumber}-quiz-host" class="quiz-host"></div>
         <div class="quiz-footer">
-          <button type="button" class="primary" id="module${moduleNumber}-quiz-submit">Submit Quiz</button>
-          <div class="quiz-feedback status-text" id="module${moduleNumber}-quiz-feedback">Score a minimum of 80% to pass.</div>
+          <div class="quiz-actions">
+            <button type="button" class="primary" id="module${moduleNumber}-quiz-submit">Submit Quiz</button>
+            <button type="button" class="nav-button ghost" id="module${moduleNumber}-quiz-retake" hidden>Retake quiz</button>
+          </div>
+          <div class="quiz-feedback status-text" id="module${moduleNumber}-quiz-feedback" aria-live="polite">Score a minimum of 80% to pass.</div>
         </div>
         ${renderModuleNavigation(module.id)}
       </div>
@@ -2297,6 +2377,10 @@
     return `module${getModuleNumber(moduleId)}-quiz-submit`;
   }
 
+  function getQuizRetakeId(moduleId) {
+    return `module${getModuleNumber(moduleId)}-quiz-retake`;
+  }
+
   function getQuizFeedbackId(moduleId) {
     return `module${getModuleNumber(moduleId)}-quiz-feedback`;
   }
@@ -2358,8 +2442,12 @@
     modules.forEach(module => {
       renderQuizForModule(module.id);
       const submitButton = document.getElementById(getQuizButtonId(module.id));
+      const retakeButton = document.getElementById(getQuizRetakeId(module.id));
       if (submitButton) {
         submitButton.addEventListener('click', () => submitQuiz(module.id));
+      }
+      if (retakeButton) {
+        retakeButton.addEventListener('click', () => resetQuiz(module.id));
       }
     });
   }
@@ -2370,6 +2458,32 @@
       if (radios[i].checked) return radios[i].value;
     }
     return null;
+  }
+
+  function getUnansweredQuestions(moduleId) {
+    const state = activeQuizState[moduleId];
+    const questions = state?.questions || [];
+    const unanswered = [];
+    questions.forEach((question, idx) => {
+      const selected = getSelectedRadioValue(getQuestionInputName(moduleId, question.id));
+      if (!selected) {
+        unanswered.push(idx + 1);
+      }
+    });
+    return unanswered;
+  }
+
+  function resetQuiz(moduleId) {
+    renderQuizForModule(moduleId);
+    const feedbackEl = getFeedbackElement(moduleId);
+    if (feedbackEl) {
+      feedbackEl.textContent = 'Score a minimum of 80% to pass.';
+      feedbackEl.classList.remove('inline-warning');
+    }
+    const retakeButton = document.getElementById(getQuizRetakeId(moduleId));
+    if (retakeButton) {
+      retakeButton.setAttribute('hidden', 'hidden');
+    }
   }
 
   function evaluateModuleQuiz(moduleId) {
@@ -2403,43 +2517,69 @@
 
   function submitQuiz(moduleId) {
     const name = getEmployeeName();
-    if (!name) {
-      alert('Enter your employee name before submitting.');
+    const location = getEmployeeLocation();
+    const isValid = validateEmployeeName();
+    if (!isValid) {
+      showToast('Enter your employee name before submitting.', 'error');
+      document.getElementById('employeeName')?.focus();
       return;
     }
 
-    const location = getEmployeeLocation();
-    const results = evaluateModuleQuiz(moduleId);
-
-    if (!results.total) {
+    const state = activeQuizState[moduleId];
+    const questionsLoaded = state?.questions?.length;
+    if (!questionsLoaded) {
       updateModuleResultText(moduleId, false, 0, 0, 0, [], 'Quiz questions were not loaded. Please try again.');
       renderQuizForModule(moduleId);
       return;
     }
 
+    const unanswered = getUnansweredQuestions(moduleId);
+    if (unanswered.length) {
+      const feedbackEl = getFeedbackElement(moduleId);
+      if (feedbackEl) {
+        feedbackEl.innerHTML = `<p class="inline-warning">Please answer all questions before submitting. Missing: ${unanswered.join(', ')}.</p>`;
+      }
+      showToast('Please answer all questions before submitting.', 'error');
+      return;
+    }
+
+    const results = evaluateModuleQuiz(moduleId);
     const passed = results.score >= 80;
     updateModuleResultText(moduleId, passed, results.score, results.correct, results.total, results.incorrectDetails);
 
-    const regenerateQuiz = () => renderQuizForModule(moduleId);
+    const retakeButton = document.getElementById(getQuizRetakeId(moduleId));
+    if (retakeButton) {
+      retakeButton.removeAttribute('hidden');
+    }
+
+    const submitButtonId = getQuizButtonId(moduleId);
+    setLoading(submitButtonId, true, 'Saving…');
 
     if (google.script && google.script.run) {
       google.script.run.withSuccessHandler(() => {
         showToast('Module result saved', 'success');
         loadCertificationStatus();
-        regenerateQuiz();
+        setLoading(submitButtonId, false);
+        if (autoAdvanceOnPass && passed) {
+          const moduleNumber = parseInt(moduleId.replace('M', ''), 10);
+          const nextId = moduleNumber < modules.length ? `module-M${moduleNumber + 1}` : 'dashboard';
+          navigateToSection(nextId);
+        }
       }).withFailureHandler(err => {
         showToast('Error saving result. Please retry.', 'error');
         updateModuleResultText(moduleId, false, results.score, results.correct, results.total, results.incorrectDetails, `Error saving: ${err}`);
-        regenerateQuiz();
+        setLoading(submitButtonId, false);
       }).saveModuleResult(moduleId, name, location, results.score, passed);
     } else {
-      regenerateQuiz();
+      setLoading(submitButtonId, false);
     }
   }
 
   function updateModuleResultText(moduleId, passed, score, correct, total, incorrectDetails = [], errorText) {
     const el = getFeedbackElement(moduleId);
     if (!el) return;
+
+    el.classList.remove('inline-warning');
 
     if (errorText) {
       el.textContent = errorText;
@@ -2467,9 +2607,26 @@
 
   function loadCertificationStatus() {
     const name = getEmployeeName();
-    if (!name) return;
+    const isValid = validateEmployeeName();
+    if (!isValid) {
+      document.getElementById('employeeName')?.focus();
+      return;
+    }
+    setLoading('status-refresh-button', true, 'Loading…');
     if (google.script && google.script.run) {
-      google.script.run.withSuccessHandler(renderCertificationStatus).getEmployeeCertificationStatus(name);
+      google.script.run
+        .withSuccessHandler(status => {
+          renderCertificationStatus(status);
+          setLoading('status-refresh-button', false);
+        })
+        .withFailureHandler(err => {
+          showToast('Could not load certification status. Please try again.', 'error');
+          console.error(err);
+          setLoading('status-refresh-button', false);
+        })
+        .getEmployeeCertificationStatus(name);
+    } else {
+      setLoading('status-refresh-button', false);
     }
   }
 
@@ -2484,7 +2641,10 @@
           lastCertificationStatus = status;
           resolve(status);
         })
-        .withFailureHandler(err => reject(err))
+        .withFailureHandler(err => {
+          showToast('Unable to refresh certification status right now.', 'error');
+          reject(err);
+        })
         .getEmployeeCertificationStatus(name);
     });
   }
@@ -2495,22 +2655,43 @@
     const title = document.getElementById('certStatus');
     const sub = document.getElementById('certSubstatus');
     const progressFill = document.getElementById('progressFill');
+    const progressFillAlt = document.getElementById('progress-bar-fill');
     const progressText = document.getElementById('progressText');
+    const progressTextAlt = document.getElementById('progress-text');
     const moduleProgress = document.getElementById('moduleProgress');
     const moduleList = document.getElementById('module-status-list');
+    const nextRecommendation = document.getElementById('next-module-recommendation');
     if (!status) return;
 
     const completed = status.completedModules || [];
     const missing = status.missingModules || [];
     const percent = Math.round((completed.length / modules.length) * 100);
     updateCertificateButtonState(status);
-    progressFill.style.width = `${percent}%`;
+    if (progressFill) {
+      progressFill.style.width = `${percent}%`;
+    }
+    if (progressFillAlt) {
+      progressFillAlt.style.width = `${percent}%`;
+    }
     const remainingMinutes = calculateRemainingMinutes(missing);
     const remainingDisplay = formatMinutes(remainingMinutes);
     if (progressText) {
       progressText.textContent = `${completed.length} / ${modules.length} modules complete • Estimated ${remainingDisplay} to finish`;
     }
+    if (progressTextAlt) {
+      progressTextAlt.textContent = `${completed.length} of ${modules.length} modules passed`;
+    }
     updateTimeEstimates(missing);
+
+    if (nextRecommendation) {
+      const nextModuleId = getNextRecommendedModule(completed);
+      if (nextModuleId) {
+        const moduleDetails = modules.find(m => m.id === nextModuleId);
+        nextRecommendation.innerHTML = `<p class="eyebrow">Next recommended module</p><p><strong>${moduleDetails?.title || nextModuleId}</strong> — Start here to keep momentum.</p>`;
+      } else {
+        nextRecommendation.textContent = '';
+      }
+    }
 
     if (status.isCertified) {
       badge.textContent = 'Certified Alteration Pinner';
@@ -2537,12 +2718,22 @@
     if (moduleList) {
       moduleList.innerHTML = modules.map(mod => {
         const isDone = completed.includes(mod.id);
-        return `<li class="module-status-item ${isDone ? 'status-complete' : 'status-missing'}">${mod.title} — ${isDone ? 'Completed ✅' : 'Not completed ❌'}</li>`;
+        return `<li class="module-status-item ${isDone ? 'status-complete' : 'status-missing'}"><span class="module-label">${mod.title}</span><span class="module-badge ${isDone ? 'badge-pass' : 'badge-pending'}">${isDone ? 'Passed' : 'Not Passed Yet'}</span></li>`;
       }).join('');
     }
   }
 
-  function navigateToSection(sectionId, trigger) {
+  function getNextRecommendedModule(completedModules = []) {
+    const ordered = modules.map(m => m.id);
+    for (let i = 0; i < ordered.length; i++) {
+      if (!completedModules.includes(ordered[i])) {
+        return ordered[i];
+      }
+    }
+    return null;
+  }
+
+  function navigateToSection(sectionId, trigger, skipHashUpdate = false) {
     const sections = document.querySelectorAll('.main-section');
     sections.forEach(section => {
       if (section.id === sectionId || (sectionId.startsWith('module-') && (section.id === 'modules' || section.id === sectionId))) {
@@ -2552,16 +2743,26 @@
       }
     });
 
+    let focusTarget = null;
     if (sectionId.startsWith('module-')) {
       const targetModule = document.getElementById(sectionId);
       if (targetModule) {
         targetModule.hidden = false;
         document.getElementById('modules')?.removeAttribute('hidden');
         const heading = document.getElementById(`${sectionId}-title`);
-        heading?.focus();
+        focusTarget = heading;
       }
     } else if (sectionId === 'dashboard') {
-      document.getElementById('certStatus')?.focus();
+      focusTarget = document.getElementById('certStatus');
+    }
+
+    if (!skipHashUpdate) {
+      const newHash = `#${sectionId}`;
+      if (history.replaceState) {
+        history.replaceState(null, '', newHash);
+      } else {
+        window.location.hash = newHash;
+      }
     }
 
     const navItems = document.querySelectorAll('.nav-item');
@@ -2574,6 +2775,15 @@
         item.removeAttribute('aria-current');
       }
     });
+
+    const targetEl = document.getElementById(sectionId);
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    if (focusTarget) {
+      setTimeout(() => focusTarget?.focus(), 150);
+    }
 
     if (trigger && typeof trigger.blur === 'function') {
       trigger.blur();
@@ -2663,46 +2873,19 @@
   function bindIdentityPersistence() {
     const nameInput = document.getElementById('employeeName');
     const locationInput = document.getElementById('employeeLocation');
-    nameInput?.addEventListener('input', () => persistIdentity());
-    locationInput?.addEventListener('input', () => persistIdentity());
+    nameInput?.addEventListener('input', () => {
+      validateEmployeeName();
+      saveEmployeeInputsToLocal();
+    });
+    locationInput?.addEventListener('input', () => saveEmployeeInputsToLocal());
   }
 
   function persistIdentity() {
-    try {
-      localStorage.setItem('dublinCertEmployeeName', getEmployeeName());
-      localStorage.setItem('dublinCertEmployeeLocation', getEmployeeLocation());
-    } catch (err) {
-      console.log('Local storage unavailable', err);
-    }
+    saveEmployeeInputsToLocal();
   }
 
   function restoreIdentityFromStorage() {
-    try {
-      const name = localStorage.getItem('dublinCertEmployeeName');
-      const location = localStorage.getItem('dublinCertEmployeeLocation');
-      if (name) {
-        document.getElementById('employeeName').value = name;
-      }
-      if (location) {
-        document.getElementById('employeeLocation').value = location;
-      }
-      if (name) {
-        loadCertificationStatus();
-      }
-    } catch (err) {
-      console.log('Local storage unavailable', err);
-    }
-  }
-
-  function showToast(message, type = 'info') {
-    const toast = document.getElementById('global-toast');
-    if (!toast) return;
-    toast.textContent = message;
-    toast.className = `toast toast--${type}`;
-    toast.style.opacity = '1';
-    setTimeout(() => {
-      toast.style.opacity = '0';
-    }, 3200);
+    loadEmployeeInputsFromLocal();
   }
 
 </script>

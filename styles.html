@@ -42,6 +42,12 @@
     width: auto;
   }
 
+  .header-subtitle {
+    margin: 0;
+    font-weight: 700;
+    opacity: 0.9;
+  }
+
   h1 { margin: 4px 0; }
   .subtitle { margin: 2px 0 0 0; opacity: 0.9; }
   .eyebrow { text-transform: uppercase; letter-spacing: 0.08em; margin: 0; font-size: 0.8rem; opacity: 0.85; }
@@ -67,6 +73,7 @@
     padding: 10px 14px;
     border-radius: 999px;
     font-weight: 700;
+    min-height: 44px;
   }
 
   .nav-item.active {
@@ -87,7 +94,10 @@
     padding: 12px 16px;
     font-weight: 700;
     cursor: pointer;
+    min-height: 44px;
   }
+
+  button[disabled] { opacity: 0.7; cursor: not-allowed; }
 
   button.primary { background: var(--gold); color: #1a1a1a; box-shadow: var(--card-shadow); }
   button.secondary { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.6); }
@@ -107,6 +117,7 @@
   .identity-bar label { display: block; font-weight: 600; margin-bottom: 6px; }
   .identity-bar input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #d0d7de; }
   .field.compact { text-align: right; }
+  .inline-error { color: #991b1b; font-weight: 600; min-height: 18px; margin-top: 4px; }
 
   .dashboard {
     display: grid;
@@ -126,8 +137,9 @@
   .badge { background: #e7f4f1; color: #0b5f52; padding: 8px 12px; border-radius: 999px; font-weight: 700; }
 
   .progress-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-  .progress-bar { flex: 1; width: 100%; height: 12px; border-radius: 999px; background: #e5e7eb; margin: 12px 0; overflow: hidden; }
-  .progress-bar-fill { height: 100%; width: 0; background: var(--gold); transition: width 0.3s ease; }
+  .progress-bar { flex: 1; width: 100%; height: 12px; border-radius: 999px; background: #e5e7eb; margin: 12px 0; overflow: hidden; position: relative; }
+  .progress-bar-fill { height: 100%; width: 0; background: var(--gold); transition: width 0.4s ease; }
+  .progress-bar-fill.ghost-fill { opacity: 0.35; position: absolute; inset: 0; pointer-events: none; }
   .progress-text { font-weight: 600; color: #334155; }
   .cert-estimates { margin: 4px 0 12px; padding: 10px; border-radius: 10px; background: #f8fafc; border: 1px solid #e5e7eb; }
   .cert-estimates p { margin: 4px 0; font-weight: 600; color: #0f172a; }
@@ -154,9 +166,13 @@
 #moduleContainer { display: flex; flex-direction: column; gap: 16px; }
 
   .module-status-list { list-style: none; padding: 0; margin: 12px 0 0 0; display: grid; gap: 6px; }
-  .module-status-item { padding: 10px; border-radius: 10px; border: 1px solid #e5e7eb; background: #f8fafc; font-weight: 600; }
+  .module-status-item { padding: 10px; border-radius: 10px; border: 1px solid #e5e7eb; background: #f8fafc; font-weight: 600; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
   .status-complete { border-color: #c1f0d4; background: #eefcf3; color: #0f5132; }
   .status-missing { border-color: #fee2e2; background: #fff5f5; color: #991b1b; }
+  .module-badge { padding: 6px 10px; border-radius: 999px; font-weight: 800; }
+  .badge-pass { background: #0f5132; color: #e8f8f2; }
+  .badge-pending { background: #991b1b; color: #fff5f5; }
+  .next-module { padding: 12px; border-radius: 12px; border: 1px dashed #e2e8f0; background: #f8fafc; margin-bottom: 10px; }
 
   .module-section[hidden] { display: none; }
 
@@ -173,11 +189,15 @@
   .quiz-question { margin-bottom: 10px; }
   .quiz-options label { display: block; margin: 4px 0; }
   .quiz input[type="text"] { width: 100%; margin-top: 6px; }
+  .quiz-context { font-weight: 700; color: #0f172a; margin-bottom: 4px; }
   .quiz-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .quiz-actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .module-nav { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
   .module-nav .nav-button { background: #f8fafc; color: var(--text); border: 1px solid #e5e7eb; box-shadow: var(--card-shadow); }
   .module-nav .nav-button.primary { background: var(--gold); color: #1a1a1a; border-color: var(--gold); }
+  .nav-button.ghost { background: #fff; color: #0f172a; border-color: #e5e7eb; }
   .status-text { font-weight: 700; }
+  .inline-warning { color: #b45309; }
 
   /* Module 1 specific additions */
   .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
@@ -318,6 +338,7 @@
   .toast--success { background: #065f46; }
   .toast--error { background: #991b1b; }
   .toast--info { background: #1f2933; }
+  .toast--warning { background: #92400e; }
 
   .progress-bar-track { width: 100%; background: #e5e7eb; border-radius: 999px; overflow: hidden; }
 
