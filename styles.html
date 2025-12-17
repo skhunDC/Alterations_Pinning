@@ -116,18 +116,9 @@
     border-radius: 12px;
     display: grid;
     gap: 12px;
-    grid-template-columns: minmax(320px, 1.4fr) minmax(260px, 1fr) auto;
-    grid-auto-flow: column;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     align-items: end;
     box-shadow: var(--card-shadow);
-  }
-
-  @media (max-width: 720px) {
-    .identity-bar {
-      grid-template-columns: 1fr;
-    }
-
-    .field.compact { text-align: left; }
   }
 
   .identity-bar label { display: block; font-weight: 600; margin-bottom: 6px; }
