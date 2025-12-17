@@ -282,7 +282,7 @@ function generateCertificatePDF(employeeName, employeeLocationOrId) {
   const logoPara = cell.appendParagraph('');
   const logoImage = logoPara.appendInlineImage(logoBlob);
   // Keep the logo compact so it doesn't overwhelm the certificate header.
-  logoImage.setWidth(90).setHeight(50);
+  logoImage.setWidth(150).setHeight(150);
   logoPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER)
     .setSpacingBefore(6)
     .setSpacingAfter(0);
