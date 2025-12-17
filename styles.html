@@ -5,6 +5,7 @@
     --gray: #f4f6f8;
     --text: #1f2933;
     --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --header-height: 200px;
   }
 
   * { box-sizing: border-box; }
@@ -19,16 +20,22 @@
   .app-header {
     background: linear-gradient(135deg, var(--green), #0d8571);
     color: #fff;
-    padding: 20px 24px;
+    padding: 20px 24px 12px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: var(--card-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .header-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
     flex-wrap: wrap;
-    box-shadow: var(--card-shadow);
-    position: sticky;
-    top: 0;
-    z-index: 10;
   }
 
   .brand-left {
@@ -57,18 +64,18 @@
   .main-nav {
     display: flex;
     gap: 8px;
-    padding: 10px 16px;
-    background: #fff;
-    position: sticky;
-    top: 120px;
-    z-index: 9;
-    border-bottom: 1px solid #e5e7eb;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 8px 20px rgba(0, 0, 0, 0.12);
     flex-wrap: wrap;
+    backdrop-filter: blur(6px);
   }
 
   .nav-item, .nav-link {
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.7);
     color: var(--text);
     padding: 10px 14px;
     border-radius: 999px;
@@ -175,6 +182,8 @@
   .next-module { padding: 12px; border-radius: 12px; border: 1px dashed #e2e8f0; background: #f8fafc; margin-bottom: 10px; }
 
   .module-section[hidden] { display: none; }
+
+  .main-section { scroll-margin-top: calc(var(--header-height) + 80px); }
 
   .module { padding: 16px; border-radius: 14px; background: #fff; box-shadow: var(--card-shadow); }
   .module h2 { margin-top: 0; color: var(--green); }
@@ -345,7 +354,6 @@
   @media (max-width: 900px) {
     .layout { grid-template-columns: 1fr; }
     .side-nav { position: relative; top: auto; }
-    .main-nav { top: auto; position: sticky; }
   }
 
   .metric-table { border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #f8fafc; display: grid; gap: 8px; }
