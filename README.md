@@ -15,16 +15,17 @@ Google Apps Script + HTMLService single-page experience that delivers Dublin Cle
 ## Deploying as a Web App
 1. Create a new Apps Script project and add all files above (File → New → HTML file for each partial; `Code.gs` as a script file; replace manifest with `appsscript.json`).
 2. Publish → Deploy as web app → Execute as **User accessing the web app** → Access: **Anyone** (adjust later for SSO).
-3. On first save, the script creates a spreadsheet named **Alterations Pinning Certification** with sheet **ModuleResults**.
+3. On first save, the script creates a spreadsheet named **Alterations Pinning Certification** with sheets **ModuleResults** (scores) and **QuizAttempts** (question-level detail).
 
 ## How Data Is Stored
-- Each quiz submission calls `saveModuleResult(moduleId, employeeName, employeeLocationOrId, score, passed)` in `Code.gs`.
-- Rows include: timestamp, employee name, location/ID, module ID (M1–M5), score, passed (TRUE/FALSE).
+- Each quiz submission calls `saveModuleAttempt(moduleId, employeeName, employeeLocationOrId, score, passed, correctCount, totalQuestions, answers)` in `Code.gs`, which logs both summary scores and detailed answers while keeping `saveModuleResult` intact for compatibility.
+- **ModuleResults** rows include: timestamp, employee name, location/ID, module ID (M1–M5), score, passed (TRUE/FALSE).
+- **QuizAttempts** rows include: timestamp, attemptId, employee identity, module ID, question number/id/text, selected answer (id/label), correct answer (id/label), per-question correctness, overall correct count, total questions, score %, and pass/fail.
 - `getEmployeeCertificationStatus(employeeName)` aggregates passing attempts to report completed and missing modules plus overall certification.
 
 ## Using the UI
 1. Enter employee name (required) and location/ID (optional) at the top. The app remembers these via localStorage when available.
-2. Navigate modules via sticky top navigation or sidebar; read objectives, content, visuals, and take the quiz (80% pass threshold). Active navigation is highlighted and focusable.
+2. Navigate modules via sticky top navigation or sidebar; read objectives, content, visuals, and take the quiz (83% pass threshold — 5 of 6 correct). Active navigation is highlighted and focusable.
 3. Submit a quiz to save to Sheets and refresh status. The dashboard shows modules remaining, a progress bar with estimated minutes, and a checklist.
 4. Use **Print Certificate** to open `print.html` with the employee name and completion table for HR files and supervisor sign-off (only when certified).
 5. Admins can reference the underlying ModuleResults sheet directly in Google Sheets for summary reporting.

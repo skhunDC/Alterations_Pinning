@@ -1441,6 +1441,10 @@
     M5: 20
   };
 
+  const QUESTIONS_PER_MODULE = 6;
+  const PASSING_CORRECT_REQUIRED = 5;
+  const PASSING_SCORE_PERCENT = 83;
+  const PASSING_MESSAGE = `Score ${PASSING_CORRECT_REQUIRED} of ${QUESTIONS_PER_MODULE} correct (${PASSING_SCORE_PERCENT}%) to pass.`;
   const totalProgramMinutes = Object.values(moduleTimeEstimates).reduce((sum, minutes) => sum + minutes, 0);
   const autoAdvanceOnPass = false;
   const toastDurationMs = 3800;
@@ -1663,7 +1667,7 @@
             <button type="button" class="primary" id="module${moduleNumber}-quiz-submit">Submit Quiz</button>
             <button type="button" class="nav-button ghost" id="module${moduleNumber}-quiz-retake" hidden>Retake quiz</button>
           </div>
-          <div class="quiz-feedback status-text" id="module${moduleNumber}-quiz-feedback" aria-live="polite">Score a minimum of 80% to pass.</div>
+          <div class="quiz-feedback status-text" id="module${moduleNumber}-quiz-feedback" aria-live="polite">${PASSING_MESSAGE}</div>
         </div>
         ${renderModuleNavigation(module.id)}
       </div>
@@ -2443,7 +2447,7 @@
       return;
     }
 
-    const selectedQuestions = shuffleArray(pool).slice(0, Math.min(6, pool.length)).map(question => ({
+    const selectedQuestions = shuffleArray(pool).slice(0, Math.min(QUESTIONS_PER_MODULE, pool.length)).map(question => ({
       ...question,
       options: shuffleArray((question.options || []).map(opt => ({ ...opt })))
     }));
@@ -2453,7 +2457,7 @@
 
     const feedbackEl = getFeedbackElement(moduleId);
     if (feedbackEl) {
-      feedbackEl.textContent = 'Score a minimum of 80% to pass.';
+      feedbackEl.textContent = PASSING_MESSAGE;
       feedbackEl.style.color = '';
     }
   }
@@ -2497,7 +2501,7 @@
     renderQuizForModule(moduleId);
     const feedbackEl = getFeedbackElement(moduleId);
     if (feedbackEl) {
-      feedbackEl.textContent = 'Score a minimum of 80% to pass.';
+      feedbackEl.textContent = PASSING_MESSAGE;
       feedbackEl.classList.remove('inline-warning');
     }
     const retakeButton = document.getElementById(getQuizRetakeId(moduleId));
@@ -2510,15 +2514,30 @@
     const state = activeQuizState[moduleId];
     const questions = state?.questions || [];
     if (!questions.length) {
-      return { score: 0, correct: 0, total: 0, incorrectDetails: [] };
+      return { score: 0, correct: 0, total: QUESTIONS_PER_MODULE, incorrectDetails: [], answers: [] };
     }
 
     let correct = 0;
     const incorrectDetails = [];
+    const answers = [];
 
     questions.forEach((question, idx) => {
       const selected = getSelectedRadioValue(getQuestionInputName(moduleId, question.id));
       const isCorrect = selected === question.correctOptionId;
+      const correctOption = (question.options || []).find(opt => opt.id === question.correctOptionId);
+      const selectedOption = (question.options || []).find(opt => opt.id === selected);
+      answers.push({
+        moduleId,
+        questionNumber: idx + 1,
+        questionId: question.id,
+        questionText: question.prompt,
+        selectedOptionId: selected || '',
+        selectedOptionLabel: selectedOption?.label || '',
+        correctOptionId: question.correctOptionId || '',
+        correctOptionLabel: correctOption?.label || '',
+        isCorrect
+      });
+
       if (isCorrect) {
         correct += 1;
       } else {
@@ -2530,9 +2549,9 @@
       }
     });
 
-    const total = questions.length;
-    const score = total ? Math.round((correct / total) * 100) : 0;
-    return { score, correct, total, incorrectDetails };
+    const denominator = QUESTIONS_PER_MODULE || questions.length || 1;
+    const score = Math.round((correct / denominator) * 100);
+    return { score, correct, total: denominator, incorrectDetails, answers };
   }
 
   function submitQuiz(moduleId) {
@@ -2564,7 +2583,7 @@
     }
 
     const results = evaluateModuleQuiz(moduleId);
-    const passed = results.score >= 80;
+    const passed = results.correct >= PASSING_CORRECT_REQUIRED;
     updateModuleResultText(moduleId, passed, results.score, results.correct, results.total, results.incorrectDetails);
 
     const retakeButton = document.getElementById(getQuizRetakeId(moduleId));
@@ -2589,7 +2608,7 @@
         showToast('Error saving result. Please retry.', 'error');
         updateModuleResultText(moduleId, false, results.score, results.correct, results.total, results.incorrectDetails, `Error saving: ${err}`);
         setLoading(submitButtonId, false);
-      }).saveModuleResult(moduleId, name, location, results.score, passed);
+      }).saveModuleAttempt(moduleId, name, location, results.score, passed, results.correct, QUESTIONS_PER_MODULE, results.answers || []);
     } else {
       setLoading(submitButtonId, false);
     }
@@ -2607,7 +2626,7 @@
       return;
     }
 
-    const summary = `${passed ? 'PASS' : 'Review content and retry'} — ${correct}/${total} correct (${score}%).`;
+    const summary = `${passed ? 'PASS' : 'Review content and retry'} — ${correct}/${total} correct (${score}%). Passing requires ${PASSING_CORRECT_REQUIRED} of ${QUESTIONS_PER_MODULE} correct.`;
     const tips = (incorrectDetails || []).map(item => `<li><strong>Q${item.number}</strong>: ${item.tip || 'Review this topic again.'}</li>`).join('');
 
     if (tips) {

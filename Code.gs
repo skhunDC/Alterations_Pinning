@@ -1,6 +1,26 @@
 const SPREADSHEET_NAME = 'Alterations Pinning Certification';
 const MODULE_RESULTS_SHEET = 'ModuleResults';
+const QUIZ_ATTEMPTS_SHEET = 'QuizAttempts';
 const MODULE_HEADERS = ['Timestamp', 'EmployeeName', 'LocationOrID', 'ModuleID', 'Score', 'Passed'];
+const QUIZ_ATTEMPT_HEADERS = [
+  'Timestamp',
+  'AttemptId',
+  'EmployeeName',
+  'LocationOrID',
+  'ModuleID',
+  'QuestionNumber',
+  'QuestionId',
+  'QuestionText',
+  'SelectedOptionId',
+  'SelectedOptionLabel',
+  'CorrectOptionId',
+  'CorrectOptionLabel',
+  'IsCorrect',
+  'CorrectCount',
+  'TotalQuestions',
+  'ScorePercent',
+  'Passed'
+];
 
 // Reusable Google Doc certificate template for Dublin Cleaners
 var CERTIFICATE_TEMPLATE_ID = '17yjalGF_nZEw_mWVQm9vlme_eoAYHLbBPw7nruiG1QQ';
@@ -36,12 +56,12 @@ function doGet() {
 
 function getOrCreateCertificationSpreadsheet_() {
   const existing = DriveApp.getFilesByName(SPREADSHEET_NAME);
-  if (existing.hasNext()) {
-    return SpreadsheetApp.open(existing.next());
-  }
-  const created = SpreadsheetApp.create(SPREADSHEET_NAME);
-  getOrCreateModuleResultsSheet_(created);
-  return created;
+  const spreadsheet = existing.hasNext()
+    ? SpreadsheetApp.open(existing.next())
+    : SpreadsheetApp.create(SPREADSHEET_NAME);
+  getOrCreateModuleResultsSheet_(spreadsheet);
+  getOrCreateQuizAttemptsSheet_(spreadsheet);
+  return spreadsheet;
 }
 
 function getOrCreateModuleResultsSheet_(spreadsheet) {
@@ -59,13 +79,25 @@ function getOrCreateModuleResultsSheet_(spreadsheet) {
   return sheet;
 }
 
-function saveModuleResult(moduleId, employeeName, employeeLocationOrId, score, passed) {
-  if (!employeeName || !moduleId) {
-    throw new Error('Employee name and module ID are required.');
+function getOrCreateQuizAttemptsSheet_(spreadsheet) {
+  const ss = spreadsheet || getOrCreateCertificationSpreadsheet_();
+  let sheet = ss.getSheetByName(QUIZ_ATTEMPTS_SHEET);
+  if (!sheet) {
+    sheet = ss.insertSheet(QUIZ_ATTEMPTS_SHEET);
   }
-  const sheet = getOrCreateModuleResultsSheet_();
+  const headerRange = sheet.getRange(1, 1, 1, QUIZ_ATTEMPT_HEADERS.length);
+  const headers = headerRange.getValues()[0];
+  const headersMatch = headers.join('') === QUIZ_ATTEMPT_HEADERS.join('');
+  if (!headersMatch) {
+    headerRange.setValues([QUIZ_ATTEMPT_HEADERS]);
+  }
+  return sheet;
+}
+
+function appendModuleResultRow_(timestamp, moduleId, employeeName, employeeLocationOrId, score, passed, spreadsheet) {
+  const sheet = getOrCreateModuleResultsSheet_(spreadsheet);
   const row = [
-    new Date(),
+    timestamp,
     employeeName.trim(),
     (employeeLocationOrId || '').trim(),
     moduleId,
@@ -73,7 +105,80 @@ function saveModuleResult(moduleId, employeeName, employeeLocationOrId, score, p
     !!passed
   ];
   sheet.appendRow(row);
-  return { savedAt: row[0] };
+  return row;
+}
+
+function saveModuleResult(moduleId, employeeName, employeeLocationOrId, score, passed) {
+  if (!employeeName || !moduleId) {
+    throw new Error('Employee name and module ID are required.');
+  }
+  const timestamp = new Date();
+  appendModuleResultRow_(timestamp, moduleId, employeeName, employeeLocationOrId, score, passed);
+  return { savedAt: timestamp };
+}
+
+function saveModuleAttempt(moduleId, employeeName, employeeLocationOrId, score, passed, correctCount, totalQuestions, answers) {
+  if (!employeeName || !moduleId) {
+    throw new Error('Employee name and module ID are required.');
+  }
+
+  const ss = getOrCreateCertificationSpreadsheet_();
+  const timestamp = new Date();
+  const normalizedName = employeeName.trim();
+  const normalizedLocation = (employeeLocationOrId || '').trim();
+  const safeScore = typeof score === 'number' ? score : '';
+  const safeCorrectCount = typeof correctCount === 'number' ? correctCount : 0;
+  const safeTotalQuestions = typeof totalQuestions === 'number' && totalQuestions > 0 ? totalQuestions : 6;
+  const attemptId = typeof Utilities !== 'undefined' && Utilities.getUuid ? Utilities.getUuid() : `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+
+  appendModuleResultRow_(timestamp, moduleId, normalizedName, normalizedLocation, safeScore, passed, ss);
+
+  const sheet = getOrCreateQuizAttemptsSheet_(ss);
+  const responseRows = (answers || []).map(function(answer, idx) {
+    return [
+      timestamp,
+      attemptId,
+      normalizedName,
+      normalizedLocation,
+      moduleId,
+      answer.questionNumber || idx + 1,
+      answer.questionId || '',
+      answer.questionText || '',
+      answer.selectedOptionId || '',
+      answer.selectedOptionLabel || '',
+      answer.correctOptionId || '',
+      answer.correctOptionLabel || '',
+      answer.isCorrect === true,
+      safeCorrectCount,
+      safeTotalQuestions,
+      safeScore,
+      !!passed
+    ];
+  });
+
+  const rowsToSave = responseRows.length ? responseRows : [[
+    timestamp,
+    attemptId,
+    normalizedName,
+    normalizedLocation,
+    moduleId,
+    '',
+    '',
+    'No question data captured',
+    '',
+    '',
+    '',
+    '',
+    false,
+    safeCorrectCount,
+    safeTotalQuestions,
+    safeScore,
+    !!passed
+  ]];
+
+  sheet.getRange(sheet.getLastRow() + 1, 1, rowsToSave.length, QUIZ_ATTEMPT_HEADERS.length).setValues(rowsToSave);
+
+  return { savedAt: timestamp, attemptId: attemptId };
 }
 
 function getEmployeeCertificationStatus(employeeName) {
