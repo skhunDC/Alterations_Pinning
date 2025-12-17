@@ -1655,6 +1655,26 @@
             </div>`;
   }
 
+  function moduleHeroTemplate(module, headingId) {
+    const moduleNumber = module.id.replace('M', '');
+    const objectives = (module.objectives || []).map(item => `<li>${item}</li>`).join('');
+    return `
+      <header class="module-hero">
+        <div class="module-hero__text">
+          <div class="module-hero__meta">
+            <span class="pill">Module ${moduleNumber}</span>
+          </div>
+          <h2 id="${headingId}" class="module-title" tabindex="-1">${module.title}</h2>
+          <p class="module-subtitle">${module.intro}</p>
+          <div class="module-objectives-block">
+            <p class="eyebrow">What you'll learn</p>
+            <ul class="module-objectives">${objectives}</ul>
+          </div>
+        </div>
+      </header>
+    `;
+  }
+
   function quizHostTemplate(module) {
     const moduleNumber = module.id.replace('M', '');
     return `
@@ -1720,7 +1740,6 @@
   }
 
   function moduleOneTemplate(module) {
-    const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
     const subjectiveList = module.vocabulary.subjective.map(item => `<li>❌ ${item}</li>`).join('');
     const objectiveList = module.vocabulary.objective.map(item => `<li>✅ ${item}</li>`).join('');
     const rules = module.measurementRules.map(rule => `
@@ -1756,92 +1775,139 @@
     const headingId = `${sectionId}-title`;
     return `
       <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
-        <article class="module" id="${module.id}">
-        <span class="pill">Module ${module.id.replace('M','')}</span>
-        <h2 id="${headingId}" tabindex="-1">${module.title}</h2>
-        <p>${module.intro}</p>
-
-        <div class="section">
-          <h3>Learning Objectives</h3>
-          <ul>${objectives}</ul>
-        </div>
-
-        <div class="section concept-grid">
-          <div class="concept-card">
-            <h3>Subjective vs Objective</h3>
-            <div class="list-row">
-              <div>
-                <p class="eyebrow">Avoid</p>
-                <ul>${subjectiveList}</ul>
-              </div>
-              <div>
-                <p class="eyebrow">Use Instead</p>
-                <ul>${objectiveList}</ul>
+        <article class="module module-shell" id="${module.id}">
+          ${moduleHeroTemplate(module, headingId)}
+          <div class="module-cards">
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Measurement language reset</h3>
+                  <p class="subtitle">Shift every conversation from “a bit” or “2 inches” to final measurements tailors can sew to.</p>
+                  <div class="concept-grid">
+                    <div class="concept-card">
+                      <h3>Subjective vs Objective</h3>
+                      <div class="list-row">
+                        <div>
+                          <p class="eyebrow">Avoid</p>
+                          <ul>${subjectiveList}</ul>
+                        </div>
+                        <div>
+                          <p class="eyebrow">Use Instead</p>
+                          <ul>${objectiveList}</ul>
+                        </div>
+                      </div>
+                      <p class="tip">Ask the customer to stand naturally, measure the preferred fit, and document the final number.</p>
+                    </div>
+                    <div class="concept-card highlight">
+                      <h3>Standard Measurement Language</h3>
+                      <p>Use formats that travel clearly to the tailor:</p>
+                      <ul>
+                        <li>INSEAM 30 / INSEAM 32</li>
+                        <li>OUTSEAM 40</li>
+                        <li>WAIST 36</li>
+                        <li>“Shorten sleeves to 23 inches from shoulder seam.”</li>
+                      </ul>
+                      <p class="tip">Never record “a little” or “+/-” values—capture the final measurement instead.</p>
+                    </div>
+                  </div>
+                  <div class="rule-grid">${rules}</div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--rule">
+                    <p class="callout-title">✅ Key Rule</p>
+                    <p>Record the final measurement (e.g., “INSEAM 30”) instead of a change amount.</p>
+                  </div>
+                  <div class="callout callout--warn">
+                    <p class="callout-title">⚠️ Common Mistake</p>
+                    <p>Using tag sizes or plus/minus shorthand creates guesswork for tailors.</p>
+                  </div>
+                  <div class="module-figure-grid">
+                    <figure class="module-figure">
+                      <img class="module-image" src="https://www.dublincleaners.com/wp-content/uploads/2025/12/Women-Pant-Size-label.jpg" alt="Women’s pants size label example." loading="lazy" />
+                      <figcaption class="module-caption">Tag sizes vary — measure the garment and capture the confirmed number.</figcaption>
+                    </figure>
+                    <figure class="module-figure">
+                      <img class="module-image" src="https://www.dublincleaners.com/wp-content/uploads/2025/12/Women-Pant-Size-label.jpg" alt="Men’s pants size label example; tags still require tape verification." loading="lazy" />
+                      <figcaption class="module-caption">Men’s labels also drift after alterations. Always verify with a tape.</figcaption>
+                    </figure>
+                  </div>
+                </aside>
               </div>
             </div>
-            <p class="tip">Ask the customer to stand naturally, measure the preferred fit, and document the final number.</p>
+
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Hem clarity and objective notes</h3>
+                  <div class="callout callout--note">
+                    <p class="callout-title">📝 POS Note Example</p>
+                    <p>“Shorten inseam to 30 inches; customer approved.”</p>
+                  </div>
+                  <div class="callout callout--note">
+                    <p class="callout-title">📏 Measurement</p>
+                    <p>“Finished hem 36 inches from floor with flats.”</p>
+                  </div>
+                  <div class="callout callout--warn">
+                    <p class="callout-title">⚠️ Common Mistake</p>
+                    <p>Writing “hem 2 inches” hides the true target. Replace with the final length.</p>
+                  </div>
+                  <div class="script-card">
+                    <h3>Confirmation Script</h3>
+                    <p>“I’ll note <strong>‘shorten inseam to 30 inches’</strong>. Is that exactly what you want?” Repeat back the final measurement before saving it.</p>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--rule">
+                    <p class="callout-title">🧷 Pin Safety</p>
+                    <p>Measure on a flat surface after marking; never guess from tags.</p>
+                  </div>
+                  <div class="callout callout--note">
+                    <p class="callout-title">${module.hemCallout.heading}</p>
+                    <ul>${hemPoints}</ul>
+                  </div>
+                </aside>
+              </div>
+            </div>
+
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Prevent complaints with clear rewrites</h3>
+                  <p class="subtitle">Translate vague requests into ready-to-sew instructions.</p>
+                  <div class="scenario-grid">
+                    <h3>Complaint Prevention Examples</h3>
+                    ${scenarios}
+                  </div>
+                  <div class="practice-grid" aria-label="Rewrite practice for clearer notes">
+                    <h3>Rewrite Practice (not graded)</h3>
+                    <p class="subtitle">Rewrite each vague note as a final, objective instruction. Use the examples as guidance.</p>
+                    <div class="practice-list">${practices}</div>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--rule">
+                    <p class="callout-title">✅ Key Rule</p>
+                    <p>Every rewrite must end with a measurable number the tailor can match.</p>
+                  </div>
+                  <div class="callout callout--note">
+                    <p class="callout-title">📝 Customer Script</p>
+                    <p>“To make sure we get this right, I’m writing ‘Shorten inseam to 30 inches.’ Does that match what you want?”</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
+
+            <div class="module-card quiz-card">
+              ${quizHostTemplate(module)}
+              <div class="back-to-top"><button type="button" class="nav-button" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">Back to top</button></div>
+            </div>
           </div>
-          <div class="concept-card highlight">
-            <h3>Standard Measurement Language</h3>
-            <p>Use formats that travel clearly to the tailor:</p>
-            <ul>
-              <li>INSEAM 30 / INSEAM 32</li>
-              <li>OUTSEAM 40</li>
-              <li>WAIST 36</li>
-              <li>“Shorten sleeves to 23 inches from shoulder seam.”</li>
-            </ul>
-            <p class="tip">Never record “a little” or “+/-” values—capture the final measurement instead.</p>
-          </div>
-        </div>
-
-        <div class="section rule-grid">
-          ${rules}
-        </div>
-
-        <div class="section">
-          <h3>Why tags can’t replace measurements</h3>
-          <figure class="module-figure">
-            <img class="module-image" src="https://www.dublincleaners.com/wp-content/uploads/2025/12/Women-Pant-Size-label.jpg" alt="Women’s pants size label example." loading="lazy" />
-            <figcaption class="module-caption">Tag sizes vary and may reflect past alterations — men’s and women’s labels can both mislead. Always measure the garment and record final objective measurements.</figcaption>
-          </figure>
-        </div>
-
-        <div class="section hem-callout">
-          <div>
-            <p class="eyebrow">Hem Reminder</p>
-            <h3>${module.hemCallout.heading}</h3>
-            <ul>${hemPoints}</ul>
-          </div>
-          <div class="hem-visual">
-            <p class="badge-lite">Garment Part</p>
-            <p>The hem is the folded, sewn edge. It needs a target length to make sense.</p>
-          </div>
-        </div>
-
-        <div class="section scenario-grid">
-          <h3>Complaint Prevention Examples</h3>
-          ${scenarios}
-        </div>
-
-        <div class="section practice-grid" aria-label="Rewrite practice for clearer notes">
-          <h3>Rewrite Practice (not graded)</h3>
-          <p class="subtitle">Rewrite each vague note as a final, objective instruction. Use the examples as guidance.</p>
-          <div class="practice-list">${practices}</div>
-        </div>
-
-        <div class="section script-card">
-          <h3>Confirmation Script</h3>
-          <p>“I’ll note <strong>‘shorten inseam to 30 inches’</strong>. Is that exactly what you want?” Repeat back the final measurement before saving it.</p>
-        </div>
-
-        ${quizHostTemplate(module)}
         </article>
       </section>
     `;
   }
 
   function moduleFourTemplate(module) {
-    const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
     const correctList = module.objectiveNotes.correct.map(item => `<li>${item}</li>`).join('');
     const incorrectList = module.objectiveNotes.incorrect.map(item => `<li>${item}</li>`).join('');
     const hemWrong = module.hemGuidance.wrong.map(item => `<li>❌ ${item}</li>`).join('');
@@ -1898,87 +1964,149 @@
     const headingId = `${sectionId}-title`;
     return `
       <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
-        <article class="module module-four" id="${module.id}">
-        <span class="pill">Module ${module.id.replace('M','')}</span>
-        <h2 id="${headingId}" tabindex="-1">${module.title}</h2>
-        <p>${module.intro}</p>
-
-        <div class="section">
-          <h3>Learning Objectives</h3>
-          <ul>${objectives}</ul>
-        </div>
-
-        <div class="section module-four__grid" aria-label="Objective SPOT note examples">
-          <div class="note-card">
-            <p class="eyebrow">Objective Notes in SPOT POS</p>
-            <div class="note-columns">
-              <div>
-                <p class="badge-lite">Correct</p>
-                <ul>${correctList}</ul>
-              </div>
-              <div>
-                <p class="pill pill-quiet">Avoid</p>
-                <ul>${incorrectList}</ul>
+        <article class="module module-four module-shell" id="${module.id}">
+          ${moduleHeroTemplate(module, headingId)}
+          <div class="module-cards">
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Objective SPOT notes that travel</h3>
+                  <p class="subtitle">Replace vague language with final measurements the tailor can trust.</p>
+                  <div class="module-four__grid" aria-label="Objective SPOT note examples">
+                    <div class="note-card">
+                      <p class="eyebrow">Objective Notes in SPOT POS</p>
+                      <div class="note-columns">
+                        <div>
+                          <p class="badge-lite">Correct</p>
+                          <ul>${correctList}</ul>
+                        </div>
+                        <div>
+                          <p class="pill pill-quiet">Avoid</p>
+                          <ul>${incorrectList}</ul>
+                        </div>
+                      </div>
+                      <p class="tip">${module.objectiveNotes.reminder}</p>
+                    </div>
+                    <div class="note-card hem-guard">
+                      <p class="eyebrow">Avoid Using “Hem” as a Verb</p>
+                      <p>${module.hemGuidance.definition}</p>
+                      <div class="note-columns">
+                        <div>
+                          <p class="pill pill-quiet">Wrong</p>
+                          <ul>${hemWrong}</ul>
+                        </div>
+                        <div>
+                          <p class="pill pill-quiet">Better</p>
+                          <ul>${hemBetter}</ul>
+                        </div>
+                      </div>
+                      <p class="tip">${module.hemGuidance.reminder}</p>
+                    </div>
+                  </div>
+                  <div class="comparison-table" aria-label="Shorten vs hem wording">
+                    <h3>“Shorten to X” vs “Hem to X”</h3>
+                    <div class="comparison-grid">${comparisonRows}</div>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--rule">
+                    <p class="callout-title">✅ Key Rule</p>
+                    <p>Write the action and final number. “Hem” alone is never enough.</p>
+                  </div>
+                  <div class="callout callout--warn">
+                    <p class="callout-title">⚠️ Common Mistake</p>
+                    <p>Copying tag sizes or “as is” instead of measuring and confirming.</p>
+                  </div>
+                </aside>
               </div>
             </div>
-            <p class="tip">${module.objectiveNotes.reminder}</p>
-          </div>
-          <div class="note-card hem-guard">
-            <p class="eyebrow">Avoid Using “Hem” as a Verb</p>
-            <p>${module.hemGuidance.definition}</p>
-            <div class="note-columns">
-              <div>
-                <p class="pill pill-quiet">Wrong</p>
-                <ul>${hemWrong}</ul>
-              </div>
-              <div>
-                <p class="pill pill-quiet">Better</p>
-                <ul>${hemBetter}</ul>
+
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Standard formats & SPOT field usage</h3>
+                  <div class="format-grid" aria-label="Standard POS formats">
+                    <h3>Using Standard Formats in SPOT</h3>
+                    <p class="micro-copy">Lead with the garment area and the final measurement so tailors can act without guessing.</p>
+                    <div class="format-cards">${formatCards}</div>
+                  </div>
+                  <div class="field-usage" aria-label="SPOT field usage guidance">
+                    <h3>Use SPOT Fields Consistently</h3>
+                    <ul>${fieldUsage}</ul>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--note">
+                    <p class="callout-title">📝 POS Note Example</p>
+                    <p>“Jeans: shorten inseam to 30.0 (measured). Customer approved.”</p>
+                  </div>
+                  <div class="callout callout--rule">
+                    <p class="callout-title">✅ Key Rule</p>
+                    <p>Always mirror approvals in the note so the tailor knows the customer agreed.</p>
+                  </div>
+                </aside>
               </div>
             </div>
-            <p class="tip">${module.hemGuidance.reminder}</p>
+
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>POS mockups & customer scripts</h3>
+                  <div class="pos-mockups" aria-label="POS note walkthrough">
+                    <h3>POS Screen Note Examples</h3>
+                    <p class="micro-copy">These text mockups show how to capture the garment, service, and objective note the tailor will follow.</p>
+                    <div class="mockup-grid">${posMockups}</div>
+                  </div>
+                  <div class="script-grid" aria-label="Customer communication scripts">
+                    <h3>Customer Communication Scripts</h3>
+                    <p class="subtitle">Mirror the customer’s expectation verbally, then repeat it in the SPOT note.</p>
+                    <div class="script-grid__inner">${scripts}</div>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--note">
+                    <p class="callout-title">📝 Customer Script</p>
+                    <p>${module.scripts.confirm}</p>
+                  </div>
+                  <div class="callout callout--warn">
+                    <p class="callout-title">⚠️ Common Mistake</p>
+                    <p>Leaving “hem” as the only instruction; tailors need the finished measurement.</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
+
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Corrections & checklist</h3>
+                  <div class="correction-list" aria-label="Correcting vague notes">
+                    <h3>Correcting Bad Notes</h3>
+                    <ul>${corrections}</ul>
+                  </div>
+                  <div class="checklist-lite" aria-label="Note entry checklist">
+                    <h3>Quick SPOT Note Checklist ✅</h3>
+                    <ul>${checklist}</ul>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--rule">
+                    <p class="callout-title">✅ Key Rule</p>
+                    <p>Pair garment type with the final number: “Wool trousers: inseam 30 (measured).”</p>
+                  </div>
+                  <div class="callout callout--note">
+                    <p class="callout-title">📝 Customer Script</p>
+                    <p>${module.scripts.clarify}</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
+
+            <div class="module-card quiz-card">
+              ${quizHostTemplate(module)}
+              <div class="back-to-top"><button type="button" class="nav-button" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">Back to top</button></div>
+            </div>
           </div>
-        </div>
-
-        <div class="section comparison-table" aria-label="Shorten vs hem wording">
-          <h3>“Shorten to X” vs “Hem to X”</h3>
-          <div class="comparison-grid">${comparisonRows}</div>
-        </div>
-
-        <div class="section format-grid" aria-label="Standard POS formats">
-          <h3>Using Standard Formats in SPOT</h3>
-          <p class="micro-copy">Lead with the garment area and the final measurement so tailors can act without guessing.</p>
-          <div class="format-cards">${formatCards}</div>
-        </div>
-
-        <div class="section field-usage" aria-label="SPOT field usage guidance">
-          <h3>Use SPOT Fields Consistently</h3>
-          <ul>${fieldUsage}</ul>
-        </div>
-
-        <div class="section pos-mockups" aria-label="POS note walkthrough">
-          <h3>POS Screen Note Examples</h3>
-          <p class="micro-copy">These text mockups show how to capture the garment, service, and objective note the tailor will follow.</p>
-          <div class="mockup-grid">${posMockups}</div>
-        </div>
-
-        <div class="section script-grid" aria-label="Customer communication scripts">
-          <h3>Customer Communication Scripts</h3>
-          <p class="subtitle">Mirror the customer’s expectation verbally, then repeat it in the SPOT note.</p>
-          <div class="script-grid__inner">${scripts}</div>
-        </div>
-
-        <div class="section correction-list" aria-label="Correcting vague notes">
-          <h3>Correcting Bad Notes</h3>
-          <ul>${corrections}</ul>
-        </div>
-
-        <div class="section checklist-lite" aria-label="Note entry checklist">
-          <h3>Quick SPOT Note Checklist ✅</h3>
-          <ul>${checklist}</ul>
-        </div>
-
-        ${quizHostTemplate(module)}
         </article>
       </section>
     `;
@@ -1986,7 +2114,6 @@
 
   // Module 2 uses custom layout classes (pin-grid, policy-card, orientation-grid) defined in styles.html.
   function moduleTwoTemplate(module) {
-    const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
     const pinCards = module.pinTypes.map(pin => `
       <div class="pin-card">
         <div class="pin-card__header">
@@ -2012,81 +2139,124 @@
     const headingId = `${sectionId}-title`;
     return `
       <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
-        <article class="module" id="${module.id}">
-        <span class="pill">Module ${module.id.replace('M','')}</span>
-        <h2 id="${headingId}" tabindex="-1">${module.title}</h2>
-        <p>${module.intro}</p>
+        <article class="module module-shell" id="${module.id}">
+          ${moduleHeroTemplate(module, headingId)}
+          <div class="module-cards">
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Pin types and when to use them</h3>
+                  <p class="subtitle">Choose the right tool, then swap to safety pins before garments travel.</p>
+                  <div class="pin-grid" aria-label="Pin type comparison">
+                    ${pinCards}
+                  </div>
+                  <div class="callout callout--warn">
+                    <p class="callout-title">⚠️ Common Mistake</p>
+                    <p>Sending straight pins to the plant. Replace with closed safety pins before bagging.</p>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="module-figure-grid">
+                    <figure class="module-figure">
+                      <img class="module-image" src="https://www.dublincleaners.com/wp-content/uploads/2025/12/Straightpin.jpg" alt="Straight pins with colored heads arranged for fitting" />
+                      <figcaption class="module-caption">Straight pins: temporary and supervised only.</figcaption>
+                    </figure>
+                    <figure class="module-figure">
+                      <img class="module-image" src="https://www.dublincleaners.com/wp-content/uploads/2025/12/safetypin.jpg" alt="Closed safety pin ready for securing garments" />
+                      <figcaption class="module-caption">Safety pins: locked and travel-ready.</figcaption>
+                    </figure>
+                  </div>
+                  <div class="callout callout--rule">
+                    <p class="callout-title">🧷 Pin Safety</p>
+                    <p>Only closed, horizontal safety pins leave the store. Verify orientation before the customer walks away.</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
 
-        <div class="section">
-          <h3>Learning Objectives</h3>
-          <ul>${objectives}</ul>
-        </div>
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Plant travel policy</h3>
+                  <div class="policy-card" aria-label="Safety pin policy">
+                    <div>
+                      <p class="eyebrow">Plant Travel Rule</p>
+                      <h3>${module.policy.headline}</h3>
+                      <ul>${module.policy.rules.map(rule => `<li>${rule}</li>`).join('')}</ul>
+                      <p class="note-line">${module.policy.note}</p>
+                    </div>
+                    <div class="policy-badge">
+                      <div class="badge-warning">Safety pins only</div>
+                      <p class="micro-copy">Closed clasps prevent injuries and protect machinery.</p>
+                    </div>
+                  </div>
+                  <div class="orientation-grid" aria-label="Pin orientation examples">
+                    <div class="orientation-card good">
+                      <p class="pill pill-quiet">Correct</p>
+                      <h3>${module.orientation.correct.title}</h3>
+                      <ul>${module.orientation.correct.bullets.map(item => `<li>${item}</li>`).join('')}</ul>
+                      <p class="micro-copy">${module.orientation.correct.description}</p>
+                    </div>
+                    <div class="orientation-card risk">
+                      <p class="pill pill-quiet">Incorrect</p>
+                      <h3>${module.orientation.incorrect.title}</h3>
+                      <ul>${module.orientation.incorrect.bullets.map(item => `<li>${item}</li>`).join('')}</ul>
+                      <p class="micro-copy">${module.orientation.incorrect.description}</p>
+                    </div>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--note">
+                    <p class="callout-title">📝 Customer Script</p>
+                    <p>“These safety pins are locked and horizontal at your hem line so it won’t shift in the bag.”</p>
+                  </div>
+                  <div class="callout callout--warn">
+                    <p class="callout-title">⚠️ Common Mistake</p>
+                    <p>Vertical pins distort hems and slip during transit.</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
 
-        <div class="section pin-grid" aria-label="Pin type comparison">
-          ${pinCards}
-        </div>
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Safety checklist & scenarios</h3>
+                  <div class="checklist" aria-label="Pin safety checklist">
+                    <div>
+                      <p class="eyebrow">Quick Safety</p>
+                      <h3>Pin Safety Checklist ⚠️</h3>
+                      <ul>${checklist}</ul>
+                    </div>
+                    <div class="checklist-note">
+                      <p class="badge-lite">Checklist Reminder</p>
+                      <p>Use this before every plant-bound garment leaves the counter.</p>
+                      <p class="micro-copy">Imagine the hem as a line — pins should sit on that line (horizontal), never crossing it like a fence post (vertical).</p>
+                    </div>
+                  </div>
+                  <div class="scenario-grid" aria-label="Pin safety scenarios">
+                    <h3>Pin Safety Scenarios</h3>
+                    ${scenarios}
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--rule">
+                    <p class="callout-title">✅ Key Rule</p>
+                    <p>Count pins, close clasps, confirm orientation, and brief the customer before bagging.</p>
+                  </div>
+                  <div class="callout callout--note">
+                    <p class="callout-title">🧷 Pin Safety</p>
+                    <p>Swap straight pins after fittings—never let them leave the building.</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
 
-        <div class="section">
-          <figure class="module-figure">
-            <img class="module-image" src="https://www.dublincleaners.com/wp-content/uploads/2025/12/Straightpin.jpg" alt="Straight pins with colored heads arranged for fitting" />
-            <figcaption class="module-caption">Straight pins are for controlled pinning during fitting. Use safety pins for plant travel.</figcaption>
-          </figure>
-        </div>
-
-        <div class="section policy-card" aria-label="Safety pin policy">
-          <div>
-            <p class="eyebrow">Plant Travel Rule</p>
-            <h3>${module.policy.headline}</h3>
-            <ul>${module.policy.rules.map(rule => `<li>${rule}</li>`).join('')}</ul>
-            <p class="note-line">${module.policy.note}</p>
+            <div class="module-card quiz-card">
+              ${quizHostTemplate(module)}
+              <div class="back-to-top"><button type="button" class="nav-button" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">Back to top</button></div>
+            </div>
           </div>
-          <div class="policy-badge">
-            <div class="badge-warning">Safety pins only</div>
-            <p class="micro-copy">Closed clasps prevent injuries and protect machinery.</p>
-          </div>
-        </div>
-
-        <div class="section">
-          <figure class="module-figure">
-            <img class="module-image" src="https://www.dublincleaners.com/wp-content/uploads/2025/12/safetypin.jpg" alt="Closed safety pin ready for securing garments" />
-            <figcaption class="module-caption">Safety pins are required for garments traveling to the plant.</figcaption>
-          </figure>
-        </div>
-
-        <div class="section orientation-grid" aria-label="Pin orientation examples">
-          <div class="orientation-card good">
-            <p class="pill pill-quiet">Correct</p>
-            <h3>${module.orientation.correct.title}</h3>
-            <ul>${module.orientation.correct.bullets.map(item => `<li>${item}</li>`).join('')}</ul>
-            <p class="micro-copy">${module.orientation.correct.description}</p>
-          </div>
-          <div class="orientation-card risk">
-            <p class="pill pill-quiet">Incorrect</p>
-            <h3>${module.orientation.incorrect.title}</h3>
-            <ul>${module.orientation.incorrect.bullets.map(item => `<li>${item}</li>`).join('')}</ul>
-            <p class="micro-copy">${module.orientation.incorrect.description}</p>
-          </div>
-        </div>
-
-        <div class="section checklist" aria-label="Pin safety checklist">
-          <div>
-            <p class="eyebrow">Quick Safety</p>
-            <h3>Pin Safety Checklist ⚠️</h3>
-            <ul>${checklist}</ul>
-          </div>
-          <div class="checklist-note">
-            <p class="badge-lite">Checklist Reminder</p>
-            <p>Use this before every plant-bound garment leaves the counter.</p>
-            <p class="micro-copy">Imagine the hem as a line — pins should sit on that line (horizontal), never crossing it like a fence post (vertical).</p>
-          </div>
-        </div>
-
-        <div class="section scenario-grid" aria-label="Pin safety scenarios">
-          <h3>Pin Safety Scenarios</h3>
-          ${scenarios}
-        </div>
-
-        ${quizHostTemplate(module)}
         </article>
       </section>
     `;
@@ -2095,8 +2265,6 @@
   // Module 3 focuses on garment-specific pinning, smoothing fabric, handedness, patches, and customer-pinned verification.
   // New layout classes are defined in styles.html and scoped with the prefix module-three- where applicable.
   function moduleThreeTemplate(module) {
-    const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
-
     const garmentCards = module.garmentTypes.map(type => `
       <div class="garment-card">
         <div class="garment-card__header">
@@ -2145,157 +2313,215 @@
     const headingId = `${sectionId}-title`;
     return `
       <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
-        <article class="module" id="${module.id}">
-        <span class="pill">Module ${module.id.replace('M','')}</span>
-        <h2 id="${headingId}" tabindex="-1">${module.title}</h2>
-        <p>${module.intro}</p>
+        <article class="module module-shell" id="${module.id}">
+          ${moduleHeroTemplate(module, headingId)}
+          <div class="module-cards">
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Garment-specific pinning playbook</h3>
+                  <p class="subtitle">CSR-approved garments, pinned with objective notes and balanced measurements.</p>
+                  <div class="garment-grid" aria-label="Garment pinning guidance">
+                    ${garmentCards}
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--rule">
+                    <p class="callout-title">✅ Key Rule</p>
+                    <p>Use multiple horizontal pins to hold hems level—never vertical pins on hems.</p>
+                  </div>
+                  <div class="callout callout--note">
+                    <p class="callout-title">📝 Customer Script</p>
+                    <p>“We’ll mark each leg, measure off-body, and note the exact inseam so both sides match.”</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
 
-        <div class="section">
-          <h3>Learning Objectives</h3>
-          <ul>${objectives}</ul>
-        </div>
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Smoothing, balance, and on-body limits</h3>
+                  <div class="policy-callout" aria-label="Non-negotiable pants policy">
+                    <div>
+                      <p class="eyebrow">Non-Negotiable Policy</p>
+                      <h3>${module.pantsPolicy.headline}</h3>
+                      <ul>${pantsPolicyPoints}</ul>
+                    </div>
+                    <div>
+                      <p class="eyebrow">How to verify without on-body measurement</p>
+                      <ul>${pantsPolicyVerification}</ul>
+                      <p class="micro-copy">${module.pantsPolicy.note}</p>
+                    </div>
+                  </div>
+                  <div class="callout-card" aria-label="Smooth fabric guidance">
+                    <div>
+                      <p class="eyebrow">Accuracy Rule</p>
+                      <h3>${module.smoothRules.headline}</h3>
+                      <ul>${smoothList}</ul>
+                    </div>
+                    <div class="stretch-risk">
+                      <p class="badge-lite">Do not stretch</p>
+                      <p>Stretching a pant leg can add 1/2”–1” instantly. Smooth first, then measure.</p>
+                    </div>
+                  </div>
+                  <div class="policy-callout" aria-label="Leg length differences">
+                    <div>
+                      <p class="eyebrow">Balance note</p>
+                      <h3>${module.legLengthCallout.headline}</h3>
+                      <ul>${legCalloutBullets}</ul>
+                      <p class="micro-copy"><strong>Practice scenario:</strong> ${module.legLengthCallout.scenario}</p>
+                    </div>
+                    <div class="note-chip-row" aria-label="Note format examples">${legCalloutNotes}</div>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--note">
+                    <p class="callout-title">🧷 Pin Safety</p>
+                    <p>Pin only loose fabric away from skin while the customer is present. Measure off-body.</p>
+                  </div>
+                  <div class="callout callout--warn">
+                    <p class="callout-title">⚠️ Common Mistake</p>
+                    <p>Measuring inseams on-body or stretching fabric to reach a length.</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
 
-        <div class="section garment-grid" aria-label="Garment pinning guidance">
-          ${garmentCards}
-        </div>
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Workflow, verification, and patch control</h3>
+                  <div class="workflow-card" aria-label="Pants hem workflow">
+                    <p class="eyebrow">Repeatable steps</p>
+                    <h3>${module.pantsWorkflow.title}</h3>
+                    <ol>${workflowSteps}</ol>
+                  </div>
+                  <div class="do-dont" aria-label="Do and don't for trouser pinning">
+                    <div class="card-lite">
+                      <p class="eyebrow">Do</p>
+                      <ul>${doList}</ul>
+                    </div>
+                    <div class="card-lite risk">
+                      <p class="eyebrow">Don't</p>
+                      <ul>${dontList}</ul>
+                    </div>
+                  </div>
+                  <div class="two-column" aria-label="Patch protocol and placement">
+                    <div class="card-lite">
+                      <p class="eyebrow">Patch protocol</p>
+                      <h3>One Patch, One Garment</h3>
+                      <ul>${pairingList}</ul>
+                    </div>
+                    <div class="card-lite">
+                      <p class="eyebrow">Placement coaching</p>
+                      <h3>Pick the Exact Spot</h3>
+                      <ul>${placementList}</ul>
+                    </div>
+                  </div>
+                  <div class="verification" aria-label="Customer pinned garment verification">
+                    <div>
+                      <p class="eyebrow">Customer-pinned garments</p>
+                      <h3>Verify Before You Save</h3>
+                      <ul>${verificationSteps}</ul>
+                      <p class="micro-copy">${module.customerPinned.reason}</p>
+                    </div>
+                    <div class="verification-note">
+                      <p class="badge-lite">Script</p>
+                      <p>“You want this hem at <strong>29 inches</strong> right where you pinned it, correct? I’ll note <em>‘shorten inseam to 29 inches (customer pinned)’</em>.”</p>
+                    </div>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--note">
+                    <p class="callout-title">📝 Customer Script</p>
+                    <p>${module.handedness.prompt}</p>
+                    <ul>
+                      <li>${module.handedness.reason}</li>
+                      <li>${module.handedness.action}</li>
+                    </ul>
+                  </div>
+                  <div class="callout callout--rule">
+                    <p class="callout-title">✅ Key Rule</p>
+                    <p>Document each leg separately when lengths differ; never average inseams.</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
 
-        <div class="section policy-callout" aria-label="Non-negotiable pants policy">
-          <div>
-            <p class="eyebrow">Non-Negotiable Policy</p>
-            <h3>${module.pantsPolicy.headline}</h3>
-            <ul>${pantsPolicyPoints}</ul>
-          </div>
-          <div>
-            <p class="eyebrow">How to verify without on-body measurement</p>
-            <ul>${pantsPolicyVerification}</ul>
-            <p class="micro-copy">${module.pantsPolicy.note}</p>
-          </div>
-        </div>
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Recording measurements with drape context</h3>
+                  <div class="metric-table" aria-label="Recording final measurements">
+                    <h3>Recording Final, Objective Measurements</h3>
+                    <p class="micro-copy">Use final numbers, not guesses or plus/minus shorthand.</p>
+                    ${recordingRows}
+                  </div>
+                  <div class="callout-card" aria-label="Drape differences">
+                    <div>
+                      <p class="eyebrow">Fabric context</p>
+                      <h3>${module.drapeNotes.headline}</h3>
+                      <ul>${drapeBullets}</ul>
+                    </div>
+                    <div class="note-chip-row" aria-label="Drape note examples">${drapeExamples}</div>
+                  </div>
+                  <div class="callout-card" aria-label="Escalation for precision fittings">
+                    <div>
+                      <p class="eyebrow">Escalation</p>
+                      <h3>${module.escalationNote.title}</h3>
+                      <p>${module.escalationNote.text}</p>
+                    </div>
+                    <div class="stretch-risk">
+                      <p class="badge-lite">Respect comfort</p>
+                      <p>${module.escalationNote.reminder}</p>
+                    </div>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--warn">
+                    <p class="callout-title">⚠️ Common Mistake</p>
+                    <p>Skipping garment type or shoe context; tailors need drape details to match expectations.</p>
+                  </div>
+                  <div class="callout callout--note">
+                    <p class="callout-title">📝 Customer Script</p>
+                    <p>“You prefer a slightly longer right leg. I’ll record Right inseam 30.0; Left inseam 29.75 so both feel balanced.”</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
 
-        <div class="section policy-callout" aria-label="Leg length differences">
-          <div>
-            <p class="eyebrow">Balance note</p>
-            <h3>${module.legLengthCallout.headline}</h3>
-            <ul>${legCalloutBullets}</ul>
-            <p class="micro-copy"><strong>Practice scenario:</strong> ${module.legLengthCallout.scenario}</p>
-          </div>
-          <div class="note-chip-row" aria-label="Note format examples">${legCalloutNotes}</div>
-        </div>
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Practice & quick checklist</h3>
+                  <div class="scenario-grid" aria-label="Practice scenarios for balance and drape">
+                    <h3>Practice Scenarios</h3>
+                    ${practiceScenarios}
+                  </div>
+                  <div class="checklist-lite" aria-label="Quick checklist">
+                    <h3>Quick Pinning Checklist</h3>
+                    <ul>${quickChecklist}</ul>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--rule">
+                    <p class="callout-title">✅ Key Rule</p>
+                    <p>Verify every customer pin with a tape on the table before saving notes.</p>
+                  </div>
+                  <div class="callout callout--note">
+                    <p class="callout-title">📝 Customer Script</p>
+                    <p>“I’ll double-check these pins on the table so the tailor matches the exact length you approved.”</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
 
-        <div class="section workflow-card" aria-label="Pants hem workflow">
-          <p class="eyebrow">Repeatable steps</p>
-          <h3>${module.pantsWorkflow.title}</h3>
-          <ol>${workflowSteps}</ol>
-        </div>
-
-        <div class="section do-dont" aria-label="Do and don't for trouser pinning">
-          <div class="card-lite">
-            <p class="eyebrow">Do</p>
-            <ul>${doList}</ul>
-          </div>
-          <div class="card-lite risk">
-            <p class="eyebrow">Don't</p>
-            <ul>${dontList}</ul>
-          </div>
-        </div>
-
-        <div class="section callout-card" aria-label="Smooth fabric guidance">
-          <div>
-            <p class="eyebrow">Accuracy Rule</p>
-            <h3>${module.smoothRules.headline}</h3>
-            <ul>${smoothList}</ul>
-          </div>
-          <div class="stretch-risk">
-            <p class="badge-lite">Do not stretch</p>
-            <p>Stretching a pant leg can add 1/2”–1” instantly. Smooth first, then measure.</p>
-          </div>
-        </div>
-
-        <div class="section two-column" aria-label="Handedness and balance">
-          <div class="card-lite">
-            <p class="eyebrow">Balance tip for men</p>
-            <h3>Left- vs Right-Handed Inseam Check</h3>
-            <p class="micro-copy">${module.handedness.prompt}</p>
-            <ul>
-              <li>${module.handedness.reason}</li>
-              <li>${module.handedness.action}</li>
-            </ul>
-            <div class="callout">
-              <p class="eyebrow">Handedness confirmations</p>
-              <ul>${handednessCautions}</ul>
+            <div class="module-card quiz-card">
+              ${quizHostTemplate(module)}
+              <div class="back-to-top"><button type="button" class="nav-button" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">Back to top</button></div>
             </div>
           </div>
-          <div class="card-lite">
-            <p class="eyebrow">Pin orientation</p>
-            <h3>Keep pins horizontal</h3>
-            <p>Mirror pins on both sides so hems stay even when the garment hangs or travels.</p>
-          </div>
-        </div>
-
-        <div class="section two-column" aria-label="Patch protocol and placement">
-          <div class="card-lite">
-            <p class="eyebrow">Patch protocol</p>
-            <h3>One Patch, One Garment</h3>
-            <ul>${pairingList}</ul>
-          </div>
-          <div class="card-lite">
-            <p class="eyebrow">Placement coaching</p>
-            <h3>Pick the Exact Spot</h3>
-            <ul>${placementList}</ul>
-          </div>
-        </div>
-
-        <div class="section verification" aria-label="Customer pinned garment verification">
-          <div>
-            <p class="eyebrow">Customer-pinned garments</p>
-            <h3>Verify Before You Save</h3>
-            <ul>${verificationSteps}</ul>
-            <p class="micro-copy">${module.customerPinned.reason}</p>
-          </div>
-          <div class="verification-note">
-            <p class="badge-lite">Script</p>
-            <p>“You want this hem at <strong>29 inches</strong> right where you pinned it, correct? I’ll note <em>‘shorten inseam to 29 inches (customer pinned)’</em>.”</p>
-          </div>
-        </div>
-
-        <div class="section callout-card" aria-label="Escalation for precision fittings">
-          <div>
-            <p class="eyebrow">Escalation</p>
-            <h3>${module.escalationNote.title}</h3>
-            <p>${module.escalationNote.text}</p>
-          </div>
-          <div class="stretch-risk">
-            <p class="badge-lite">Respect comfort</p>
-            <p>${module.escalationNote.reminder}</p>
-          </div>
-        </div>
-
-        <div class="section metric-table" aria-label="Recording final measurements">
-          <h3>Recording Final, Objective Measurements</h3>
-          <p class="micro-copy">Use final numbers, not guesses or plus/minus shorthand.</p>
-          ${recordingRows}
-        </div>
-
-        <div class="section callout-card" aria-label="Drape differences">
-          <div>
-            <p class="eyebrow">Fabric context</p>
-            <h3>${module.drapeNotes.headline}</h3>
-            <ul>${drapeBullets}</ul>
-          </div>
-          <div class="note-chip-row" aria-label="Drape note examples">${drapeExamples}</div>
-        </div>
-
-        <div class="section scenario-grid" aria-label="Practice scenarios for balance and drape">
-          <h3>Practice Scenarios</h3>
-          ${practiceScenarios}
-        </div>
-
-        <div class="section checklist-lite" aria-label="Quick checklist">
-          <h3>Quick Pinning Checklist</h3>
-          <ul>${quickChecklist}</ul>
-        </div>
-
-        ${quizHostTemplate(module)}
         </article>
       </section>
     `;
@@ -2305,7 +2531,6 @@
   // New classes: module-five__grid, module-five__card, module-five__comparison, module-five__script, module-five__protocol,
   // module-five__note, module-five__boundary, module-five__script-grid (documented in styles.html).
   function moduleFiveTemplate(module) {
-    const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
     const tailorOnlyCards = module.tailorOnlyCategories.map(category => `
       <div class="module-five__card">
         <p class="pill pill-quiet">Tailor-only</p>
@@ -2345,106 +2570,135 @@
     const headingId = `${sectionId}-title`;
     return `
       <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
-        <article class="module module-five" id="${module.id}">
-        <span class="pill">Module ${module.id.replace('M','')}</span>
-        <h2 id="${headingId}" tabindex="-1">${module.title}</h2>
-        <p>${module.intro}</p>
+        <article class="module module-five module-shell" id="${module.id}">
+          ${moduleHeroTemplate(module, headingId)}
+          <div class="module-cards">
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Tailor-only guardrails</h3>
+                  <p class="subtitle">Recognize high-risk garments and escalate with confidence.</p>
+                  <div class="module-five__card-grid">${tailorOnlyCards}</div>
+                  <div class="module-five__comparison" aria-label="CSR-approved vs Tailor-only comparison">
+                    <div class="module-five__card success">
+                      <p class="pill pill-quiet">CSR-approved</p>
+                      <h3>CSR-Approved Examples</h3>
+                      <ul>${module.comparison.csrApproved.map(item => `<li>${item}</li>`).join('')}</ul>
+                      <p class="micro-copy">Escalate if these include complex fabrics, structure, or embellishment.</p>
+                    </div>
+                    <div class="module-five__card warning">
+                      <p class="pill pill-quiet">Tailor review required</p>
+                      <h3>Tailor-Only Examples</h3>
+                      <ul>${module.comparison.tailorOnly.map(item => `<li>${item}</li>`).join('')}</ul>
+                      <p class="micro-copy">When in doubt, choose safety and escalate.</p>
+                    </div>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <figure class="module-figure">
+                    <img class="module-image module-image--large" src="https://www.dublincleaners.com/wp-content/uploads/2025/12/IntricateLace.jpg" alt="Intricate lace wedding dress example." loading="lazy" />
+                    <figcaption class="module-caption">Intricate lace and formal wedding garments are tailor-only—prevent snags and costly damage by escalating immediately.</figcaption>
+                  </figure>
+                  <div class="callout callout--warn">
+                    <p class="callout-title">⚠️ Common Mistake</p>
+                    <p>Attempting to pin beaded, lace, or leather garments at the counter. Stop and involve the tailor.</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
 
-        <div class="section">
-          <h3>Learning Objectives</h3>
-          <ul>${objectives}</ul>
-        </div>
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Customer-pinned protocol & escalation triggers</h3>
+                  <div class="module-five__grid" aria-label="Customer pinned protocol and escalation triggers">
+                    <div class="module-five__protocol">
+                      <p class="eyebrow">Customer-Pinned Protocol</p>
+                      <h3>Guard Complex or Risky Garments</h3>
+                      <ul>${protocolSteps}</ul>
+                      <div class="module-five__note-line">${module.customerPinnedProtocol.reminder}</div>
+                    </div>
+                    <div class="module-five__card outline">
+                      <p class="eyebrow">Escalation Triggers</p>
+                      <h3>Stop and Involve the Tailor When…</h3>
+                      <ul>${escalationList}</ul>
+                    </div>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--rule">
+                    <p class="callout-title">✅ Key Rule</p>
+                    <p>Document “tailor to review before proceeding” anytime a garment feels risky.</p>
+                  </div>
+                  <div class="callout callout--note">
+                    <p class="callout-title">📝 Customer Script</p>
+                    <p>“Because this is delicate, our tailor will review and pin it to protect the fabric.”</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
 
-        <div class="section module-five__grid" aria-label="Tailor-only garments and visual guide">
-          <div>
-            <h3>Tailor-Only List</h3>
-            <p class="micro-copy">These garments must be reviewed and pinned by the tailor—CSRs should not guess or experiment.</p>
-            <div class="module-five__card-grid">${tailorOnlyCards}</div>
-            <div class="module-figure-grid module-five__visuals" aria-label="Tailor-only visual examples">
-              <figure class="module-figure">
-                <img class="module-image module-image--large" src="https://www.dublincleaners.com/wp-content/uploads/2025/12/IntricateLace.jpg" alt="Intricate lace wedding dress example." loading="lazy" />
-                <figcaption class="module-caption">Intricate lace and formal wedding garments are tailor-only for pinning to avoid damage and ensure correct technique.</figcaption>
-              </figure>
-              <figure class="module-figure">
-                <img class="module-image module-image--large" src="https://www.dublincleaners.com/wp-content/uploads/2025/12/CustomSuit.png" alt="Custom suit on a hanger with detailed stitching." loading="lazy" />
-                <figcaption class="module-caption">
-                  Custom suits require tailor handling—never pin or chalk them as a CSR.
-                  <ul class="module-caption-list">
-                    <li>Book a tailor fitting and capture the customer’s goals (sleeve/waist/seat) in SPOT.</li>
-                    <li>Note construction details like canvassed fronts, pick stitching, and vent style for the tailor.</li>
-                    <li>Reassure the customer that the tailor will set the plan and protect the fabric before any pinning.</li>
-                  </ul>
-                </figcaption>
-              </figure>
-              <figure class="module-figure">
-                <img class="module-image module-image--large" src="https://www.dublincleaners.com/wp-content/uploads/2025/12/BeadLace.jpg" alt="Close-up of intricate beaded lace on a formal garment." loading="lazy" />
-                <figcaption class="module-caption">
-                  Beaded lace needs tailor review—snag risk is high.
-                  <ul class="module-caption-list">
-                    <li>Do not pin through beads or sequins; escalate for tailor plan and pinning.</li>
-                    <li>Document “beaded lace—tailor to set length and protect embellishments.”</li>
-                    <li>Explain that extra time prevents bead loss and fabric tears.</li>
-                  </ul>
-                </figcaption>
-              </figure>
-              <figure class="module-figure">
-                <img class="module-image module-image--large" src="https://www.dublincleaners.com/wp-content/uploads/2025/12/silkchiffon.jpeg" alt="Delicate silk chiffon fabric draped softly." loading="lazy" />
-                <figcaption class="module-caption">
-                  Silk and chiffon puncture easily—CSR should not pin.
-                  <ul class="module-caption-list">
-                    <li>Escalate immediately; tailor will choose safe techniques (clips, chalk on seam allowance).</li>
-                    <li>Record fabric type and customer goal: “silk/chiffon—tailor to measure and mark.”</li>
-                    <li>Reassure the customer that avoiding pins protects the drape and prevents holes.</li>
-                  </ul>
-                </figcaption>
-              </figure>
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Escalation scripts</h3>
+                  <div aria-label="Escalation scripts">
+                    <div class="module-five__script-grid">${scriptCards}</div>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--warn">
+                    <p class="callout-title">⚠️ Common Mistake</p>
+                    <p>Apologizing or sounding unsure. Be confident that escalation protects the garment.</p>
+                  </div>
+                  <div class="callout callout--note">
+                    <p class="callout-title">📝 Customer Script</p>
+                    <p>“I’m looping our tailor in to keep this piece safe and match exactly what you want.”</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
+
+            <div class="module-card">
+              <div class="content-grid">
+                <div class="content-main">
+                  <h3>Documentation & boundaries</h3>
+                  <div class="module-five__grid" aria-label="Documentation and boundaries">
+                    <div class="module-five__note">
+                      <p class="eyebrow">Documenting Exceptions & Escalations</p>
+                      <h3>Write Notes Tailors Can Act On</h3>
+                      <ul>${documentationList}</ul>
+                      <p class="micro-copy">Mirror this language in SPOT so the tailor understands risks and customer preferences.</p>
+                    </div>
+                    <div class="module-five__boundary">
+                      <p class="eyebrow">Boundary Setting</p>
+                      <h3>Saying “No” Safely</h3>
+                      <ul>${boundaryList}</ul>
+                    </div>
+                  </div>
+                  <div class="module-five__reminder callout">
+                    <p class="eyebrow">Protection First</p>
+                    <p>Safety and garment integrity take priority over speed. Escalate early rather than risk damage.</p>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <div class="callout callout--rule">
+                    <p class="callout-title">✅ Key Rule</p>
+                    <p>Never promise a risky garment will be altered without tailor review.</p>
+                  </div>
+                  <div class="callout callout--note">
+                    <p class="callout-title">📝 Customer Script</p>
+                    <p>“Our tailor will confirm the plan before any sewing so we protect your investment.”</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
+
+            <div class="module-card quiz-card">
+              ${quizHostTemplate(module)}
+              <div class="back-to-top"><button type="button" class="nav-button" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">Back to top</button></div>
             </div>
           </div>
-          <div>
-            <h3>CSR vs Tailor Visual Guide</h3>
-            ${comparisonCards}
-          </div>
-        </div>
-
-        <div class="section module-five__grid" aria-label="Customer pinned protocol and escalation triggers">
-          <div class="module-five__protocol">
-            <p class="eyebrow">Customer-Pinned Protocol</p>
-            <h3>Guard Complex or Risky Garments</h3>
-            <ul>${protocolSteps}</ul>
-            <div class="module-five__note-line">${module.customerPinnedProtocol.reminder}</div>
-          </div>
-          <div class="module-five__card outline">
-            <p class="eyebrow">Escalation Triggers</p>
-            <h3>Stop and Involve the Tailor When…</h3>
-            <ul>${escalationList}</ul>
-          </div>
-        </div>
-
-        <div class="section" aria-label="Escalation scripts">
-          <h3>Escalation Scripts (Customer-Facing)</h3>
-          <div class="module-five__script-grid">${scriptCards}</div>
-        </div>
-
-        <div class="section module-five__grid" aria-label="Documentation and boundaries">
-          <div class="module-five__note">
-            <p class="eyebrow">Documenting Exceptions & Escalations</p>
-            <h3>Write Notes Tailors Can Act On</h3>
-            <ul>${documentationList}</ul>
-            <p class="micro-copy">Mirror this language in SPOT so the tailor understands risks and customer preferences.</p>
-          </div>
-          <div class="module-five__boundary">
-            <p class="eyebrow">Boundary Setting</p>
-            <h3>Saying “No” Safely</h3>
-            <ul>${boundaryList}</ul>
-          </div>
-        </div>
-
-        <div class="section module-five__reminder callout">
-          <p class="eyebrow">Protection First</p>
-          <p>Safety and garment integrity take priority over speed. Escalate early rather than risk damage.</p>
-        </div>
-
-        ${quizHostTemplate(module)}
         </article>
       </section>
     `;
