@@ -3285,6 +3285,9 @@
       }
     });
 
+    const isModuleView = sectionId.startsWith('module-');
+    document.body.classList.toggle('modules-nav-active', isModuleView);
+
     const moduleNavLinks = document.querySelectorAll('.nav-link');
     moduleNavLinks.forEach(link => {
       const navTarget = link.dataset.target;

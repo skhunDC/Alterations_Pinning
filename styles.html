@@ -210,12 +210,13 @@
     box-shadow: var(--card-shadow);
   }
 
-  #moduleContainer { display: flex; flex-direction: column; gap: 16px; margin-left: 0; }
+#moduleContainer { display: flex; flex-direction: column; gap: 16px; margin-left: 0; }
 
   @media (min-width: 1024px) {
     .layout { padding-left: 0; }
-    #moduleContainer {
-      margin-left: calc(var(--floating-nav-width) + (var(--floating-nav-offset) * 2));
+    #moduleContainer { margin-left: 0; }
+    body.modules-nav-active main {
+      padding-left: calc(var(--floating-nav-width) + (var(--floating-nav-offset) * 2));
     }
   }
 
