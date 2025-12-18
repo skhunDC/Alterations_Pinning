@@ -213,7 +213,10 @@
   #moduleContainer { display: flex; flex-direction: column; gap: 16px; margin-left: 0; }
 
   @media (min-width: 1024px) {
-    .layout { padding-left: calc(var(--floating-nav-width) + (var(--floating-nav-offset) * 2)); }
+    .layout { padding-left: 0; }
+    #moduleContainer {
+      margin-left: calc(var(--floating-nav-width) + (var(--floating-nav-offset) * 2));
+    }
   }
 
   .module-status-list { list-style: none; padding: 0; margin: 12px 0 0 0; display: grid; gap: 6px; }
