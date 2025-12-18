@@ -1693,7 +1693,9 @@
 
   function renderNavigation() {
     const navList = document.getElementById('navList');
-    navList.innerHTML = modules.map(module => `<li><button class="nav-link" onclick="navigateToSection('module-${module.id}', this)">${module.id} — ${module.title}</button></li>`).join('');
+    navList.innerHTML = modules
+      .map(module => `<li><button class="nav-link" data-target="module-${module.id}" onclick="navigateToSection('module-${module.id}', this)">${module.id} — ${module.title}</button></li>`)
+      .join('');
   }
 
   function renderModules() {
@@ -3229,6 +3231,21 @@
         item.setAttribute('aria-current', 'page');
       } else {
         item.removeAttribute('aria-current');
+      }
+    });
+
+    const shouldShiftForNav = sectionId === 'dashboard' || sectionId.startsWith('module-');
+    document.body.classList.toggle('modules-nav-active', shouldShiftForNav);
+
+    const moduleNavLinks = document.querySelectorAll('.nav-link');
+    moduleNavLinks.forEach(link => {
+      const navTarget = link.dataset.target;
+      const isModuleActive = navTarget === sectionId;
+      link.classList.toggle('active', isModuleActive);
+      if (isModuleActive) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
       }
     });
 
