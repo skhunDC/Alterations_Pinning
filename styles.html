@@ -507,16 +507,23 @@
 
   .sr-only { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
 
-  .module-media { margin: 16px 0; }
+  .module-media {
+    margin: 16px 0;
+    display: flex;
+    justify-content: center;
+  }
 
   .media-card {
-    max-width: 760px;
+    width: min(100%, 780px);
     margin: 0 auto;
     padding: 14px 14px 10px;
     border: 1px solid #e6e6e6;
     border-radius: 14px;
     background: #fff;
     box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 
   .media-title {
@@ -530,6 +537,7 @@
     border-radius: 12px;
     border: 1px solid #ddd;
     background: #000;
+    display: block;
   }
 
   .media-notes { margin-top: 10px; }
