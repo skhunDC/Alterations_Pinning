@@ -2839,30 +2839,44 @@
                       <figure class="module-figure">
                         <img
                           class="module-image module-image--large"
-                          src="https://www.dublincleaners.com/wp-content/uploads/2025/12/IntricateLace.jpg"
+                          src="https://apps.dublincleaners.com/images/IntricateLace.jpg"
                           alt="Intricate lace wedding dress example."
                           loading="lazy"
-                          onerror="this.onerror=null;this.src='https://www.dublincleaners.com/wp-content/uploads/2025/12/intricatelace.jpg';"
+                          referrerpolicy="no-referrer"
+                          data-fallback="apps"
+                          onerror="
+                            if (this.dataset.fallback === 'apps') {
+                              this.dataset.fallback = 'wp-upper';
+                              this.src = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/IntricateLace.jpg';
+                            } else if (this.dataset.fallback === 'wp-upper') {
+                              this.dataset.fallback = 'wp-lower';
+                              this.src = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/intricatelace.jpg';
+                            } else {
+                              this.onerror = null;
+                            }
+                          "
                         />
                         <figcaption class="module-caption">Intricate lace and formal wedding garments are tailor-only—prevent snags and costly damage by escalating immediately.</figcaption>
                       </figure>
                       <figure class="module-figure">
                         <img
                           class="module-image module-image--large"
-                          src="https://www.dublincleaners.com/wp-content/uploads/2025/12/BeadLace.jpg"
-                          alt="Close-up of intricate beaded lace on a formal garment."
-                          loading="lazy"
-                          onerror="this.onerror=null;this.src='https://www.dublincleaners.com/wp-content/uploads/2025/12/beadlace.jpg';"
-                        />
-                        <figcaption class="module-caption">Beaded lace needs tailor review—snag risk is high. Document “tailor to set length and protect embellishments.”</figcaption>
-                      </figure>
-                      <figure class="module-figure">
-                        <img
-                          class="module-image module-image--large"
-                          src="https://www.dublincleaners.com/wp-content/uploads/2025/12/silkchiffon.jpeg"
+                          src="https://apps.dublincleaners.com/images/SilkChiffon.jpeg"
                           alt="Delicate silk chiffon fabric draped softly."
                           loading="lazy"
-                          onerror="this.onerror=null;this.src='https://www.dublincleaners.com/wp-content/uploads/2025/12/SilkChiffon.jpeg';"
+                          referrerpolicy="no-referrer"
+                          data-fallback="apps"
+                          onerror="
+                            if (this.dataset.fallback === 'apps') {
+                              this.dataset.fallback = 'wp-upper';
+                              this.src = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/SilkChiffon.jpeg';
+                            } else if (this.dataset.fallback === 'wp-upper') {
+                              this.dataset.fallback = 'wp-lower';
+                              this.src = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/silkchiffon.jpeg';
+                            } else {
+                              this.onerror = null;
+                            }
+                          "
                         />
                         <figcaption class="module-caption">Silk and chiffon puncture easily—escalate immediately so the tailor can mark safely without pins in fragile fabric.</figcaption>
                       </figure>
