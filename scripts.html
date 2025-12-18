@@ -1664,6 +1664,8 @@
     const initialHash = window.location.hash?.replace('#', '');
     if (initialHash) {
       navigateToSection(initialHash.startsWith('module-') ? initialHash : initialHash, null, true);
+    } else {
+      updateNavShift('dashboard');
     }
   });
 
@@ -3285,8 +3287,7 @@
       }
     });
 
-    const shouldShiftForNav = sectionId === 'dashboard' || sectionId.startsWith('module-');
-    document.body.classList.toggle('modules-nav-active', shouldShiftForNav);
+    updateNavShift(sectionId);
 
     const moduleNavLinks = document.querySelectorAll('.nav-link');
     moduleNavLinks.forEach(link => {
@@ -3316,6 +3317,11 @@
 
   function scrollToStatus() {
     navigateToSection('dashboard');
+  }
+
+  function updateNavShift(sectionId) {
+    const shouldShiftForNav = sectionId === 'dashboard' || sectionId.startsWith('module-');
+    document.body.classList.toggle('modules-nav-active', shouldShiftForNav);
   }
 
   function handlePrintCertificate() {
