@@ -132,14 +132,14 @@
     {
       id: 'M2',
       title: 'Pinning Tools & Safety 🧷',
-      intro: 'Choose the right pins, lock them safely, and orient them horizontally so garments arrive at the plant without risk.',
+      intro: 'Choose the right pins, lock them safely, and select horizontal or vertical orientation based on stability, fabric, and customer preference.',
       objectives: [
         'Identify and describe straight pins vs. safety pins.',
         'State why safety pins are required for garments traveling to the plant.',
-        'Demonstrate correct horizontal pin orientation for hems and seams.',
-        'Explain why vertical pinning is not acceptable for alteration pinning.',
-        'Apply the pin safety checklist to protect customers, staff, and equipment.',
-        'Complete a pre-plant checklist to confirm safe, accurate pinning.'
+        'Demonstrate stable pin orientation: horizontal is preferred for travel; vertical is acceptable when customer preference, garment type, or fitting goals call for it.',
+        'Explain how to choose orientation while still delivering objective, measurable results.',
+        'Apply the pin safety checklist—including on-body pinning with your hand between garment and customer—to protect customers, staff, and equipment.',
+        'Complete a pre-plant checklist to confirm safe, accurate pinning and clear communication.'
       ],
       pinTypes: [
         {
@@ -175,7 +175,7 @@
       },
       orientation: {
         correct: {
-          title: 'Horizontal Pinning (Correct)',
+          title: 'Horizontal Pinning (Preferred for travel)',
           bullets: [
             'Pins run parallel to the floor/hem line and create a clear reference for tailors.',
             'Holds fabric securely during handling and transport.',
@@ -183,19 +183,28 @@
           ],
           description: 'Imagine the hem as a line. The pin should lie along that line, like a rail on the hem.'
         },
-        incorrect: {
-          title: 'Vertical Pinning (Incorrect)',
+        flexible: {
+          title: 'Vertical Pinning (Allowed with care)',
           bullets: [
-            'Pins sit like a fence post crossing the hem and can distort the line.',
-            'More likely to slip or change the marked length.',
-            'Harder for tailors to read consistently and unsafe for travel.'
+            'Use when the garment or customer prefers it—for example, thick seams, pleats, or quick on-body marking.',
+            'Place your hand between the garment and customer before inserting any pin.',
+            'Re-measure the finished length; if the garment will travel, convert to closed safety pins (horizontal preferred for transport).'
           ],
-          description: 'Vertical pins cross the hem like a nail; they bend fabric and do not survive transit.'
+          description: 'Choose the orientation that keeps the measurement clear and secure. Stability matters more than a single “right” direction.'
         }
       },
+      onBodySafety: {
+        headline: 'Pinning On a Customer Safely',
+        reminders: [
+          'Allowed when needed for accuracy—move slowly and communicate.',
+          'Always place your hand between the garment and the customer’s body before inserting a pin.',
+          'Avoid risky areas; if unsure or customer is uncomfortable, pause and involve the tailor.'
+        ],
+        script: '“I’m placing my hand between the fabric and you, then adding this pin where you want the hem. Tell me if anything feels uncomfortable.”'
+      },
       safetyChecklist: [
-        'Keep sharp points away from skin; never pin through skin or too close to the body.',
-        'Confirm pins are horizontal and, if safety pins, fully closed.',
+        'Keep sharp points away from skin; never pin through skin or too close to the body. Hand between garment and customer before any on-body pin.',
+        'Confirm pins are secure and stable—horizontal is preferred for transport; vertical is acceptable when noted and measured.',
         'Inform the customer where pins are placed before they leave.',
         'Count pins so none are left loose in bags or garments.',
         'Replace any straight pins with safety pins before the garment goes to the plant.'
@@ -208,6 +217,10 @@
         {
           prompt: 'You quickly pinned a hem while the customer stood on the platform using straight pins. Before sending to the plant, what must you do?',
           answer: 'Replace straight pins with closed safety pins and double-check horizontal orientation.'
+        },
+        {
+          prompt: 'You need to mark a hem while the customer is still wearing the garment. How do you protect them?',
+          answer: 'Place your hand between the garment and the customer’s body, move slowly, narrate what you are doing, and confirm comfort before inserting the pin.'
         }
       ],
       quiz: [
@@ -216,19 +229,19 @@
           { label: 'Safety pin that is closed', value: 'b', correct: true },
           { label: 'No pins—just fold the fabric', value: 'c', correct: false }
         ]},
-        { type: 'mcq', question: 'Why is vertical pinning not acceptable?', options: [
-          { label: 'It looks nicer in photos', value: 'a', correct: false },
-          { label: 'It distorts hems and can slip, changing the length', value: 'b', correct: true },
-          { label: 'It uses fewer pins', value: 'c', correct: false }
+        { type: 'mcq', question: 'Which statement is most accurate about horizontal vs. vertical pinning?', options: [
+          { label: 'Horizontal pins are preferred for stability, but vertical pins are acceptable when the garment or customer needs them and you re-measure the final length', value: 'a', correct: true },
+          { label: 'Vertical pins are never allowed for alterations', value: 'b', correct: false },
+          { label: 'Only vertical pins should be used for hems', value: 'c', correct: false }
         ]},
-        { type: 'mcq', question: 'What orientation should safety pins have on a hem?', options: [
-          { label: 'Horizontal, parallel to the floor', value: 'a', correct: true },
+        { type: 'mcq', question: 'What orientation should safety pins have on a hem for transport?', options: [
+          { label: 'Horizontal, parallel to the floor for best stability in transit', value: 'a', correct: true },
           { label: 'Vertical like a nail', value: 'b', correct: false },
           { label: 'Diagonal to save time', value: 'c', correct: false }
         ]},
         { type: 'mcq', question: 'Before sending a garment to the plant you must…', options: [
-          { label: 'Confirm pins are closed, horizontal, and counted', value: 'a', correct: true },
-          { label: 'Switch to vertical pins to speed up', value: 'b', correct: false },
+          { label: 'Confirm pins are closed, stable, and counted—horizontal preferred for travel', value: 'a', correct: true },
+          { label: 'Switch to vertical pins to speed up without re-measuring', value: 'b', correct: false },
           { label: 'Skip telling the customer about the pins', value: 'c', correct: false }
         ]},
         { type: 'mcq', question: 'When can straight pins be used?', options: [
@@ -256,26 +269,26 @@
         {
           name: 'Pants (hems + simple waist)',
           csrScope: 'CSR approved',
-          pinning: 'Mark the desired hem while the customer wears the pants using a gentle fold or shallow pin in loose fabric only—no tape measures on-body and no pins against skin. After the pants are off, place horizontal safety pins at the marked hem and add 1–2 pins near side seams for waist adjusts on the table.',
-          pins: '3–5 pins around each hem keep the line straight; safety pins required if the garment will travel.',
+          pinning: 'Mark the desired hem while the customer wears the pants using a gentle fold or shallow pin in loose fabric only—no tape measures on-body and no pins against skin. Place your hand between the garment and the customer before any on-body pin. After the pants are off, place stable safety pins (horizontal preferred for travel; vertical acceptable when needed) at the marked hem and add 1–2 pins near side seams for waist adjusts on the table.',
+          pins: '3–5 secure pins around each hem keep the line straight; safety pins required if the garment will travel.',
           record: '“Shorten inseam to 30 inches.” If legs differ: “Left inseam to 29.5; Right inseam to 30 (confirmed off-body).”',
           balance: 'Smooth both legs first; ask about handedness and leg length differences, then verify measurements off-body.'
         },
         {
           name: 'Skirts (hems)',
           csrScope: 'CSR approved',
-          pinning: 'Pin evenly around the hem; keep bias fabrics flat without pulling.',
+          pinning: 'Pin evenly around the hem; keep bias fabrics flat without pulling. Check for vents or splits—shortening reduces their length and may change movement; confirm with the customer or escalate.',
           pins: '4–6 pins spaced evenly at seams and front/back centers.',
-          record: '“Shorten hem to 38 inches from waist to floor with heels.”',
-          balance: 'Check skirt hangs level on platform; smooth before each pin.'
+          record: '“Shorten hem to 38 inches from waist to floor with heels.” Add: “Vent will be shorter—customer approved.”',
+          balance: 'Check skirt hangs level on platform; smooth before each pin. Escalate if the customer wants the vent length preserved.'
         },
         {
           name: 'Simple dresses (length only)',
           csrScope: 'CSR approved — escalate complex bodice or beading to Module 5.',
-          pinning: 'Pin horizontally at the new length; avoid stretching knit or bias fabric.',
+          pinning: 'Pin securely at the new length; avoid stretching knit or bias fabric. Check for back vents/splits that will shorten and confirm with the customer or escalate.',
           pins: '3–5 pins across front/back; mirror left/right heights.',
-          record: '“Finished length 40 inches shoulder to hem.”',
-          balance: 'Keep dress straight on hanger or platform; smooth along the hang line.'
+          record: '“Finished length 40 inches shoulder to hem.” Note vent impact if present.',
+          balance: 'Keep dress straight on hanger or platform; smooth along the hang line. Ask if they want a vent preserved before finalizing.'
         },
         {
           name: 'Simple sleeves (length)',
@@ -286,6 +299,16 @@
           balance: 'Check both sleeves match and hang evenly when arms relaxed.'
         }
       ],
+      ventsSplits: {
+        headline: 'Vents & Splits (Skirts/Dresses)',
+        bullets: [
+          'Shortening a vented skirt or dress will reduce the vent/split length.',
+          'Movement, modesty, and appearance can change when the vent is shorter.',
+          'Confirm the customer is okay with the change; note their approval in the record.',
+          'If they want the vent preserved or adjusted—or you are unsure—escalate to the tailor.'
+        ],
+        reminder: 'Document “vent will be shorter—customer approved” or escalate for tailor planning.'
+      },
       smoothRules: {
         headline: 'Smooth, Don’t Stretch',
         bullets: [
@@ -308,7 +331,7 @@
         headline: 'We do not measure inseams on the customer’s body.',
         points: [
           'Do not place a measuring tape at the inseam while the customer is wearing pants.',
-          'Pins must be placed in a way that avoids skin contact—pin fabric folds, not tight fabric against the leg.',
+          'Pins must be placed in a way that avoids skin contact—pin fabric folds, not tight fabric against the leg, and keep your hand between garment and customer when pinning on-body.',
           'Safety pins are preferred when the garment will travel to prevent shifting.'
         ],
         verification: [
@@ -338,9 +361,10 @@
       },
       doDont: {
         do: [
-          'Mark hems while the customer wears the pants only to mark the line with a fold or shallow pin away from skin; lock in horizontal safety pins after the garment is off.',
+          'Mark hems while the customer wears the pants only to mark the line with a fold or shallow pin away from skin; keep your hand between the garment and the customer. Lock in closed safety pins after the garment is off (horizontal preferred; vertical acceptable when noted and stable).',
           'Measure inseams on a flat surface after the pants are removed, using the pinned line as the reference.',
-          'Record final objective measurements for each leg and note garment type when drape matters.'
+          'Record final objective measurements for each leg and note garment type when drape matters.',
+          'Choose pin orientation based on stability and fabric—document if you use vertical pins for a specific fitting goal.'
         ],
         dont: [
           'Measure a trouser inseam while the customer is wearing the pants.',
@@ -396,11 +420,14 @@
       ],
       quickChecklist: [
         'Smooth fabric, then pin—never stretch to reach the tape.',
+        'When pinning on the customer, keep your hand between garment and body, move slowly, and confirm comfort before inserting any pin.',
         'Mark hems while the customer wears the pants if needed, then place/verify pins and measure each leg flat; never measure on the body.',
         'Ask handedness, confirm leg differences, and record each inseam with garment/shoe context.',
         'Note pant type (jeans vs trousers) and shoe type if it affects drape.',
         'One patch per garment with a chosen spot, not a guess later.',
-        'Customer-pinned? Verify off-body with a tape and write the final dimension.'
+        'Customer-pinned? Verify off-body with a tape and write the final dimension.',
+        'Select pin orientation to keep the measurement stable—horizontal is preferred for travel, vertical is acceptable when the fabric or customer needs it.',
+        'For vents/splits on skirts or dresses: confirm the shorter vent is okay or escalate to the tailor.'
       ],
       escalationNote: {
         title: 'Escalate when on-body precision is requested.',
@@ -641,7 +668,8 @@
         'Customer is unsure about what they want and the garment is complex.',
         'Fabric appears fragile or easily damaged by pins.',
         'Requested change is major (size, shape, drape).',
-        'CSR feels uncomfortable or not confident about where or how to pin.'
+        'CSR feels uncomfortable or not confident about where or how to pin.',
+        'Customer requests vent/split length stay unchanged while shortening a skirt or dress—tailor must plan preservation.'
       ],
       scripts: [
         {
@@ -664,7 +692,8 @@
       documentationNotes: [
         'Tailor-only: beaded bodice; customer wants length to floor with heels; tailor to pin and advise.',
         'Customer pinned train on wedding dress; tailor to review pinned length before sewing.',
-        'Leather jacket shoulder reshape requested; escalate to tailor for structural plan before any pinning.'
+        'Leather jacket shoulder reshape requested; escalate to tailor for structural plan before any pinning.',
+        'Customer requests vent length unchanged while shortening skirt/dress; tailor to plan vent preservation or adjust design.'
       ],
       boundaryStatements: [
         '⚠️ Employees are expected to say “This needs a tailor” instead of guessing on risky garments.',
@@ -874,15 +903,15 @@
       },
       {
         id: 'M2-Q03',
-        prompt: 'Why is vertical pinning risky?',
+        prompt: 'Which statement is most accurate about horizontal vs vertical pinning?',
         options: [
-          { id: 'a', label: 'It distorts hems and can slip, changing the length' },
-          { id: 'b', label: 'It uses more pins' },
-          { id: 'c', label: 'It is required for dress shirts' },
-          { id: 'd', label: 'It is slower to insert' }
+          { id: 'a', label: 'Horizontal pins are preferred for stability, but vertical pins are acceptable when the garment or customer needs them and you re-measure the final length' },
+          { id: 'b', label: 'Vertical pins are never allowed in alterations' },
+          { id: 'c', label: 'Only vertical pins should be used for hems' },
+          { id: 'd', label: 'Orientation does not matter and never affects stability' }
         ],
         correctOptionId: 'a',
-        tip: 'Pins should run parallel to the hem line to hold the measurement.'
+        tip: 'Choose the orientation that keeps the measurement clear and stable; horizontal is most secure for travel.'
       },
       {
         id: 'M2-Q04',
@@ -936,13 +965,13 @@
         id: 'M2-Q08',
         prompt: 'Which question should you ask yourself before a garment leaves the store?',
         options: [
-          { id: 'a', label: 'Are all pins horizontal and locked closed?' },
-          { id: 'b', label: 'Did I use enough vertical pins to hold it?' },
+          { id: 'a', label: 'Are the pins secure, locked, and measured for stability (horizontal preferred for travel)?' },
+          { id: 'b', label: 'Did I choose orientation based on the garment and customer request?' },
           { id: 'c', label: 'Can I skip counting pins if I am rushed?' },
           { id: 'd', label: 'Should I remove all pins before the plant sees it?' }
         ],
         correctOptionId: 'a',
-        tip: 'Orientation and closure prevent shifting and injuries.'
+        tip: 'Stability, closure, and a quick pin count protect the garment during travel.'
       },
       {
         id: 'M2-Q09',
@@ -991,6 +1020,18 @@
         ],
         correctOptionId: 'a',
         tip: 'Never sacrifice safety steps when busy.'
+      },
+      {
+        id: 'M2-Q13',
+        prompt: 'When pinning while a customer is still wearing the garment, what safety step is required?',
+        options: [
+          { id: 'a', label: 'Place your hand between the garment and the customer before inserting any pin' },
+          { id: 'b', label: 'Move quickly and skip communication' },
+          { id: 'c', label: 'Pin directly against the skin for accuracy' },
+          { id: 'd', label: 'Avoid telling the customer what you are doing' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Protect the customer by creating a barrier and moving slowly when pinning on-body.'
       }
     ],
     M3: [
@@ -1137,6 +1178,18 @@
         ],
         correctOptionId: 'b',
         tip: 'Avoid casual phrases—use specific measurements and context.'
+      },
+      {
+        id: 'M3-Q13',
+        prompt: 'You are shortening a dress with a back vent. What must you do before finalizing the pinning?',
+        options: [
+          { id: 'a', label: 'Confirm the customer is okay with the vent becoming shorter or escalate to a tailor to preserve it' },
+          { id: 'b', label: 'Ignore the vent because hems and vents are unrelated' },
+          { id: 'c', label: 'Sew the vent closed to avoid work' },
+          { id: 'd', label: 'Skip measurement and guess the vent length' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Shortening changes vent length—confirm approval or escalate for preservation.'
       }
     ],
     M4: [
@@ -1429,6 +1482,18 @@
         ],
         correctOptionId: 'a',
         tip: 'Set a confident, safety-focused expectation for tailor review.'
+      },
+      {
+        id: 'M5-Q13',
+        prompt: 'A customer wants a skirt vent to stay the same length even though the hem will be shortened. What is the correct next step?',
+        options: [
+          { id: 'a', label: 'Escalate to the tailor to plan how to preserve or rebuild the vent before pinning' },
+          { id: 'b', label: 'Pin and promise the vent will stay the same without checking' },
+          { id: 'c', label: 'Ignore the request and shorten normally' },
+          { id: 'd', label: 'Remove the vent entirely without asking' }
+        ],
+        correctOptionId: 'a',
+        tip: 'Vent preservation or redesign requires tailor planning—do not promise it at the counter.'
       }
     ]
   };
@@ -2168,7 +2233,7 @@
                   </div>
                   <div class="callout callout--rule">
                     <p class="callout-title">🧷 Pin Safety</p>
-                    <p>Only closed, horizontal safety pins leave the store. Verify orientation before the customer walks away.</p>
+                    <p>Only closed safety pins leave the store. Horizontal is preferred for travel; vertical is acceptable when stable and documented.</p>
                   </div>
                 </aside>
               </div>
@@ -2198,21 +2263,32 @@
                       <p class="micro-copy">${module.orientation.correct.description}</p>
                     </div>
                     <div class="orientation-card risk">
-                      <p class="pill pill-quiet">Incorrect</p>
-                      <h3>${module.orientation.incorrect.title}</h3>
-                      <ul>${module.orientation.incorrect.bullets.map(item => `<li>${item}</li>`).join('')}</ul>
-                      <p class="micro-copy">${module.orientation.incorrect.description}</p>
+                      <p class="pill pill-quiet">Allowed with care</p>
+                      <h3>${module.orientation.flexible.title}</h3>
+                      <ul>${module.orientation.flexible.bullets.map(item => `<li>${item}</li>`).join('')}</ul>
+                      <p class="micro-copy">${module.orientation.flexible.description}</p>
+                    </div>
+                  </div>
+                  <div class="policy-callout" aria-label="On-body pinning safety">
+                    <div>
+                      <p class="eyebrow">On-body pinning</p>
+                      <h3>${module.onBodySafety.headline}</h3>
+                      <ul>${module.onBodySafety.reminders.map(item => `<li>${item}</li>`).join('')}</ul>
+                    </div>
+                    <div class="stretch-risk">
+                      <p class="badge-lite">Customer Script</p>
+                      <p>${module.onBodySafety.script}</p>
                     </div>
                   </div>
                 </div>
                 <aside class="content-side">
                   <div class="callout callout--note">
                     <p class="callout-title">📝 Customer Script</p>
-                    <p>“These safety pins are locked and horizontal at your hem line so it won’t shift in the bag.”</p>
+                    <p>“These safety pins are locked and secure at your hem line so it won’t shift in the bag—horizontal for travel, or vertical here if that’s what helps us mark it.”</p>
                   </div>
                   <div class="callout callout--warn">
                     <p class="callout-title">⚠️ Common Mistake</p>
-                    <p>Vertical pins distort hems and slip during transit.</p>
+                    <p>Vertical pins can twist if they aren’t secure. Re-measure and convert to closed safety pins for travel.</p>
                   </div>
                 </aside>
               </div>
@@ -2231,7 +2307,7 @@
                     <div class="checklist-note">
                       <p class="badge-lite">Checklist Reminder</p>
                       <p>Use this before every plant-bound garment leaves the counter.</p>
-                      <p class="micro-copy">Imagine the hem as a line — pins should sit on that line (horizontal), never crossing it like a fence post (vertical).</p>
+                      <p class="micro-copy">Imagine the hem as a line — horizontal pins are most stable for travel. Vertical pins are acceptable when measured and secured for the specific garment or customer request.</p>
                     </div>
                   </div>
                   <div class="scenario-grid" aria-label="Pin safety scenarios">
@@ -2324,11 +2400,12 @@
                   <div class="garment-grid" aria-label="Garment pinning guidance">
                     ${garmentCards}
                   </div>
+                  <p class="micro-copy">Pin orientation can be horizontal or vertical based on the fitting goal—re-measure the finished length and secure with closed safety pins for travel.</p>
                 </div>
                 <aside class="content-side">
                   <div class="callout callout--rule">
                     <p class="callout-title">✅ Key Rule</p>
-                    <p>Use multiple horizontal pins to hold hems level—never vertical pins on hems.</p>
+                    <p>Use secure pins to hold hems level—horizontal is most stable for travel, but vertical is acceptable when it keeps the measurement clear for the customer or garment.</p>
                   </div>
                   <div class="callout callout--note">
                     <p class="callout-title">📝 Customer Script</p>
@@ -2373,6 +2450,17 @@
                       <p class="micro-copy"><strong>Practice scenario:</strong> ${module.legLengthCallout.scenario}</p>
                     </div>
                     <div class="note-chip-row" aria-label="Note format examples">${legCalloutNotes}</div>
+                  </div>
+                  <div class="callout-card" aria-label="Vents and splits on skirts and dresses">
+                    <div>
+                      <p class="eyebrow">Skirts/Dresses</p>
+                      <h3>${module.ventsSplits.headline}</h3>
+                      <ul>${module.ventsSplits.bullets.map(item => `<li>${item}</li>`).join('')}</ul>
+                    </div>
+                    <div class="stretch-risk">
+                      <p class="badge-lite">Reminder</p>
+                      <p>${module.ventsSplits.reminder}</p>
+                    </div>
                   </div>
                 </div>
                 <aside class="content-side">
