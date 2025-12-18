@@ -3285,8 +3285,8 @@
       }
     });
 
-    const isModuleView = sectionId.startsWith('module-');
-    document.body.classList.toggle('modules-nav-active', isModuleView);
+    const shouldShiftForNav = sectionId === 'dashboard' || sectionId.startsWith('module-');
+    document.body.classList.toggle('modules-nav-active', shouldShiftForNav);
 
     const moduleNavLinks = document.querySelectorAll('.nav-link');
     moduleNavLinks.forEach(link => {
