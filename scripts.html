@@ -138,7 +138,7 @@
         'State why safety pins are required for garments traveling to the plant.',
         'Demonstrate stable pin orientation: horizontal is preferred for travel; vertical is acceptable when customer preference, garment type, or fitting goals call for it.',
         'Explain how to choose orientation while still delivering objective, measurable results.',
-        'Apply the pin safety checklist—including on-body pinning with your hand between garment and customer—to protect customers, staff, and equipment.',
+        'Apply the pin safety checklist—including on-body pinning with your hand between garment and customer, consent, and clear boundaries away from private regions—to protect customers, staff, and equipment.',
         'Complete a pre-plant checklist to confirm safe, accurate pinning and clear communication.'
       ],
       pinTypes: [
@@ -194,20 +194,22 @@
         }
       },
       onBodySafety: {
-        headline: 'Pinning On a Customer Safely',
+        headline: 'Pinning & Measuring on a Customer Safely — Allowed With Boundaries',
         reminders: [
-          'Allowed when needed for accuracy—move slowly and communicate.',
-          'Always place your hand between the garment and the customer’s body before inserting a pin.',
-          'Avoid risky areas; if unsure or customer is uncomfortable, pause and involve the tailor.'
+          'Allowed only with consent, clear communication, and a hand barrier between garment and customer before inserting pins.',
+          'Narrate each move: “I’m going to pin here—are you comfortable?” Move slowly with controlled pins.',
+          'Never pin or measure in private or near-private regions. If a request would require that, escalate to the tailor lead or supervisor.',
+          'If the customer is unsure or seems uncomfortable, pause immediately and escalate.'
         ],
-        script: '“I’m placing my hand between the fabric and you, then adding this pin where you want the hem. Tell me if anything feels uncomfortable.”'
+        script: '“For comfort and safety, we can pin here with my hand between the fabric and you. If this adjustment requires a tailor fitting, we’ll bring in our tailor lead.”'
       },
       safetyChecklist: [
         'Keep sharp points away from skin; never pin through skin or too close to the body. Hand between garment and customer before any on-body pin.',
         'Confirm pins are secure and stable—horizontal is preferred for transport; vertical is acceptable when noted and measured.',
         'Inform the customer where pins are placed before they leave.',
         'Count pins so none are left loose in bags or garments.',
-        'Replace any straight pins with safety pins before the garment goes to the plant.'
+        'Replace any straight pins with safety pins before the garment goes to the plant.',
+        'Never pin or measure in private or near-private regions; escalate to a tailor lead or supervisor if a request would require that area.'
       ],
       scenarios: [
         {
@@ -221,6 +223,10 @@
         {
           prompt: 'You need to mark a hem while the customer is still wearing the garment. How do you protect them?',
           answer: 'Place your hand between the garment and the customer’s body, move slowly, narrate what you are doing, and confirm comfort before inserting the pin.'
+        },
+        {
+          prompt: 'A customer asks you to pin an area that would require contact near a private region. What is the correct next step?',
+          answer: 'Do not pin there—explain the boundary, and escalate to the tailor lead or supervisor for a professional fitting option.'
         }
       ],
       quiz: [
@@ -269,7 +275,7 @@
         {
           name: 'Pants (hems + simple waist)',
           csrScope: 'CSR approved',
-          pinning: 'Mark the desired hem while the customer wears the pants using a gentle fold or shallow pin in loose fabric only—no tape measures on-body and no pins against skin. Place your hand between the garment and the customer before any on-body pin. After the pants are off, place stable safety pins (horizontal preferred for travel; vertical acceptable when needed) at the marked hem and add 1–2 pins near side seams for waist adjusts on the table.',
+          pinning: 'Mark the desired hem while the customer wears the pants using a gentle fold or shallow pin in loose fabric only—no tape measures on-body and no pins against skin or near private regions. Place your hand between the garment and the customer before any on-body pin. After the pants are off, place stable safety pins (horizontal preferred for travel; vertical acceptable when needed) at the marked hem and add 1–2 pins near side seams for waist adjusts on the table. Escalate to a tailor lead if a request would require contact near private areas.',
           pins: '3–5 secure pins around each hem keep the line straight; safety pins required if the garment will travel.',
           record: '“Shorten inseam to 30 inches.” If legs differ: “Left inseam to 29.5; Right inseam to 30 (confirmed off-body).”',
           balance: 'Smooth both legs first; ask about handedness and leg length differences, then verify measurements off-body.'
@@ -277,7 +283,7 @@
         {
           name: 'Skirts (hems)',
           csrScope: 'CSR approved',
-          pinning: 'Pin evenly around the hem; keep bias fabrics flat without pulling. Check for vents or splits—shortening reduces their length and may change movement; confirm with the customer or escalate.',
+          pinning: 'Pin evenly around the hem; keep bias fabrics flat without pulling. When pinning on-body, follow safety measures, avoid private or near-private regions, and escalate if the request would require that contact. Check for vents or splits—shortening reduces their length and may change movement; confirm with the customer or escalate.',
           pins: '4–6 pins spaced evenly at seams and front/back centers.',
           record: '“Shorten hem to 38 inches from waist to floor with heels.” Add: “Vent will be shorter—customer approved.”',
           balance: 'Check skirt hangs level on platform; smooth before each pin. Escalate if the customer wants the vent length preserved.'
@@ -285,7 +291,7 @@
         {
           name: 'Simple dresses (length only)',
           csrScope: 'CSR approved — escalate complex bodice or beading to Module 5.',
-          pinning: 'Pin securely at the new length; avoid stretching knit or bias fabric. Check for back vents/splits that will shorten and confirm with the customer or escalate.',
+          pinning: 'Pin securely at the new length; avoid stretching knit or bias fabric. When pinning on-body, keep a hand barrier, move slowly, and avoid private/near-private regions. Escalate if the request would require close contact near private areas. Check for back vents/splits that will shorten and confirm with the customer or escalate.',
           pins: '3–5 pins across front/back; mirror left/right heights.',
           record: '“Finished length 40 inches shoulder to hem.” Note vent impact if present.',
           balance: 'Keep dress straight on hanger or platform; smooth along the hang line. Ask if they want a vent preserved before finalizing.'
@@ -410,6 +416,10 @@
       },
       practiceScenarios: [
         {
+          prompt: 'Customer asks for an adjustment that would require pinning very close to a private region.',
+          response: 'Do not pin there. Explain the boundary, escalate to the tailor lead/supervisor for a fitting plan, and document the escalation.'
+        },
+        {
           prompt: 'Customer says, “My left leg is shorter, please hem accordingly.”',
           response: 'Pin and measure each leg separately, confirm both numbers, and note them individually.'
         },
@@ -421,6 +431,7 @@
       quickChecklist: [
         'Smooth fabric, then pin—never stretch to reach the tape.',
         'When pinning on the customer, keep your hand between garment and body, move slowly, and confirm comfort before inserting any pin.',
+        'Never pin or measure in private or near-private regions; escalate to the tailor lead if a request requires that proximity.',
         'Mark hems while the customer wears the pants if needed, then place/verify pins and measure each leg flat; never measure on the body.',
         'Ask handedness, confirm leg differences, and record each inseam with garment/shoe context.',
         'Note pant type (jeans vs trousers) and shoe type if it affects drape.',
@@ -431,7 +442,7 @@
       ],
       escalationNote: {
         title: 'Escalate when on-body precision is requested.',
-        text: 'If a customer insists on an on-body inseam measurement or needs precision that cannot be achieved comfortably at the counter, pause and involve the tailor lead or schedule a private fitting.',
+        text: 'If a customer insists on an on-body inseam measurement, requests pinning near private regions, or needs precision that cannot be achieved comfortably at the counter, pause and involve the tailor lead or schedule a private fitting.',
         reminder: 'Keep wording calm and professional while protecting customer comfort and store policy.'
       },
       quiz: [
@@ -669,7 +680,9 @@
         'Fabric appears fragile or easily damaged by pins.',
         'Requested change is major (size, shape, drape).',
         'CSR feels uncomfortable or not confident about where or how to pin.',
-        'Customer requests vent/split length stay unchanged while shortening a skirt or dress—tailor must plan preservation.'
+        'Customer requests vent/split length stay unchanged while shortening a skirt or dress—tailor must plan preservation.',
+        'Any measuring/pinning request involving private or near-private regions—do not proceed; escalate to tailor/supervisor.',
+        'Customer discomfort or uncertainty about contact—escalate immediately.'
       ],
       scripts: [
         {
@@ -687,17 +700,23 @@
         {
           title: 'When CSR Is Unsure',
           line: 'I want to make sure this turns out exactly how you expect. I’m going to have our tailor review this with your notes instead of me pinning it.'
+        },
+        {
+          title: 'Boundary Request (Private Region)',
+          line: 'This adjustment would require pinning near a private area. For your comfort and safety, our tailor lead will handle this in a fitting room.'
         }
       ],
       documentationNotes: [
         'Tailor-only: beaded bodice; customer wants length to floor with heels; tailor to pin and advise.',
         'Customer pinned train on wedding dress; tailor to review pinned length before sewing.',
         'Leather jacket shoulder reshape requested; escalate to tailor for structural plan before any pinning.',
-        'Customer requests vent length unchanged while shortening skirt/dress; tailor to plan vent preservation or adjust design.'
+        'Customer requests vent length unchanged while shortening skirt/dress; tailor to plan vent preservation or adjust design.',
+        'Customer requested pinning near a private region; CSR escalated to tailor lead and documented boundary.'
       ],
       boundaryStatements: [
         '⚠️ Employees are expected to say “This needs a tailor” instead of guessing on risky garments.',
-        'Slowing down and escalating is safer than damaging a high-value garment.'
+        'Slowing down and escalating is safer than damaging a high-value garment.',
+        'When in doubt—or if the request involves private/near-private areas—escalate rather than proceed.'
       ],
       quiz: [
         { type: 'mcq', question: 'Which garment must be escalated to the tailor?', options: [
@@ -1032,6 +1051,18 @@
         ],
         correctOptionId: 'a',
         tip: 'Protect the customer by creating a barrier and moving slowly when pinning on-body.'
+      },
+      {
+        id: 'M2-Q14',
+        prompt: 'Which statement best matches Dublin Cleaners policy for on-body pinning?',
+        options: [
+          { id: 'a', label: 'Pin anywhere on the body as long as you are quick' },
+          { id: 'b', label: 'On-body pinning is allowed only with consent, a hand barrier, slow communication, and never in or near private regions—escalate to the tailor lead if the request requires that area' },
+          { id: 'c', label: 'Measuring tapes at the inseam are always fine if the customer agrees' },
+          { id: 'd', label: 'Avoid informing the customer so they stay still' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Consent, safety steps, and boundaries away from private regions are required; escalate when needed.'
       }
     ],
     M3: [
@@ -1494,6 +1525,18 @@
         ],
         correctOptionId: 'a',
         tip: 'Vent preservation or redesign requires tailor planning—do not promise it at the counter.'
+      },
+      {
+        id: 'M5-Q14',
+        prompt: 'Customer requests pinning near a private region to get a precise fit. What is the correct next step?',
+        options: [
+          { id: 'a', label: 'Proceed carefully and hope it is okay' },
+          { id: 'b', label: 'Explain the boundary, do not pin there, and escalate to the tailor lead/supervisor for a professional fitting option' },
+          { id: 'c', label: 'Take a quick measurement on-body to save time' },
+          { id: 'd', label: 'Ignore discomfort and continue pinning' }
+        ],
+        correctOptionId: 'b',
+        tip: 'Any request involving private or near-private regions must be escalated without proceeding.'
       }
     ]
   };
@@ -2273,25 +2316,33 @@
                       <p class="micro-copy">${module.orientation.flexible.description}</p>
                     </div>
                   </div>
-                  <div class="policy-callout" aria-label="On-body pinning safety">
-                    <div>
-                      <p class="eyebrow">On-body pinning</p>
-                      <h3>${module.onBodySafety.headline}</h3>
-                      <ul>${module.onBodySafety.reminders.map(item => `<li>${item}</li>`).join('')}</ul>
-                    </div>
-                    <div class="stretch-risk">
-                      <p class="badge-lite">Customer Script</p>
-                      <p>${module.onBodySafety.script}</p>
-                    </div>
-                  </div>
-                </div>
-                <aside class="content-side">
-                  <div class="callout callout--note">
-                    <p class="callout-title">📝 Customer Script</p>
-                    <p>“These safety pins are locked and secure at your hem line so it won’t shift in the bag—horizontal for travel, or vertical here if that’s what helps us mark it.”</p>
-                  </div>
-                  <div class="callout callout--warn">
-                    <p class="callout-title">⚠️ Common Mistake</p>
+          <div class="policy-callout" aria-label="On-body pinning safety">
+            <div>
+              <p class="eyebrow">On-body pinning</p>
+              <h3>${module.onBodySafety.headline}</h3>
+              <ul>${module.onBodySafety.reminders.map(item => `<li>${item}</li>`).join('')}</ul>
+            </div>
+            <div class="stretch-risk">
+              <p class="badge-lite">Customer Script</p>
+              <p>${module.onBodySafety.script}</p>
+            </div>
+          </div>
+          <div class="callout callout--safety" aria-label="Boundary reminder">
+            <p class="callout-title">Pinning boundaries</p>
+            <ul>
+              <li>Allowed on-body only with consent, hand barrier, slow controlled movements, and clear narration.</li>
+              <li>Never pin or measure in private or near-private regions; escalate to tailor lead/supervisor if the request requires that area.</li>
+              <li>Document that you escalated with neutral language.</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="content-side">
+          <div class="callout callout--note">
+            <p class="callout-title">📝 Customer Script</p>
+            <p>“For comfort and safety, we can pin here. If this adjustment requires a tailor fitting, we’ll bring in our tailor lead.”</p>
+          </div>
+          <div class="callout callout--warn">
+            <p class="callout-title">⚠️ Common Mistake</p>
                     <p>Vertical pins can twist if they aren’t secure. Re-measure and convert to closed safety pins for travel.</p>
                   </div>
                 </aside>
