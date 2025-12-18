@@ -1621,6 +1621,8 @@
     const initialHash = window.location.hash?.replace('#', '');
     if (initialHash) {
       navigateToSection(initialHash.startsWith('module-') ? initialHash : initialHash, null, true);
+    } else {
+      updateNavShift('dashboard');
     }
   });
 
@@ -1693,7 +1695,9 @@
 
   function renderNavigation() {
     const navList = document.getElementById('navList');
-    navList.innerHTML = modules.map(module => `<li><button class="nav-link" onclick="navigateToSection('module-${module.id}', this)">${module.id} — ${module.title}</button></li>`).join('');
+    navList.innerHTML = modules
+      .map(module => `<li><button class="nav-link" data-target="module-${module.id}" onclick="navigateToSection('module-${module.id}', this)">${module.id} — ${module.title}</button></li>`)
+      .join('');
   }
 
   function renderModules() {
@@ -3232,6 +3236,20 @@
       }
     });
 
+    updateNavShift(sectionId);
+
+    const moduleNavLinks = document.querySelectorAll('.nav-link');
+    moduleNavLinks.forEach(link => {
+      const navTarget = link.dataset.target;
+      const isModuleActive = navTarget === sectionId;
+      link.classList.toggle('active', isModuleActive);
+      if (isModuleActive) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+
     const targetEl = document.getElementById(sectionId);
     if (targetEl) {
       targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -3248,6 +3266,11 @@
 
   function scrollToStatus() {
     navigateToSection('dashboard');
+  }
+
+  function updateNavShift(sectionId) {
+    const shouldShiftForNav = sectionId === 'dashboard' || sectionId.startsWith('module-');
+    document.body.classList.toggle('modules-nav-active', shouldShiftForNav);
   }
 
   function handlePrintCertificate() {
