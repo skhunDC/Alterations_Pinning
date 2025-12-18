@@ -524,6 +524,8 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    align-items: center;
+    text-align: center;
   }
 
   .media-title {
@@ -532,7 +534,9 @@
   }
 
   .media-video {
-    width: 100%;
+    width: 40%;
+    max-width: 320px;
+    min-width: 240px;
     height: auto;
     border-radius: 12px;
     border: 1px solid #ddd;
@@ -540,7 +544,11 @@
     display: block;
   }
 
-  .media-notes { margin-top: 10px; }
+  .media-notes {
+    margin-top: 10px;
+    max-width: 560px;
+    text-align: left;
+  }
 
   .media-notes-title {
     margin: 0 0 6px;
