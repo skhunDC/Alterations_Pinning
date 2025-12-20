@@ -1587,6 +1587,16 @@
     return `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   }
 
+  function shouldShowLockoutUI(status) {
+    return !!(
+      status &&
+      status.hasCompletedAllModules === true &&
+      status.isCertified === false &&
+      status.isLocked === true &&
+      status.msRemaining > 0
+    );
+  }
+
   function toggleQuizInputs(moduleId, disabled) {
     const host = document.getElementById(getQuizHostId(moduleId));
     if (!host) return;
@@ -1628,7 +1638,7 @@
   }
 
   function updateLockoutCountdown() {
-    if (!activeLockoutStatus || !activeLockoutStatus.isLocked || !activeLockoutStatus.lockoutUntilEpochMs) {
+    if (!shouldShowLockoutUI(activeLockoutStatus) || !activeLockoutStatus.lockoutUntilEpochMs) {
       return;
     }
     const msRemaining = Math.max(activeLockoutStatus.lockoutUntilEpochMs - Date.now(), 0);
@@ -1640,6 +1650,7 @@
       refreshLockoutStatus();
       return;
     }
+    activeLockoutStatus.msRemaining = msRemaining;
 
     modules.forEach(module => {
       const timer = document.getElementById(`module${getModuleNumber(module.id)}-lockout-timer`);
@@ -1650,8 +1661,13 @@
   }
 
   function applyLockoutStatus(status) {
-    activeLockoutStatus = status || { isLocked: false, isCertified: false };
-    const isLocked = !!(activeLockoutStatus.isLocked && !activeLockoutStatus.isCertified);
+    activeLockoutStatus = status || {
+      isLocked: false,
+      isCertified: false,
+      hasCompletedAllModules: false,
+      msRemaining: 0
+    };
+    const isLocked = shouldShowLockoutUI(activeLockoutStatus);
 
     modules.forEach(module => {
       const moduleId = module.id;
@@ -1683,7 +1699,7 @@
   function refreshLockoutStatus() {
     const name = getEmployeeName();
     if (!name) {
-      applyLockoutStatus({ isLocked: false, isCertified: false });
+      applyLockoutStatus({ isLocked: false, isCertified: false, hasCompletedAllModules: false, msRemaining: 0 });
       return;
     }
     const location = getEmployeeLocation();
@@ -3309,7 +3325,7 @@
       return;
     }
 
-    if (activeLockoutStatus && activeLockoutStatus.isLocked && !activeLockoutStatus.isCertified) {
+    if (shouldShowLockoutUI(activeLockoutStatus)) {
       showToast('Quiz lockout active. Please wait for the countdown to finish.', 'warning');
       updateLockoutCountdown();
       return;
