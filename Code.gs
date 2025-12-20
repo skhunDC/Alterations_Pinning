@@ -1,6 +1,8 @@
 const SPREADSHEET_NAME = 'Alterations Pinning Certification';
 const MODULE_RESULTS_SHEET = 'ModuleResults';
 const QUIZ_ATTEMPTS_SHEET = 'QuizAttempts';
+const EMPLOYEE_LOCKOUTS_SHEET = 'EmployeeLockouts';
+const LOCKOUT_DURATION_MS = 72 * 60 * 60 * 1000;
 const MODULE_HEADERS = ['Timestamp', 'EmployeeName', 'LocationOrID', 'ModuleID', 'Score', 'Passed'];
 const QUIZ_ATTEMPT_HEADERS = [
   'Timestamp',
@@ -20,6 +22,14 @@ const QUIZ_ATTEMPT_HEADERS = [
   'TotalQuestions',
   'ScorePercent',
   'Passed'
+];
+const EMPLOYEE_LOCKOUT_HEADERS = [
+  'EmployeeName',
+  'EmployeeLocationOrId',
+  'LockoutUntilIso',
+  'LockoutUntilEpochMs',
+  'Reason',
+  'LastUpdatedTimestamp'
 ];
 
 // Reusable Google Doc certificate template for Dublin Cleaners
@@ -61,37 +71,37 @@ function getOrCreateCertificationSpreadsheet_() {
     : SpreadsheetApp.create(SPREADSHEET_NAME);
   getOrCreateModuleResultsSheet_(spreadsheet);
   getOrCreateQuizAttemptsSheet_(spreadsheet);
+  getOrCreateEmployeeLockoutsSheet_(spreadsheet);
   return spreadsheet;
 }
 
-function getOrCreateModuleResultsSheet_(spreadsheet) {
+function getOrCreateSheet_(spreadsheet, sheetName, headers) {
   const ss = spreadsheet || getOrCreateCertificationSpreadsheet_();
-  let sheet = ss.getSheetByName(MODULE_RESULTS_SHEET);
+  let sheet = ss.getSheetByName(sheetName);
   if (!sheet) {
-    sheet = ss.insertSheet(MODULE_RESULTS_SHEET);
+    sheet = ss.insertSheet(sheetName);
   }
-  const headerRange = sheet.getRange(1, 1, 1, MODULE_HEADERS.length);
-  const headers = headerRange.getValues()[0];
-  const headersMatch = headers.join('') === MODULE_HEADERS.join('');
-  if (!headersMatch) {
-    headerRange.setValues([MODULE_HEADERS]);
+  if (headers && headers.length) {
+    const headerRange = sheet.getRange(1, 1, 1, headers.length);
+    const existingHeaders = headerRange.getValues()[0];
+    const headersMatch = existingHeaders.join('') === headers.join('');
+    if (!headersMatch) {
+      headerRange.setValues([headers]);
+    }
   }
   return sheet;
 }
 
+function getOrCreateModuleResultsSheet_(spreadsheet) {
+  return getOrCreateSheet_(spreadsheet, MODULE_RESULTS_SHEET, MODULE_HEADERS);
+}
+
 function getOrCreateQuizAttemptsSheet_(spreadsheet) {
-  const ss = spreadsheet || getOrCreateCertificationSpreadsheet_();
-  let sheet = ss.getSheetByName(QUIZ_ATTEMPTS_SHEET);
-  if (!sheet) {
-    sheet = ss.insertSheet(QUIZ_ATTEMPTS_SHEET);
-  }
-  const headerRange = sheet.getRange(1, 1, 1, QUIZ_ATTEMPT_HEADERS.length);
-  const headers = headerRange.getValues()[0];
-  const headersMatch = headers.join('') === QUIZ_ATTEMPT_HEADERS.join('');
-  if (!headersMatch) {
-    headerRange.setValues([QUIZ_ATTEMPT_HEADERS]);
-  }
-  return sheet;
+  return getOrCreateSheet_(spreadsheet, QUIZ_ATTEMPTS_SHEET, QUIZ_ATTEMPT_HEADERS);
+}
+
+function getOrCreateEmployeeLockoutsSheet_(spreadsheet) {
+  return getOrCreateSheet_(spreadsheet, EMPLOYEE_LOCKOUTS_SHEET, EMPLOYEE_LOCKOUT_HEADERS);
 }
 
 function appendModuleResultRow_(timestamp, moduleId, employeeName, employeeLocationOrId, score, passed, spreadsheet) {
@@ -108,12 +118,134 @@ function appendModuleResultRow_(timestamp, moduleId, employeeName, employeeLocat
   return row;
 }
 
+function normalizeEmployeeValue_(value) {
+  return (value || '').toString().trim().toLowerCase();
+}
+
+function findEmployeeLockoutRowIndex_(sheet, employeeName, employeeLocationOrId) {
+  const data = sheet.getDataRange().getValues();
+  const targetName = normalizeEmployeeValue_(employeeName);
+  const targetLocation = normalizeEmployeeValue_(employeeLocationOrId);
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    if (normalizeEmployeeValue_(row[0]) === targetName
+      && normalizeEmployeeValue_(row[1]) === targetLocation) {
+      return i + 1;
+    }
+  }
+  return null;
+}
+
+function formatDurationMs_(durationMs) {
+  const safeMs = Math.max(0, durationMs || 0);
+  const totalSeconds = Math.floor(safeMs / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return `${hours}:${('0' + minutes).slice(-2)}:${('0' + seconds).slice(-2)}`;
+}
+
+function setEmployeeLockout_(employeeName, employeeLocationOrId, reason, durationMs) {
+  const ss = getOrCreateCertificationSpreadsheet_();
+  const sheet = getOrCreateEmployeeLockoutsSheet_(ss);
+  const lockoutUntil = new Date(Date.now() + (durationMs || LOCKOUT_DURATION_MS));
+  const rowValues = [
+    employeeName.trim(),
+    (employeeLocationOrId || '').trim(),
+    lockoutUntil.toISOString(),
+    lockoutUntil.getTime(),
+    reason || 'Failed quiz attempt',
+    new Date()
+  ];
+  const existingIndex = findEmployeeLockoutRowIndex_(sheet, employeeName, employeeLocationOrId);
+  if (existingIndex) {
+    sheet.getRange(existingIndex, 1, 1, rowValues.length).setValues([rowValues]);
+  } else {
+    sheet.appendRow(rowValues);
+  }
+  return rowValues;
+}
+
+function getEmployeeLockoutStatus(employeeName, employeeLocationOrId) {
+  if (!employeeName) {
+    return {
+      isLocked: false,
+      lockoutUntilEpochMs: null,
+      lockoutUntilIso: null,
+      msRemaining: 0,
+      isCertified: false
+    };
+  }
+
+  const normalizedName = employeeName.trim();
+  const normalizedLocation = (employeeLocationOrId || '').trim();
+  const status = getEmployeeCertificationStatus(normalizedName);
+  if (status && status.isCertified) {
+    return {
+      isLocked: false,
+      lockoutUntilEpochMs: null,
+      lockoutUntilIso: null,
+      msRemaining: 0,
+      isCertified: true
+    };
+  }
+
+  const sheet = getOrCreateEmployeeLockoutsSheet_();
+  const data = sheet.getDataRange().getValues();
+  const targetName = normalizeEmployeeValue_(normalizedName);
+  const targetLocation = normalizeEmployeeValue_(normalizedLocation);
+
+  let record = null;
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    if (normalizeEmployeeValue_(row[0]) === targetName
+      && normalizeEmployeeValue_(row[1]) === targetLocation) {
+      record = row;
+      break;
+    }
+  }
+
+  if (!record) {
+    return {
+      isLocked: false,
+      lockoutUntilEpochMs: null,
+      lockoutUntilIso: null,
+      msRemaining: 0,
+      isCertified: false
+    };
+  }
+
+  const lockoutUntilEpochMs = Number(record[3]) || null;
+  const lockoutUntilIso = record[2] || null;
+  const now = Date.now();
+  const isLocked = lockoutUntilEpochMs && now < lockoutUntilEpochMs;
+  return {
+    isLocked: !!isLocked,
+    lockoutUntilEpochMs: lockoutUntilEpochMs,
+    lockoutUntilIso: lockoutUntilIso,
+    msRemaining: isLocked ? Math.max(lockoutUntilEpochMs - now, 0) : 0,
+    isCertified: false
+  };
+}
+
 function saveModuleResult(moduleId, employeeName, employeeLocationOrId, score, passed) {
   if (!employeeName || !moduleId) {
     throw new Error('Employee name and module ID are required.');
   }
+
+  const normalizedName = employeeName.trim();
+  const normalizedLocation = (employeeLocationOrId || '').trim();
+  const lockoutStatus = getEmployeeLockoutStatus(normalizedName, normalizedLocation);
+  if (lockoutStatus.isLocked && !lockoutStatus.isCertified) {
+    throw new Error(`Quiz lockout active. You can retry in ${formatDurationMs_(lockoutStatus.msRemaining)}.`);
+  }
+
+  const statusBefore = getEmployeeCertificationStatus(normalizedName);
   const timestamp = new Date();
-  appendModuleResultRow_(timestamp, moduleId, employeeName, employeeLocationOrId, score, passed);
+  appendModuleResultRow_(timestamp, moduleId, normalizedName, normalizedLocation, score, passed);
+  if (passed === false && statusBefore && !statusBefore.isCertified) {
+    setEmployeeLockout_(normalizedName, normalizedLocation, 'Failed module quiz', LOCKOUT_DURATION_MS);
+  }
   return { savedAt: timestamp };
 }
 
@@ -122,10 +254,16 @@ function saveModuleAttempt(moduleId, employeeName, employeeLocationOrId, score, 
     throw new Error('Employee name and module ID are required.');
   }
 
-  const ss = getOrCreateCertificationSpreadsheet_();
-  const timestamp = new Date();
   const normalizedName = employeeName.trim();
   const normalizedLocation = (employeeLocationOrId || '').trim();
+  const lockoutStatus = getEmployeeLockoutStatus(normalizedName, normalizedLocation);
+  if (lockoutStatus.isLocked && !lockoutStatus.isCertified) {
+    throw new Error(`Quiz lockout active. You can retry in ${formatDurationMs_(lockoutStatus.msRemaining)}.`);
+  }
+
+  const statusBefore = getEmployeeCertificationStatus(normalizedName);
+  const ss = getOrCreateCertificationSpreadsheet_();
+  const timestamp = new Date();
   const safeScore = typeof score === 'number' ? score : '';
   const safeCorrectCount = typeof correctCount === 'number' ? correctCount : 0;
   const safeTotalQuestions = typeof totalQuestions === 'number' && totalQuestions > 0 ? totalQuestions : 6;
@@ -177,6 +315,10 @@ function saveModuleAttempt(moduleId, employeeName, employeeLocationOrId, score, 
   ]];
 
   sheet.getRange(sheet.getLastRow() + 1, 1, rowsToSave.length, QUIZ_ATTEMPT_HEADERS.length).setValues(rowsToSave);
+
+  if (passed === false && statusBefore && !statusBefore.isCertified) {
+    setEmployeeLockout_(normalizedName, normalizedLocation, 'Failed module quiz', LOCKOUT_DURATION_MS);
+  }
 
   return { savedAt: timestamp, attemptId: attemptId };
 }
