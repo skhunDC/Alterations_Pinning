@@ -1562,6 +1562,9 @@
   let toastTimeoutRef = null;
   let activeLockoutStatus = null;
   let lockoutTimerId = null;
+  let finalOutcomeTimerId = null;
+  let finalOutcomePreviousFocus = null;
+  let finalOutcomeKeydownHandler = null;
 
   function showToast(message, type = 'info') {
     const toast = document.getElementById('global-toast');
@@ -1713,6 +1716,24 @@
     }
   }
 
+  function fetchLockoutStatusByName(name, location) {
+    if (!google.script || !google.script.run) {
+      return Promise.resolve(activeLockoutStatus);
+    }
+
+    return new Promise((resolve, reject) => {
+      google.script.run
+        .withSuccessHandler(status => {
+          resolve(status);
+        })
+        .withFailureHandler(err => {
+          showToast('Unable to refresh lockout status right now.', 'error');
+          reject(err);
+        })
+        .getEmployeeLockoutStatus(name, location);
+    });
+  }
+
   function setLoading(elId, isLoading, loadingLabel = 'Loading…') {
     const el = document.getElementById(elId);
     if (!el) return;
@@ -1768,6 +1789,242 @@
     return true;
   }
 
+  function escapeHtml(value) {
+    return (value || '').toString()
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function getFinalOutcomeElements() {
+    return {
+      overlay: document.getElementById('final-outcome-modal-overlay'),
+      modal: document.getElementById('final-outcome-modal'),
+      title: document.getElementById('final-outcome-title'),
+      body: document.getElementById('final-outcome-body'),
+      primaryButton: document.getElementById('final-outcome-primary-btn'),
+      secondaryButton: document.getElementById('final-outcome-secondary-btn'),
+      closeButton: document.getElementById('final-outcome-close-btn')
+    };
+  }
+
+  function getFocusableElements(container) {
+    if (!container) return [];
+    const focusableSelectors = [
+      'button:not([disabled])',
+      '[href]',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])'
+    ];
+    return Array.from(container.querySelectorAll(focusableSelectors.join(','))).filter(el => !el.hasAttribute('disabled'));
+  }
+
+  function stopFinalOutcomeCountdown() {
+    if (finalOutcomeTimerId) {
+      clearInterval(finalOutcomeTimerId);
+      finalOutcomeTimerId = null;
+    }
+  }
+
+  function startFinalOutcomeCountdown(lockoutStatus) {
+    stopFinalOutcomeCountdown();
+    const timerEl = document.getElementById('final-outcome-lockout-timer');
+    if (!timerEl || !lockoutStatus || !lockoutStatus.lockoutUntilEpochMs) {
+      return;
+    }
+
+    const updateTimer = () => {
+      const msRemaining = Math.max(lockoutStatus.lockoutUntilEpochMs - Date.now(), 0);
+      timerEl.textContent = formatLockoutCountdown(msRemaining);
+      if (msRemaining <= 0) {
+        stopFinalOutcomeCountdown();
+      }
+    };
+
+    updateTimer();
+    finalOutcomeTimerId = setInterval(updateTimer, 1000);
+  }
+
+  function openFinalOutcomeModal() {
+    const { overlay, modal } = getFinalOutcomeElements();
+    if (!overlay || !modal) return;
+    finalOutcomePreviousFocus = document.activeElement;
+    overlay.style.display = 'flex';
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+
+    finalOutcomeKeydownHandler = event => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeFinalOutcomeModal();
+        return;
+      }
+
+      if (event.key !== 'Tab') {
+        return;
+      }
+
+      const focusable = getFocusableElements(modal);
+      if (focusable.length === 0) {
+        event.preventDefault();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', finalOutcomeKeydownHandler);
+    const focusable = getFocusableElements(modal);
+    (focusable[0] || modal).focus();
+  }
+
+  function closeFinalOutcomeModal() {
+    const { overlay } = getFinalOutcomeElements();
+    if (!overlay) return;
+    overlay.style.display = 'none';
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+    stopFinalOutcomeCountdown();
+
+    if (finalOutcomeKeydownHandler) {
+      document.removeEventListener('keydown', finalOutcomeKeydownHandler);
+      finalOutcomeKeydownHandler = null;
+    }
+
+    if (finalOutcomePreviousFocus && typeof finalOutcomePreviousFocus.focus === 'function') {
+      finalOutcomePreviousFocus.focus();
+    }
+  }
+
+  function setFinalOutcomeButton(button, label, handler) {
+    if (!button) return;
+    button.textContent = label;
+    button.onclick = handler;
+  }
+
+  function showFinalOutcomeModalContent({ title, bodyHtml, primaryLabel, primaryAction, secondaryLabel }) {
+    const { title: titleEl, body, primaryButton, secondaryButton } = getFinalOutcomeElements();
+    if (titleEl) {
+      titleEl.textContent = title;
+    }
+    if (body) {
+      body.innerHTML = bodyHtml;
+    }
+    setFinalOutcomeButton(primaryButton, primaryLabel, primaryAction);
+    if (secondaryButton) {
+      secondaryButton.textContent = secondaryLabel || 'Close';
+      secondaryButton.onclick = closeFinalOutcomeModal;
+    }
+    openFinalOutcomeModal();
+  }
+
+  function showFinalOutcomePassModal(employeeName) {
+    const safeName = escapeHtml(employeeName);
+    const bodyHtml = `
+      <p>Congratulations, <strong>${safeName}</strong>! You have successfully completed the Dublin Cleaners Alterations Pinning Certification Program.</p>
+      <p>You are now authorized to pin eligible garments in-store according to Dublin Cleaners standards.</p>
+    `;
+
+    showFinalOutcomeModalContent({
+      title: '✅ PASS — Certified Alteration Pinner',
+      bodyHtml: bodyHtml,
+      primaryLabel: 'Generate Certificate (PDF)',
+      primaryAction: () => {
+        closeFinalOutcomeModal();
+        handlePrintCertificate();
+      },
+      secondaryLabel: 'Close'
+    });
+  }
+
+  function showFinalOutcomeFailModal(employeeName, lockoutStatus) {
+    const safeName = escapeHtml(employeeName);
+    const hasActiveLockout = !!(lockoutStatus && lockoutStatus.isLocked && lockoutStatus.msRemaining > 0);
+    const countdownHtml = hasActiveLockout
+      ? `<p class="modal-countdown">You can retake in: <span id="final-outcome-lockout-timer">${formatLockoutCountdown(lockoutStatus.msRemaining)}</span></p>`
+      : '<p class="modal-countdown">Retake availability is being updated. Please refresh.</p>';
+
+    const bodyHtml = `
+      <p><strong>${safeName}</strong>, you completed all 5 modules, but did not meet the passing requirement (83%+ per module).</p>
+      <p>Please review the modules and retake the quizzes after the required waiting period.</p>
+      ${countdownHtml}
+    `;
+
+    showFinalOutcomeModalContent({
+      title: '❌ FAIL — Not Certified Yet',
+      bodyHtml: bodyHtml,
+      primaryLabel: 'Review Modules',
+      primaryAction: () => {
+        closeFinalOutcomeModal();
+        navigateToSection('dashboard');
+      },
+      secondaryLabel: 'Close'
+    });
+
+    if (hasActiveLockout) {
+      startFinalOutcomeCountdown(lockoutStatus);
+    }
+  }
+
+  function handleFinalOutcomeAfterModuleFive() {
+    const name = getEmployeeName();
+    if (!name) return;
+    const location = getEmployeeLocation();
+
+    Promise.all([
+      fetchCertificationStatusByName(name),
+      fetchLockoutStatusByName(name, location)
+    ])
+      .then(([status, lockoutStatus]) => {
+        const hasCompletedAllModules = !!(
+          lockoutStatus && lockoutStatus.hasCompletedAllModules === true
+        );
+        if (!hasCompletedAllModules) {
+          return;
+        }
+
+        if (status && status.isCertified) {
+          showFinalOutcomePassModal(name);
+        } else {
+          showFinalOutcomeFailModal(name, lockoutStatus);
+        }
+      })
+      .catch(err => {
+        console.error('Could not load final outcome status', err);
+      });
+  }
+
+  function setupFinalOutcomeModal() {
+    const { overlay, closeButton, secondaryButton, modal } = getFinalOutcomeElements();
+    if (closeButton) {
+      closeButton.addEventListener('click', closeFinalOutcomeModal);
+    }
+    if (secondaryButton) {
+      secondaryButton.addEventListener('click', closeFinalOutcomeModal);
+    }
+    if (overlay) {
+      overlay.addEventListener('click', event => {
+        if (event.target === overlay) {
+          closeFinalOutcomeModal();
+        }
+      });
+    }
+    if (modal) {
+      modal.setAttribute('tabindex', '-1');
+    }
+  }
+
   function debounce(fn, delay = 150) {
     let timeoutId;
     return (...args) => {
@@ -1798,6 +2055,7 @@
     loadEmployeeInputsFromLocal();
     updateCertificateButtonState(lastCertificationStatus);
     setupPrintCertificateButton();
+    setupFinalOutcomeModal();
     const initialHash = window.location.hash?.replace('#', '');
     if (initialHash) {
       navigateToSection(initialHash.startsWith('module-') ? initialHash : initialHash, null, true);
@@ -3367,6 +3625,9 @@
         loadCertificationStatus();
         refreshLockoutStatus();
         setLoading(submitButtonId, false);
+        if (moduleId === 'M5') {
+          handleFinalOutcomeAfterModuleFive();
+        }
         if (autoAdvanceOnPass && passed) {
           const moduleNumber = parseInt(moduleId.replace('M', ''), 10);
           const nextId = moduleNumber < modules.length ? `module-M${moduleNumber + 1}` : 'dashboard';
