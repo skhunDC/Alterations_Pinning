@@ -228,6 +228,43 @@ function getEmployeeLockoutStatus(employeeName, employeeLocationOrId) {
   };
 }
 
+function getEmployeeModuleLatestResults_(employeeName) {
+  const latest = {};
+  if (!employeeName) {
+    return latest;
+  }
+  const sheet = getOrCreateModuleResultsSheet_();
+  const data = sheet.getDataRange().getValues();
+  const normalizedName = employeeName.trim().toLowerCase();
+  data.slice(1).forEach(function(row) {
+    if (!row[1]) return;
+    if (row[1].toString().trim().toLowerCase() !== normalizedName) return;
+    const moduleId = row[3];
+    const timestamp = row[0];
+    if (!moduleId) return;
+    if (!latest[moduleId] || latest[moduleId].timestamp < timestamp) {
+      latest[moduleId] = {
+        moduleId: moduleId,
+        score: row[4],
+        passed: row[5] === true || row[5] === 'TRUE',
+        timestamp: timestamp
+      };
+    }
+  });
+  return latest;
+}
+
+function shouldTriggerFinalLockout_(employeeName) {
+  const allModules = ['M1', 'M2', 'M3', 'M4', 'M5'];
+  const latest = getEmployeeModuleLatestResults_(employeeName);
+  const hasAllModules = allModules.every(function(id) { return !!latest[id]; });
+  if (!hasAllModules) {
+    return false;
+  }
+  const allPassed = allModules.every(function(id) { return latest[id].passed === true; });
+  return !allPassed;
+}
+
 function saveModuleResult(moduleId, employeeName, employeeLocationOrId, score, passed) {
   if (!employeeName || !moduleId) {
     throw new Error('Employee name and module ID are required.');
@@ -243,7 +280,7 @@ function saveModuleResult(moduleId, employeeName, employeeLocationOrId, score, p
   const statusBefore = getEmployeeCertificationStatus(normalizedName);
   const timestamp = new Date();
   appendModuleResultRow_(timestamp, moduleId, normalizedName, normalizedLocation, score, passed);
-  if (passed === false && statusBefore && !statusBefore.isCertified) {
+  if (statusBefore && !statusBefore.isCertified && shouldTriggerFinalLockout_(normalizedName)) {
     setEmployeeLockout_(normalizedName, normalizedLocation, 'Failed module quiz', LOCKOUT_DURATION_MS);
   }
   return { savedAt: timestamp };
@@ -316,7 +353,7 @@ function saveModuleAttempt(moduleId, employeeName, employeeLocationOrId, score, 
 
   sheet.getRange(sheet.getLastRow() + 1, 1, rowsToSave.length, QUIZ_ATTEMPT_HEADERS.length).setValues(rowsToSave);
 
-  if (passed === false && statusBefore && !statusBefore.isCertified) {
+  if (statusBefore && !statusBefore.isCertified && shouldTriggerFinalLockout_(normalizedName)) {
     setEmployeeLockout_(normalizedName, normalizedLocation, 'Failed module quiz', LOCKOUT_DURATION_MS);
   }
 
