@@ -1560,6 +1560,8 @@
   let lastCertificationStatus = null;
   const activeQuizState = {};
   let toastTimeoutRef = null;
+  let activeLockoutStatus = null;
+  let lockoutTimerId = null;
 
   function showToast(message, type = 'info') {
     const toast = document.getElementById('global-toast');
@@ -1574,6 +1576,125 @@
     toastTimeoutRef = setTimeout(() => {
       toast.style.opacity = '0';
     }, toastDurationMs);
+  }
+
+  function formatLockoutCountdown(durationMs) {
+    const safeMs = Math.max(0, durationMs || 0);
+    const totalSeconds = Math.floor(safeMs / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }
+
+  function toggleQuizInputs(moduleId, disabled) {
+    const host = document.getElementById(getQuizHostId(moduleId));
+    if (!host) return;
+    const inputs = host.querySelectorAll('input');
+    inputs.forEach(input => {
+      if (disabled) {
+        input.dataset.lockoutDisabled = 'true';
+        input.setAttribute('disabled', 'disabled');
+      } else if (input.dataset.lockoutDisabled === 'true') {
+        input.removeAttribute('disabled');
+        delete input.dataset.lockoutDisabled;
+      }
+    });
+  }
+
+  function toggleButtonLockoutState(button, isLocked) {
+    if (!button) return;
+    if (isLocked) {
+      button.dataset.lockoutDisabled = 'true';
+      button.setAttribute('disabled', 'disabled');
+      button.setAttribute('aria-disabled', 'true');
+    } else if (button.dataset.lockoutDisabled === 'true') {
+      if (!button.hasAttribute('aria-busy')) {
+        button.removeAttribute('disabled');
+        button.setAttribute('aria-disabled', 'false');
+      }
+      delete button.dataset.lockoutDisabled;
+    }
+  }
+
+  function setQuizLockoutBanner(moduleId, isLocked) {
+    const banner = document.getElementById(`module${getModuleNumber(moduleId)}-lockout-banner`);
+    if (!banner) return;
+    if (isLocked) {
+      banner.removeAttribute('hidden');
+    } else {
+      banner.setAttribute('hidden', 'hidden');
+    }
+  }
+
+  function updateLockoutCountdown() {
+    if (!activeLockoutStatus || !activeLockoutStatus.isLocked || !activeLockoutStatus.lockoutUntilEpochMs) {
+      return;
+    }
+    const msRemaining = Math.max(activeLockoutStatus.lockoutUntilEpochMs - Date.now(), 0);
+    if (msRemaining <= 0) {
+      if (lockoutTimerId) {
+        clearInterval(lockoutTimerId);
+        lockoutTimerId = null;
+      }
+      refreshLockoutStatus();
+      return;
+    }
+
+    modules.forEach(module => {
+      const timer = document.getElementById(`module${getModuleNumber(module.id)}-lockout-timer`);
+      if (timer) {
+        timer.textContent = formatLockoutCountdown(msRemaining);
+      }
+    });
+  }
+
+  function applyLockoutStatus(status) {
+    activeLockoutStatus = status || { isLocked: false, isCertified: false };
+    const isLocked = !!(activeLockoutStatus.isLocked && !activeLockoutStatus.isCertified);
+
+    modules.forEach(module => {
+      const moduleId = module.id;
+      const submitButton = document.getElementById(getQuizButtonId(moduleId));
+      const retakeButton = document.getElementById(getQuizRetakeId(moduleId));
+      const quizHost = document.getElementById(getQuizHostId(moduleId));
+      const quizCard = quizHost ? quizHost.closest('.quiz') : null;
+
+      toggleButtonLockoutState(submitButton, isLocked);
+      toggleButtonLockoutState(retakeButton, isLocked);
+      toggleQuizInputs(moduleId, isLocked);
+      setQuizLockoutBanner(moduleId, isLocked);
+
+      if (quizCard) {
+        quizCard.classList.toggle('quiz-locked', isLocked);
+      }
+    });
+
+    if (lockoutTimerId) {
+      clearInterval(lockoutTimerId);
+      lockoutTimerId = null;
+    }
+    if (isLocked) {
+      updateLockoutCountdown();
+      lockoutTimerId = setInterval(updateLockoutCountdown, 1000);
+    }
+  }
+
+  function refreshLockoutStatus() {
+    const name = getEmployeeName();
+    if (!name) {
+      applyLockoutStatus({ isLocked: false, isCertified: false });
+      return;
+    }
+    const location = getEmployeeLocation();
+    if (google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(status => applyLockoutStatus(status))
+        .withFailureHandler(err => {
+          console.error('Could not load lockout status', err);
+        })
+        .getEmployeeLockoutStatus(name, location);
+    }
   }
 
   function setLoading(elId, isLoading, loadingLabel = 'Loading…') {
@@ -1791,6 +1912,10 @@
     const moduleNumber = module.id.replace('M', '');
     return `
       <div class="quiz quiz-card" aria-label="quiz for ${module.title}">
+        <div class="quiz-lockout-banner" id="module${moduleNumber}-lockout-banner" hidden>
+          <div class="quiz-lockout-title">⏳ Quiz Lockout Active</div>
+          <div class="quiz-lockout-countdown">Time remaining: <span id="module${moduleNumber}-lockout-timer">72:00:00</span></div>
+        </div>
         <div class="quiz-context">You’re working on Module ${moduleNumber}</div>
         <h3>Module ${moduleNumber} Quiz</h3>
         <div id="module${moduleNumber}-quiz-host" class="quiz-host"></div>
@@ -3184,6 +3309,12 @@
       return;
     }
 
+    if (activeLockoutStatus && activeLockoutStatus.isLocked && !activeLockoutStatus.isCertified) {
+      showToast('Quiz lockout active. Please wait for the countdown to finish.', 'warning');
+      updateLockoutCountdown();
+      return;
+    }
+
     const state = activeQuizState[moduleId];
     const questionsLoaded = state?.questions?.length;
     if (!questionsLoaded) {
@@ -3218,6 +3349,7 @@
       google.script.run.withSuccessHandler(() => {
         showToast('Module result saved', 'success');
         loadCertificationStatus();
+        refreshLockoutStatus();
         setLoading(submitButtonId, false);
         if (autoAdvanceOnPass && passed) {
           const moduleNumber = parseInt(moduleId.replace('M', ''), 10);
@@ -3227,6 +3359,7 @@
       }).withFailureHandler(err => {
         showToast('Error saving result. Please retry.', 'error');
         updateModuleResultText(moduleId, false, results.score, results.correct, results.total, results.incorrectDetails, `Error saving: ${err}`);
+        refreshLockoutStatus();
         setLoading(submitButtonId, false);
       }).saveModuleAttempt(moduleId, name, location, results.score, passed, results.correct, QUESTIONS_PER_MODULE, results.answers || []);
     } else {
@@ -3276,6 +3409,7 @@
       google.script.run
         .withSuccessHandler(status => {
           renderCertificationStatus(status);
+          refreshLockoutStatus();
           setLoading('status-refresh-button', false);
         })
         .withFailureHandler(err => {
