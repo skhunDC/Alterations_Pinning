@@ -24,12 +24,14 @@ const QUIZ_ATTEMPT_HEADERS = [
   'Passed'
 ];
 const EMPLOYEE_LOCKOUT_HEADERS = [
+  'EmployeeKey',
   'EmployeeName',
   'EmployeeLocationOrId',
-  'LockoutUntilIso',
   'LockoutUntilEpochMs',
+  'LockoutUntilIso',
   'Reason',
-  'LastUpdatedTimestamp'
+  'TriggeredAtEpochMs',
+  'TriggeredAtIso'
 ];
 
 // Reusable Google Doc certificate template for Dublin Cleaners
@@ -122,14 +124,19 @@ function normalizeEmployeeValue_(value) {
   return (value || '').toString().trim().toLowerCase();
 }
 
+function getEmployeeKey_(employeeName, employeeLocationOrId) {
+  const namePart = normalizeEmployeeValue_(employeeName);
+  const locationPart = normalizeEmployeeValue_(employeeLocationOrId);
+  if (!namePart) return '';
+  return locationPart ? `${namePart}|${locationPart}` : namePart;
+}
+
 function findEmployeeLockoutRowIndex_(sheet, employeeName, employeeLocationOrId) {
   const data = sheet.getDataRange().getValues();
-  const targetName = normalizeEmployeeValue_(employeeName);
-  const targetLocation = normalizeEmployeeValue_(employeeLocationOrId);
+  const targetKey = getEmployeeKey_(employeeName, employeeLocationOrId);
   for (let i = 1; i < data.length; i++) {
     const row = data[i];
-    if (normalizeEmployeeValue_(row[0]) === targetName
-      && normalizeEmployeeValue_(row[1]) === targetLocation) {
+    if (normalizeEmployeeValue_(row[0]) === targetKey) {
       return i + 1;
     }
   }
@@ -149,13 +156,17 @@ function setEmployeeLockout_(employeeName, employeeLocationOrId, reason, duratio
   const ss = getOrCreateCertificationSpreadsheet_();
   const sheet = getOrCreateEmployeeLockoutsSheet_(ss);
   const lockoutUntil = new Date(Date.now() + (durationMs || LOCKOUT_DURATION_MS));
+  const triggeredAt = new Date();
+  const employeeKey = getEmployeeKey_(employeeName, employeeLocationOrId);
   const rowValues = [
+    employeeKey,
     employeeName.trim(),
     (employeeLocationOrId || '').trim(),
-    lockoutUntil.toISOString(),
     lockoutUntil.getTime(),
+    lockoutUntil.toISOString(),
     reason || 'Failed quiz attempt',
-    new Date()
+    triggeredAt.getTime(),
+    triggeredAt.toISOString()
   ];
   const existingIndex = findEmployeeLockoutRowIndex_(sheet, employeeName, employeeLocationOrId);
   if (existingIndex) {
@@ -166,6 +177,49 @@ function setEmployeeLockout_(employeeName, employeeLocationOrId, reason, duratio
   return rowValues;
 }
 
+function getEmployeeModuleAttemptSummary_(employeeName, employeeLocationOrId) {
+  if (!employeeName) {
+    return { hasCompletedAllModules: false, failedModules: [], attemptedModules: [] };
+  }
+  const targetName = normalizeEmployeeValue_(employeeName);
+  const targetLocation = normalizeEmployeeValue_(employeeLocationOrId);
+  const filterByLocation = !!targetLocation;
+  const sheet = getOrCreateModuleResultsSheet_();
+  const data = sheet.getDataRange().getValues().slice(1);
+  const latestByModule = {};
+  const attempted = new Set();
+
+  data.forEach(function(row) {
+    if (normalizeEmployeeValue_(row[1]) !== targetName) return;
+    if (filterByLocation && normalizeEmployeeValue_(row[2]) !== targetLocation) return;
+    const moduleId = row[3];
+    if (!moduleId) return;
+    attempted.add(moduleId);
+    const timestamp = row[0];
+    if (!latestByModule[moduleId] || latestByModule[moduleId].timestamp < timestamp) {
+      latestByModule[moduleId] = {
+        moduleId: moduleId,
+        passed: row[5] === true || row[5] === 'TRUE',
+        timestamp: timestamp
+      };
+    }
+  });
+
+  const allModules = ['M1', 'M2', 'M3', 'M4', 'M5'];
+  const hasCompletedAllModules = allModules.every(function(id) { return attempted.has(id); });
+  const failedModules = allModules.filter(function(id) {
+    const latest = latestByModule[id];
+    if (!latest) return false;
+    return latest.passed !== true;
+  });
+
+  return {
+    hasCompletedAllModules: hasCompletedAllModules,
+    failedModules: failedModules,
+    attemptedModules: Array.from(attempted)
+  };
+}
+
 function getEmployeeLockoutStatus(employeeName, employeeLocationOrId) {
   if (!employeeName) {
     return {
@@ -173,33 +227,36 @@ function getEmployeeLockoutStatus(employeeName, employeeLocationOrId) {
       lockoutUntilEpochMs: null,
       lockoutUntilIso: null,
       msRemaining: 0,
-      isCertified: false
+      hasCompletedAllModules: false,
+      isCertified: false,
+      failedModules: []
     };
   }
 
   const normalizedName = employeeName.trim();
   const normalizedLocation = (employeeLocationOrId || '').trim();
   const status = getEmployeeCertificationStatus(normalizedName);
+  const moduleSummary = getEmployeeModuleAttemptSummary_(normalizedName, normalizedLocation);
   if (status && status.isCertified) {
     return {
       isLocked: false,
       lockoutUntilEpochMs: null,
       lockoutUntilIso: null,
       msRemaining: 0,
-      isCertified: true
+      hasCompletedAllModules: moduleSummary.hasCompletedAllModules,
+      isCertified: true,
+      failedModules: moduleSummary.failedModules
     };
   }
 
   const sheet = getOrCreateEmployeeLockoutsSheet_();
   const data = sheet.getDataRange().getValues();
-  const targetName = normalizeEmployeeValue_(normalizedName);
-  const targetLocation = normalizeEmployeeValue_(normalizedLocation);
+  const targetKey = getEmployeeKey_(normalizedName, normalizedLocation);
 
   let record = null;
   for (let i = 1; i < data.length; i++) {
     const row = data[i];
-    if (normalizeEmployeeValue_(row[0]) === targetName
-      && normalizeEmployeeValue_(row[1]) === targetLocation) {
+    if (normalizeEmployeeValue_(row[0]) === targetKey) {
       record = row;
       break;
     }
@@ -211,12 +268,14 @@ function getEmployeeLockoutStatus(employeeName, employeeLocationOrId) {
       lockoutUntilEpochMs: null,
       lockoutUntilIso: null,
       msRemaining: 0,
-      isCertified: false
+      hasCompletedAllModules: moduleSummary.hasCompletedAllModules,
+      isCertified: false,
+      failedModules: moduleSummary.failedModules
     };
   }
 
   const lockoutUntilEpochMs = Number(record[3]) || null;
-  const lockoutUntilIso = record[2] || null;
+  const lockoutUntilIso = record[4] || null;
   const now = Date.now();
   const isLocked = lockoutUntilEpochMs && now < lockoutUntilEpochMs;
   return {
@@ -224,8 +283,26 @@ function getEmployeeLockoutStatus(employeeName, employeeLocationOrId) {
     lockoutUntilEpochMs: lockoutUntilEpochMs,
     lockoutUntilIso: lockoutUntilIso,
     msRemaining: isLocked ? Math.max(lockoutUntilEpochMs - now, 0) : 0,
-    isCertified: false
+    hasCompletedAllModules: moduleSummary.hasCompletedAllModules,
+    isCertified: false,
+    failedModules: moduleSummary.failedModules
   };
+}
+
+function maybeTriggerLockoutAfterAttempt_(employeeName, employeeLocationOrId) {
+  const lockoutStatus = getEmployeeLockoutStatus(employeeName, employeeLocationOrId);
+  if (lockoutStatus.isLocked || lockoutStatus.isCertified) {
+    return null;
+  }
+  if (lockoutStatus.hasCompletedAllModules) {
+    return setEmployeeLockout_(
+      employeeName,
+      employeeLocationOrId,
+      'Completed all modules without certification',
+      LOCKOUT_DURATION_MS
+    );
+  }
+  return null;
 }
 
 function saveModuleResult(moduleId, employeeName, employeeLocationOrId, score, passed) {
@@ -240,12 +317,9 @@ function saveModuleResult(moduleId, employeeName, employeeLocationOrId, score, p
     throw new Error(`Quiz lockout active. You can retry in ${formatDurationMs_(lockoutStatus.msRemaining)}.`);
   }
 
-  const statusBefore = getEmployeeCertificationStatus(normalizedName);
   const timestamp = new Date();
   appendModuleResultRow_(timestamp, moduleId, normalizedName, normalizedLocation, score, passed);
-  if (passed === false && statusBefore && !statusBefore.isCertified) {
-    setEmployeeLockout_(normalizedName, normalizedLocation, 'Failed module quiz', LOCKOUT_DURATION_MS);
-  }
+  maybeTriggerLockoutAfterAttempt_(normalizedName, normalizedLocation);
   return { savedAt: timestamp };
 }
 
@@ -261,7 +335,6 @@ function saveModuleAttempt(moduleId, employeeName, employeeLocationOrId, score, 
     throw new Error(`Quiz lockout active. You can retry in ${formatDurationMs_(lockoutStatus.msRemaining)}.`);
   }
 
-  const statusBefore = getEmployeeCertificationStatus(normalizedName);
   const ss = getOrCreateCertificationSpreadsheet_();
   const timestamp = new Date();
   const safeScore = typeof score === 'number' ? score : '';
@@ -316,9 +389,7 @@ function saveModuleAttempt(moduleId, employeeName, employeeLocationOrId, score, 
 
   sheet.getRange(sheet.getLastRow() + 1, 1, rowsToSave.length, QUIZ_ATTEMPT_HEADERS.length).setValues(rowsToSave);
 
-  if (passed === false && statusBefore && !statusBefore.isCertified) {
-    setEmployeeLockout_(normalizedName, normalizedLocation, 'Failed module quiz', LOCKOUT_DURATION_MS);
-  }
+  maybeTriggerLockoutAfterAttempt_(normalizedName, normalizedLocation);
 
   return { savedAt: timestamp, attemptId: attemptId };
 }
