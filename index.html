@@ -127,6 +127,20 @@
 
     <div id="global-toast" class="toast" role="status" aria-live="polite"></div>
 
+    <div id="final-outcome-modal-overlay" class="modal-overlay" style="display:none;" aria-hidden="true">
+      <div id="final-outcome-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="final-outcome-title">
+        <button type="button" class="modal-close" id="final-outcome-close-btn" aria-label="Close">×</button>
+
+        <h2 id="final-outcome-title" class="modal-title"></h2>
+        <div id="final-outcome-body" class="modal-body"></div>
+
+        <div class="modal-actions">
+          <button type="button" id="final-outcome-primary-btn" class="primary-button"></button>
+          <button type="button" id="final-outcome-secondary-btn" class="secondary-button">Close</button>
+        </div>
+      </div>
+    </div>
+
     <?!= include('scripts'); ?>
   </body>
 </html>
