@@ -401,9 +401,10 @@
         M2: 'Pinning Tools & Safety',
         M3: 'Pinning by Garment Type',
         M4: 'SPOT POS Notes & Communication',
-        M5: 'Exceptions & Escalation'
+        M5: 'Exceptions & Escalation',
+        M6: 'In-Person Supervised Fitting + Manager Signoff'
       };
-      const moduleOrder = ['M1', 'M2', 'M3', 'M4', 'M5'];
+      const moduleOrder = ['M1', 'M2', 'M3', 'M4', 'M5', 'M6'];
       const statusBadge = document.getElementById('certStatus');
       const statusText = document.getElementById('statusText');
       const moduleList = document.getElementById('moduleList');
@@ -416,7 +417,9 @@
 
       function moduleRow(id, passed) {
         const className = `module-row ${passed ? 'module-row--pass' : ''}`;
-        const status = passed ? 'Passed' : 'Pending';
+        const statusLabel = id === 'M6' ? 'Completed' : 'Passed';
+        const pendingLabel = id === 'M6' ? 'Signoff Needed' : 'Pending';
+        const status = passed ? statusLabel : pendingLabel;
         const statusClass = passed ? 'module-row__status' : 'module-row__status module-row__status--pending';
         return `<div class="${className}">
           <p class="module-row__title">${id} — ${moduleTitles[id] || ''} <span class="${statusClass}">(${status})</span></p>

@@ -745,6 +745,11 @@
           { label: 'Promising to try pinning quickly anyway', value: 'c', correct: false }
         ]}
       ]
+    },
+    {
+      id: 'M6',
+      title: 'In-Person Supervised Fitting + Manager Signoff',
+      intro: 'Complete a supervised fitting with an approved tailor and submit manager signoff to finish certification.'
     }
   ];
 
@@ -1546,8 +1551,14 @@
     M2: 15,
     M3: 25,
     M4: 20,
-    M5: 20
+    M5: 20,
+    M6: 10
   };
+
+  const approvedTailors = ['InSun (Plant)', 'Beth (Newark)'];
+  const approvedSites = ['Plant', 'Newark'];
+  const approvedFittingTypes = ['Customer fitting', 'Employee fitting'];
+  const approvedManagers = ['Ryan Brown', 'Melissa Lackey', 'Sea Khun'];
 
   const QUESTIONS_PER_MODULE = 6;
   const PASSING_CORRECT_REQUIRED = 5;
@@ -1789,6 +1800,191 @@
     return true;
   }
 
+  function normalizeText(value) {
+    return (value || '').toString().trim();
+  }
+
+  function normalizeSignature(value) {
+    return normalizeText(value).toLowerCase();
+  }
+
+  function toggleOtherGarmentField() {
+    const garmentType = document.getElementById('module6-garment-type')?.value || '';
+    const otherRow = document.getElementById('module6-other-garment-row');
+    if (!otherRow) return;
+    if (garmentType === 'Other') {
+      otherRow.hidden = false;
+    } else {
+      otherRow.hidden = true;
+      const otherInput = document.getElementById('module6-other-garment-type');
+      if (otherInput) otherInput.value = '';
+    }
+  }
+
+  function renderModule6SignoffStatus(status) {
+    const statusEl = document.getElementById('module6-signoff-status');
+    if (!statusEl) return;
+    if (!status || !status.exists) {
+      statusEl.textContent = 'No signoff on file yet.';
+      statusEl.className = 'status-text';
+      return;
+    }
+    if (!status.isComplete) {
+      statusEl.textContent = 'Signoff started but not complete.';
+      statusEl.className = 'status-text inline-warning';
+      return;
+    }
+
+    const fittingType = status.fittingType
+      ? (status.fittingType.toLowerCase().includes('fitting') ? status.fittingType : `${status.fittingType} fitting`)
+      : '';
+    const timeText = status.fittingTime ? ` at ${status.fittingTime}` : '';
+    const signedAt = status.signedAtIso ? new Date(status.signedAtIso).toLocaleString() : '—';
+    statusEl.innerHTML = `
+      <div class="status-badge">Module 6 Completed ✅</div>
+      <p><strong>Tailor:</strong> ${status.tailorName || '—'} (${status.tailorSite || '—'})</p>
+      <p><strong>Fitting:</strong> ${fittingType || '—'} • ${status.fittingDateIso || '—'}${timeText}</p>
+      <p><strong>Manager:</strong> ${status.managerName || '—'} • Signed ${signedAt}</p>
+    `;
+    statusEl.className = 'status-text';
+  }
+
+  function loadModule6SignoffStatus() {
+    const name = getEmployeeName();
+    const location = getEmployeeLocation();
+    if (!name) return;
+    if (!google.script || !google.script.run) return;
+
+    google.script.run
+      .withSuccessHandler(status => {
+        renderModule6SignoffStatus(status);
+      })
+      .withFailureHandler(err => {
+        console.error('Could not load Module 6 signoff status', err);
+      })
+      .getSignoffStatus(name, location);
+  }
+
+  function handleModule6SignoffSubmit() {
+    const feedbackEl = document.getElementById('module6-signoff-feedback');
+    const name = getEmployeeName();
+    const isValidName = validateEmployeeName();
+    if (!isValidName) {
+      feedbackEl.textContent = 'Enter employee name before submitting signoff.';
+      feedbackEl.classList.add('inline-warning');
+      document.getElementById('employeeName')?.focus();
+      return;
+    }
+
+    const location = getEmployeeLocation();
+    const tailorName = normalizeText(document.getElementById('module6-tailor')?.value);
+    const tailorSite = normalizeText(document.getElementById('module6-site')?.value);
+    const fittingType = normalizeText(document.getElementById('module6-fitting-type')?.value);
+    const garmentType = normalizeText(document.getElementById('module6-garment-type')?.value);
+    const otherGarmentType = normalizeText(document.getElementById('module6-other-garment-type')?.value);
+    const fittingDateIso = normalizeText(document.getElementById('module6-fitting-date')?.value);
+    const fittingTime = normalizeText(document.getElementById('module6-fitting-time')?.value);
+    const notes = normalizeText(document.getElementById('module6-notes')?.value);
+    const managerName = normalizeText(document.getElementById('module6-manager')?.value);
+    const managerSignature = normalizeText(document.getElementById('module6-manager-signature')?.value);
+    const managerConfirmed = !!document.getElementById('module6-manager-confirm')?.checked;
+
+    const errors = [];
+    if (!tailorName || !approvedTailors.includes(tailorName)) {
+      errors.push('Select an approved tailor.');
+    }
+    if (!tailorSite || !approvedSites.includes(tailorSite)) {
+      errors.push('Select a valid site.');
+    }
+    if (!fittingType || !approvedFittingTypes.includes(fittingType)) {
+      errors.push('Select a fitting type.');
+    }
+    if (!garmentType) {
+      errors.push('Select a garment type.');
+    }
+    if (garmentType === 'Other' && !otherGarmentType) {
+      errors.push('Enter the other garment type.');
+    }
+    if (!fittingDateIso) {
+      errors.push('Choose the fitting date.');
+    }
+    if (!managerName || !approvedManagers.includes(managerName)) {
+      errors.push('Select an approved manager.');
+    }
+    if (!managerSignature) {
+      errors.push('Manager typed signature is required.');
+    } else if (normalizeSignature(managerSignature) !== normalizeSignature(managerName)) {
+      errors.push('Manager signature must match the selected manager name.');
+    }
+    if (!managerConfirmed) {
+      errors.push('Manager confirmation is required.');
+    }
+
+    if (errors.length) {
+      feedbackEl.innerHTML = `<p class="inline-warning">${errors.join(' ')}</p>`;
+      return;
+    }
+
+    const payload = {
+      employeeName: name,
+      employeeLocationOrId: location,
+      tailorName,
+      tailorSite,
+      fittingType,
+      garmentType,
+      otherGarmentType,
+      fittingDateIso,
+      fittingTime,
+      notes,
+      managerName,
+      managerTypedSignature: managerSignature,
+      managerConfirmed
+    };
+
+    const submitButton = document.getElementById('module6-signoff-submit');
+    setLoading('module6-signoff-submit', true, 'Submitting…');
+
+    if (google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(status => {
+          if (feedbackEl) {
+            feedbackEl.textContent = 'Module 6 signoff saved successfully.';
+            feedbackEl.classList.remove('inline-warning');
+          }
+          renderModule6SignoffStatus(status);
+          loadCertificationStatus();
+          setLoading('module6-signoff-submit', false);
+          if (status?.isComplete) {
+            fetchCertificationStatusByName(name)
+              .then(updatedStatus => {
+                if (updatedStatus?.isCertified) {
+                  showFinalOutcomePassModal(name);
+                }
+              })
+              .catch(() => {});
+          }
+        })
+        .withFailureHandler(err => {
+          if (feedbackEl) {
+            feedbackEl.textContent = `Signoff could not be saved. ${err?.message || err}`;
+            feedbackEl.classList.add('inline-warning');
+          }
+          setLoading('module6-signoff-submit', false);
+        })
+        .saveModule6Signoff(payload);
+    } else {
+      setLoading('module6-signoff-submit', false);
+    }
+  }
+
+  function setupModule6SignoffForm() {
+    const garmentSelect = document.getElementById('module6-garment-type');
+    garmentSelect?.addEventListener('change', toggleOtherGarmentField);
+    const submitButton = document.getElementById('module6-signoff-submit');
+    submitButton?.addEventListener('click', handleModule6SignoffSubmit);
+    toggleOtherGarmentField();
+  }
+
   function escapeHtml(value) {
     return (value || '').toString()
       .replace(/&/g, '&amp;')
@@ -1956,7 +2152,7 @@
       : '<p class="modal-countdown">Retake availability is being updated. Please refresh.</p>';
 
     const bodyHtml = `
-      <p><strong>${safeName}</strong>, you completed all 5 modules, but did not meet the passing requirement (83%+ per module).</p>
+      <p><strong>${safeName}</strong>, you completed all 5 quiz modules, but did not meet the passing requirement (83%+ per module).</p>
       <p>Please review the modules and retake the quizzes after the required waiting period.</p>
       ${countdownHtml}
     `;
@@ -1977,6 +2173,25 @@
     }
   }
 
+  function showFinalOutcomeSignoffPendingModal(employeeName) {
+    const safeName = escapeHtml(employeeName);
+    const bodyHtml = `
+      <p><strong>${safeName}</strong>, you passed Modules 1–5.</p>
+      <p>Finish Module 6 by completing an in-person supervised fitting and manager signoff to become fully certified.</p>
+    `;
+
+    showFinalOutcomeModalContent({
+      title: '📝 Module 6 Signoff Required',
+      bodyHtml: bodyHtml,
+      primaryLabel: 'Go to Module 6',
+      primaryAction: () => {
+        closeFinalOutcomeModal();
+        navigateToSection('module-M6');
+      },
+      secondaryLabel: 'Close'
+    });
+  }
+
   function handleFinalOutcomeAfterModuleFive() {
     const name = getEmployeeName();
     if (!name) return;
@@ -1994,7 +2209,9 @@
           return;
         }
 
-        if (status && status.isCertified) {
+        if (status && status.module6Complete === false) {
+          showFinalOutcomeSignoffPendingModal(name);
+        } else if (status && status.isCertified) {
           showFinalOutcomePassModal(name);
         } else {
           showFinalOutcomeFailModal(name, lockoutStatus);
@@ -2051,6 +2268,7 @@
     renderNavigation();
     renderModules();
     initializeModuleQuizzes();
+    setupModule6SignoffForm();
     bindIdentityPersistence();
     loadEmployeeInputsFromLocal();
     updateCertificateButtonState(lastCertificationStatus);
@@ -2102,7 +2320,7 @@
       } else {
         btn.setAttribute('disabled', 'disabled');
         btn.setAttribute('aria-disabled', 'true');
-        btn.title = 'Pass all five modules to unlock certificate printing';
+        btn.title = 'Pass Modules 1–5 and complete Module 6 signoff to unlock certificate printing';
       }
     });
   }
@@ -2220,6 +2438,9 @@
     }
     if (module.id === 'M5') {
       return moduleFiveTemplate(module);
+    }
+    if (module.id === 'M6') {
+      return moduleSixTemplate(module);
     }
     const objectives = module.objectives.map(item => `<li>${item}</li>`).join('');
     const sections = module.sections.map(section => `
@@ -3408,6 +3629,121 @@
     `;
   }
 
+  function moduleSixTemplate(module) {
+    const sectionId = `module-${module.id}`;
+    const headingId = `${sectionId}-title`;
+    return `
+      <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
+        <article class="module module-shell" id="${module.id}">
+          ${moduleHeroTemplate(module, headingId)}
+          <div class="module-cards">
+            <div class="module-card">
+              <h3>Module 6 checklist</h3>
+              <p class="subtitle">This step is required before an employee is fully certified.</p>
+              <ol class="module-objectives">
+                <li>Complete an in-person supervised fitting with an approved tailor (customer OR employee).</li>
+                <li>Document what was fitted (garment type + fitting type).</li>
+                <li>Record the tailor and site details.</li>
+                <li>Manager reviews the fitting details and signs off digitally.</li>
+              </ol>
+              <div id="module6-signoff-status" class="status-text" aria-live="polite">No signoff on file yet.</div>
+            </div>
+
+            <div class="module-card signoff-card">
+              <h3>Module 6 Signoff Form</h3>
+              <div class="form-row">
+                <div>
+                  <label class="form-label" for="module6-tailor">Tailor (required)</label>
+                  <select id="module6-tailor" class="form-input">
+                    <option value="">Select a tailor</option>
+                    <option value="InSun (Plant)">InSun (Plant)</option>
+                    <option value="Beth (Newark)">Beth (Newark)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label" for="module6-site">Location/Site (required)</label>
+                  <select id="module6-site" class="form-input">
+                    <option value="">Select a site</option>
+                    <option value="Plant">Plant</option>
+                    <option value="Newark">Newark</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label" for="module6-fitting-type">Fitting type (required)</label>
+                  <select id="module6-fitting-type" class="form-input">
+                    <option value="">Select fitting type</option>
+                    <option value="Customer fitting">Customer fitting</option>
+                    <option value="Employee fitting">Employee fitting</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div>
+                  <label class="form-label" for="module6-garment-type">Garment type (required)</label>
+                  <select id="module6-garment-type" class="form-input">
+                    <option value="">Select garment</option>
+                    <option value="Pants">Pants</option>
+                    <option value="Skirt/Dress">Skirt/Dress</option>
+                    <option value="Jacket/Sport Coat">Jacket/Sport Coat</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div id="module6-other-garment-row" hidden>
+                  <label class="form-label" for="module6-other-garment-type">Other garment type (required)</label>
+                  <input type="text" id="module6-other-garment-type" class="form-input" placeholder="Describe garment type" />
+                </div>
+                <div>
+                  <label class="form-label" for="module6-fitting-date">Date of fitting (required)</label>
+                  <input type="date" id="module6-fitting-date" class="form-input" />
+                </div>
+                <div>
+                  <label class="form-label" for="module6-fitting-time">Time of fitting (optional)</label>
+                  <input type="time" id="module6-fitting-time" class="form-input" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div>
+                  <label class="form-label" for="module6-notes">Notes (optional)</label>
+                  <input type="text" id="module6-notes" class="form-input" maxlength="160" placeholder="Short notes for the manager" />
+                </div>
+              </div>
+
+              <h4>Manager Digital Signoff</h4>
+              <div class="form-row">
+                <div>
+                  <label class="form-label" for="module6-manager">Manager (required)</label>
+                  <select id="module6-manager" class="form-input">
+                    <option value="">Select a manager</option>
+                    <option value="Ryan Brown">Ryan Brown</option>
+                    <option value="Melissa Lackey">Melissa Lackey</option>
+                    <option value="Sea Khun">Sea Khun</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label" for="module6-manager-signature">Manager typed signature (required)</label>
+                  <input type="text" id="module6-manager-signature" class="form-input" placeholder="Type your full name" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <label class="form-label" for="module6-manager-confirm">
+                  <input type="checkbox" id="module6-manager-confirm" />
+                  I confirm this employee completed an in-person supervised fitting with an approved tailor and is approved for certification.
+                </label>
+              </div>
+
+              <button type="button" class="primary" id="module6-signoff-submit">Submit Signoff</button>
+              <div id="module6-signoff-feedback" class="status-text" aria-live="polite"></div>
+              ${renderModuleNavigation(module.id)}
+            </div>
+          </div>
+        </article>
+      </section>
+    `;
+  }
+
   function getModuleNumber(moduleId) {
     return moduleId.replace('M', '');
   }
@@ -3686,6 +4022,7 @@
       google.script.run
         .withSuccessHandler(status => {
           renderCertificationStatus(status);
+          loadModule6SignoffStatus();
           refreshLockoutStatus();
           setLoading('status-refresh-button', false);
         })
@@ -3768,27 +4105,30 @@
       badge.style.background = '#e8f8f2';
       badge.style.color = '#0f5132';
       title.textContent = '🎓 Certified Alteration Pinner';
-      sub.textContent = 'All five modules passed. Print your certificate for records.';
+      sub.textContent = 'All six modules completed, including Module 6 signoff. Print your certificate for records.';
     } else {
-      badge.textContent = `${completed.length}/5 Modules Passed`;
+      badge.textContent = `${completed.length}/${modules.length} Modules Completed`;
       badge.style.background = '#fff8e1';
       badge.style.color = '#8a6b00';
       title.textContent = 'Modules remaining: ' + (missing.length ? missing.join(', ') : '—');
-      sub.textContent = 'Pass each module quiz to reach certification. Supervisor sign-off required for live pinning clearance.';
+      sub.textContent = 'Pass Modules 1–5 and complete Module 6 signoff to reach certification.';
     }
 
     moduleProgress.innerHTML = modules.map(mod => {
       const isDone = completed.includes(mod.id);
+      const statusLabel = mod.id === 'M6' ? 'Completed' : 'Passed';
       return `<div class="module-chip ${isDone ? 'pass' : ''}">
         <p class="title">${mod.id} — ${mod.title}</p>
-        <p class="status">${isDone ? 'Passed' : 'Pending'}</p>
+        <p class="status">${isDone ? statusLabel : 'Pending'}</p>
       </div>`;
     }).join('');
 
     if (moduleList) {
       moduleList.innerHTML = modules.map(mod => {
         const isDone = completed.includes(mod.id);
-        return `<li class="module-status-item ${isDone ? 'status-complete' : 'status-missing'}"><span class="module-label">${mod.title}</span><span class="module-badge ${isDone ? 'badge-pass' : 'badge-pending'}">${isDone ? 'Passed' : 'Not Passed Yet'}</span></li>`;
+        const label = mod.id === 'M6' ? 'Completed' : 'Passed';
+        const pendingLabel = mod.id === 'M6' ? 'Signoff Needed' : 'Not Passed Yet';
+        return `<li class="module-status-item ${isDone ? 'status-complete' : 'status-missing'}"><span class="module-label">${mod.title}</span><span class="module-badge ${isDone ? 'badge-pass' : 'badge-pending'}">${isDone ? label : pendingLabel}</span></li>`;
       }).join('');
     }
   }
@@ -3916,7 +4256,7 @@
         lastCertificationStatus = status;
         updateCertificateButtonState(status);
         if (!status || !status.isCertified) {
-          showToast('Pass all five modules before generating a certificate.', 'error');
+          showToast('Complete Modules 1–5 and Module 6 signoff before generating a certificate.', 'error');
           return null;
         }
 
