@@ -600,6 +600,22 @@
     display: block;
   }
 
+  .media-card--compact {
+    width: min(100%, 560px);
+  }
+
+  .media-video--compact {
+    max-width: 360px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  @media (max-width: 640px) {
+    .media-video--compact {
+      max-width: 100%;
+    }
+  }
+
   .media-notes {
     margin-top: 10px;
     max-width: 560px;
