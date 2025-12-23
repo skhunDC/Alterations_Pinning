@@ -749,7 +749,12 @@
     {
       id: 'M6',
       title: 'In-Person Supervised Fitting + Manager Signoff',
-      intro: 'Complete a supervised fitting with an approved tailor and submit manager signoff to finish certification.'
+      intro: 'Complete a supervised fitting with an approved tailor and submit manager signoff to finish certification.',
+      objectives: [
+        'Complete a supervised fitting with an approved tailor.',
+        'Capture garment, fitting, and location details for the record.',
+        'Submit manager signoff to finalize certification.'
+      ]
     }
   ];
 
@@ -2380,9 +2385,19 @@
             </div>`;
   }
 
-  function moduleHeroTemplate(module, headingId) {
+  function moduleHeroTemplate(module, headingId, options = {}) {
+    const { showObjectives = true } = options;
     const moduleNumber = module.id.replace('M', '');
-    const objectives = (module.objectives || []).map(item => `<li>${item}</li>`).join('');
+    const objectivesList = module.objectives || [];
+    const objectives = objectivesList.map(item => `<li>${item}</li>`).join('');
+    const objectivesBlock = showObjectives && objectivesList.length
+      ? `
+          <div class="module-objectives-block">
+            <p class="eyebrow">What you'll learn</p>
+            <ul class="module-objectives">${objectives}</ul>
+          </div>
+        `
+      : '';
     return `
       <header class="module-hero">
         <div class="module-hero__text">
@@ -2391,10 +2406,7 @@
           </div>
           <h2 id="${headingId}" class="module-title" tabindex="-1">${module.title}</h2>
           <p class="module-subtitle">${module.intro}</p>
-          <div class="module-objectives-block">
-            <p class="eyebrow">What you'll learn</p>
-            <ul class="module-objectives">${objectives}</ul>
-          </div>
+          ${objectivesBlock}
         </div>
       </header>
     `;
@@ -3632,12 +3644,17 @@
   function moduleSixTemplate(module) {
     const sectionId = `module-${module.id}`;
     const headingId = `${sectionId}-title`;
+    const objectives = (module.objectives || []).map(item => `<li>${item}</li>`).join('');
     return `
       <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
         <article class="module module-shell" id="${module.id}">
-          ${moduleHeroTemplate(module, headingId)}
+          ${moduleHeroTemplate(module, headingId, { showObjectives: false })}
           <div class="module-cards">
             <div class="module-card">
+              <div class="module-objectives-block">
+                <p class="eyebrow">What you'll learn</p>
+                <ul class="module-objectives">${objectives}</ul>
+              </div>
               <h3>Module 6 checklist</h3>
               <p class="subtitle">This step is required before an employee is fully certified.</p>
               <ol class="module-objectives">
