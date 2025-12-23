@@ -2,6 +2,7 @@ const SPREADSHEET_NAME = 'Alterations Pinning Certification';
 const MODULE_RESULTS_SHEET = 'ModuleResults';
 const QUIZ_ATTEMPTS_SHEET = 'QuizAttempts';
 const EMPLOYEE_LOCKOUTS_SHEET = 'EmployeeLockouts';
+const SIGNOFFS_SHEET = 'Signoffs';
 const LOCKOUT_DURATION_MS = 72 * 60 * 60 * 1000;
 const MODULE_HEADERS = ['Timestamp', 'EmployeeName', 'LocationOrID', 'ModuleID', 'Score', 'Passed'];
 const QUIZ_ATTEMPT_HEADERS = [
@@ -33,6 +34,29 @@ const EMPLOYEE_LOCKOUT_HEADERS = [
   'TriggeredAtEpochMs',
   'TriggeredAtIso'
 ];
+const SIGNOFF_HEADERS = [
+  'Timestamp',
+  'EmployeeName',
+  'EmployeeLocationOrId',
+  'TailorName',
+  'TailorSite',
+  'FittingType',
+  'GarmentType',
+  'OtherGarmentType',
+  'FittingDateIso',
+  'FittingTime',
+  'Notes',
+  'ManagerName',
+  'ManagerTypedSignature',
+  'ManagerConfirmed',
+  'SignoffCompleted',
+  'RecordId',
+  'EmployeeKey'
+];
+const APPROVED_TAILORS = ['InSun (Plant)', 'Beth (Newark)'];
+const APPROVED_SITES = ['Plant', 'Newark'];
+const APPROVED_FITTING_TYPES = ['Customer', 'Employee'];
+const APPROVED_MANAGERS = ['Ryan Brown', 'Melissa Lackey', 'Sea Khun'];
 
 // Reusable Google Doc certificate template for Dublin Cleaners
 var CERTIFICATE_TEMPLATE_ID = '17yjalGF_nZEw_mWVQm9vlme_eoAYHLbBPw7nruiG1QQ';
@@ -74,6 +98,7 @@ function getOrCreateCertificationSpreadsheet_() {
   getOrCreateModuleResultsSheet_(spreadsheet);
   getOrCreateQuizAttemptsSheet_(spreadsheet);
   getOrCreateEmployeeLockoutsSheet_(spreadsheet);
+  getOrCreateSignoffsSheet_(spreadsheet);
   return spreadsheet;
 }
 
@@ -106,6 +131,10 @@ function getOrCreateEmployeeLockoutsSheet_(spreadsheet) {
   return getOrCreateSheet_(spreadsheet, EMPLOYEE_LOCKOUTS_SHEET, EMPLOYEE_LOCKOUT_HEADERS);
 }
 
+function getOrCreateSignoffsSheet_(spreadsheet) {
+  return getOrCreateSheet_(spreadsheet, SIGNOFFS_SHEET, SIGNOFF_HEADERS);
+}
+
 function appendModuleResultRow_(timestamp, moduleId, employeeName, employeeLocationOrId, score, passed, spreadsheet) {
   const sheet = getOrCreateModuleResultsSheet_(spreadsheet);
   const row = [
@@ -129,6 +158,65 @@ function getEmployeeKey_(employeeName, employeeLocationOrId) {
   const locationPart = normalizeEmployeeValue_(employeeLocationOrId);
   if (!namePart) return '';
   return locationPart ? `${namePart}|${locationPart}` : namePart;
+}
+
+function normalizeText_(value) {
+  return (value || '').toString().trim();
+}
+
+function normalizeSignatureMatch_(value) {
+  return normalizeText_(value).toLowerCase();
+}
+
+function normalizeFittingType_(value) {
+  const clean = normalizeText_(value);
+  if (!clean) return '';
+  const lower = clean.toLowerCase();
+  if (lower.indexOf('customer') !== -1) return 'Customer';
+  if (lower.indexOf('employee') !== -1) return 'Employee';
+  return clean;
+}
+
+function findSignoffRowIndexByKey_(sheet, employeeKey) {
+  if (!sheet || !employeeKey) return 0;
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    if (normalizeEmployeeValue_(row[16]) === employeeKey) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+function getLatestSignoffRecord_(employeeName, employeeLocationOrId) {
+  if (!employeeName) return null;
+  const sheet = getOrCreateSignoffsSheet_();
+  const data = sheet.getDataRange().getValues();
+  const targetName = normalizeEmployeeValue_(employeeName);
+  const targetLocation = normalizeEmployeeValue_(employeeLocationOrId);
+  const filterByLocation = !!targetLocation;
+
+  let latestRow = null;
+  let latestTimestamp = null;
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    if (normalizeEmployeeValue_(row[1]) !== targetName) continue;
+    if (filterByLocation && normalizeEmployeeValue_(row[2]) !== targetLocation) continue;
+    const timestamp = row[0] instanceof Date ? row[0] : new Date(row[0]);
+    if (!latestTimestamp || timestamp > latestTimestamp) {
+      latestTimestamp = timestamp;
+      latestRow = row;
+    }
+  }
+
+  if (!latestRow && !filterByLocation) {
+    return null;
+  }
+  if (!latestRow && filterByLocation) {
+    return getLatestSignoffRecord_(employeeName, '');
+  }
+  return latestRow;
 }
 
 function findEmployeeLockoutRowIndex_(sheet, employeeName, employeeLocationOrId) {
@@ -396,7 +484,12 @@ function saveModuleAttempt(moduleId, employeeName, employeeLocationOrId, score, 
 
 function getEmployeeCertificationStatus(employeeName) {
   if (!employeeName) {
-    return { completedModules: [], missingModules: ['M1', 'M2', 'M3', 'M4', 'M5'], isCertified: false };
+    return {
+      completedModules: [],
+      missingModules: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6'],
+      isCertified: false,
+      module6Complete: false
+    };
   }
   const sheet = getOrCreateModuleResultsSheet_();
   const data = sheet.getDataRange().getValues();
@@ -404,6 +497,8 @@ function getEmployeeCertificationStatus(employeeName) {
     return row[1] && row[1].toString().trim().toLowerCase() === employeeName.trim().toLowerCase();
   });
   const latest = {};
+  let latestLocation = '';
+  let latestTimestamp = null;
   records.forEach(function(row) {
     const moduleId = row[3];
     const timestamp = row[0];
@@ -415,13 +510,184 @@ function getEmployeeCertificationStatus(employeeName) {
         timestamp: timestamp
       };
     }
+    if (!latestTimestamp || timestamp > latestTimestamp) {
+      latestTimestamp = timestamp;
+      latestLocation = row[2] ? row[2].toString().trim() : '';
+    }
   });
-  const allModules = ['M1', 'M2', 'M3', 'M4', 'M5'];
+  const signoffRow = getLatestSignoffRecord_(employeeName, latestLocation);
+  const module6Complete = !!(signoffRow && (signoffRow[14] === true || signoffRow[14] === 'TRUE'));
+  const allModules = ['M1', 'M2', 'M3', 'M4', 'M5', 'M6'];
   const completedModules = allModules.filter(function(id) {
+    if (id === 'M6') return module6Complete;
     return latest[id] && latest[id].passed === true;
   });
   const missingModules = allModules.filter(function(id) { return completedModules.indexOf(id) === -1; });
-  return { completedModules: completedModules, missingModules: missingModules, isCertified: missingModules.length === 0 };
+  return {
+    completedModules: completedModules,
+    missingModules: missingModules,
+    isCertified: missingModules.length === 0,
+    module6Complete: module6Complete
+  };
+}
+
+function getSignoffStatus(employeeName, employeeLocationOrId) {
+  if (!employeeName) {
+    return {
+      exists: false,
+      isComplete: false,
+      tailorName: '',
+      tailorSite: '',
+      fittingType: '',
+      garmentType: '',
+      otherGarmentType: '',
+      fittingDateIso: '',
+      fittingTime: '',
+      notes: '',
+      managerName: '',
+      signedAtIso: '',
+      recordId: ''
+    };
+  }
+
+  const sheet = getOrCreateSignoffsSheet_();
+  const employeeKey = getEmployeeKey_(employeeName, employeeLocationOrId);
+  let row = null;
+  if (employeeKey) {
+    const rowIndex = findSignoffRowIndexByKey_(sheet, employeeKey);
+    if (rowIndex) {
+      row = sheet.getRange(rowIndex, 1, 1, SIGNOFF_HEADERS.length).getValues()[0];
+    }
+  }
+
+  if (!row) {
+    row = getLatestSignoffRecord_(employeeName, employeeLocationOrId);
+  }
+
+  if (!row) {
+    return {
+      exists: false,
+      isComplete: false,
+      tailorName: '',
+      tailorSite: '',
+      fittingType: '',
+      garmentType: '',
+      otherGarmentType: '',
+      fittingDateIso: '',
+      fittingTime: '',
+      notes: '',
+      managerName: '',
+      signedAtIso: '',
+      recordId: ''
+    };
+  }
+
+  const timestamp = row[0] instanceof Date ? row[0].toISOString() : row[0];
+  return {
+    exists: true,
+    isComplete: row[14] === true || row[14] === 'TRUE',
+    tailorName: row[3] || '',
+    tailorSite: row[4] || '',
+    fittingType: row[5] || '',
+    garmentType: row[6] || '',
+    otherGarmentType: row[7] || '',
+    fittingDateIso: row[8] || '',
+    fittingTime: row[9] || '',
+    notes: row[10] || '',
+    managerName: row[11] || '',
+    signedAtIso: timestamp || '',
+    recordId: row[15] || ''
+  };
+}
+
+function saveModule6Signoff(payload) {
+  if (!payload) {
+    throw new Error('Signoff data is required.');
+  }
+
+  const employeeName = normalizeText_(payload.employeeName);
+  if (!employeeName) {
+    throw new Error('Employee name is required.');
+  }
+  const employeeLocationOrId = normalizeText_(payload.employeeLocationOrId);
+  const tailorName = normalizeText_(payload.tailorName);
+  const tailorSite = normalizeText_(payload.tailorSite);
+  const fittingType = normalizeFittingType_(payload.fittingType);
+  const garmentType = normalizeText_(payload.garmentType);
+  const otherGarmentType = normalizeText_(payload.otherGarmentType);
+  const fittingDateIso = normalizeText_(payload.fittingDateIso);
+  const fittingTime = normalizeText_(payload.fittingTime);
+  const notes = normalizeText_(payload.notes);
+  const managerName = normalizeText_(payload.managerName);
+  const managerTypedSignature = normalizeText_(payload.managerTypedSignature);
+  const managerConfirmed = payload.managerConfirmed === true || payload.managerConfirmed === 'TRUE';
+
+  if (!tailorName || APPROVED_TAILORS.indexOf(tailorName) === -1) {
+    throw new Error('Tailor must be an approved option.');
+  }
+  if (!tailorSite || APPROVED_SITES.indexOf(tailorSite) === -1) {
+    throw new Error('Tailor site must be Plant or Newark.');
+  }
+  if (!fittingType || APPROVED_FITTING_TYPES.indexOf(fittingType) === -1) {
+    throw new Error('Fitting type must be Customer or Employee.');
+  }
+  if (!garmentType) {
+    throw new Error('Garment type is required.');
+  }
+  if (garmentType === 'Other' && !otherGarmentType) {
+    throw new Error('Other garment type is required.');
+  }
+  if (!fittingDateIso) {
+    throw new Error('Fitting date is required.');
+  }
+  if (!managerName || APPROVED_MANAGERS.indexOf(managerName) === -1) {
+    throw new Error('Manager must be an approved option.');
+  }
+  if (!managerTypedSignature) {
+    throw new Error('Manager typed signature is required.');
+  }
+  if (normalizeSignatureMatch_(managerTypedSignature) !== normalizeSignatureMatch_(managerName)) {
+    throw new Error('Manager typed signature must match the selected manager name.');
+  }
+  if (!managerConfirmed) {
+    throw new Error('Manager confirmation is required.');
+  }
+
+  const timestamp = new Date();
+  const employeeKey = getEmployeeKey_(employeeName, employeeLocationOrId);
+  const recordId = typeof Utilities !== 'undefined' && Utilities.getUuid
+    ? Utilities.getUuid()
+    : `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+
+  const rowValues = [
+    timestamp,
+    employeeName,
+    employeeLocationOrId,
+    tailorName,
+    tailorSite,
+    fittingType,
+    garmentType,
+    otherGarmentType,
+    fittingDateIso,
+    fittingTime,
+    notes,
+    managerName,
+    managerTypedSignature,
+    managerConfirmed,
+    true,
+    recordId,
+    employeeKey
+  ];
+
+  const sheet = getOrCreateSignoffsSheet_();
+  const existingIndex = findSignoffRowIndexByKey_(sheet, employeeKey);
+  if (existingIndex) {
+    sheet.getRange(existingIndex, 1, 1, rowValues.length).setValues([rowValues]);
+  } else {
+    sheet.appendRow(rowValues);
+  }
+
+  return getSignoffStatus(employeeName, employeeLocationOrId);
 }
 
 function getAllModules() {
@@ -430,7 +696,8 @@ function getAllModules() {
     { id: 'M2', title: 'Pinning Tools & Safety' },
     { id: 'M3', title: 'Pinning by Garment Type' },
     { id: 'M4', title: 'SPOT POS Notes & Communication' },
-    { id: 'M5', title: 'Exceptions & Escalation' }
+    { id: 'M5', title: 'Exceptions & Escalation' },
+    { id: 'M6', title: 'In-Person Supervised Fitting + Manager Signoff' }
   ];
 }
 
@@ -757,7 +1024,7 @@ function createCertificateFile(employeeName, employeeLocationOrId) {
 
   const status = getEmployeeCertificationStatus(employeeName);
   if (!status.isCertified) {
-    throw new Error('Employee must complete all modules before creating a certificate.');
+    throw new Error('Employee must complete Modules 1–5 and Module 6 signoff before creating a certificate.');
   }
 
   const folder = getOrCreateCertificateFolder_();
@@ -827,7 +1094,7 @@ function ensureCertificateFile(employeeName, employeeLocationOrId) {
 
   const status = getEmployeeCertificationStatus(employeeName);
   if (!status.isCertified) {
-    throw new Error('Employee must complete all modules before creating a certificate.');
+    throw new Error('Employee must complete Modules 1–5 and Module 6 signoff before creating a certificate.');
   }
 
   const existing = findLatestCertificateFile_(employeeName);
