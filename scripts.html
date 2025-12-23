@@ -1591,9 +1591,13 @@
   }
 
   function shouldShowLockoutUI(status) {
+    const hasFailedModules = Array.isArray(status?.failedModules)
+      ? status.failedModules.length > 0
+      : false;
     return !!(
       status &&
       status.hasCompletedAllModules === true &&
+      hasFailedModules &&
       status.isCertified === false &&
       status.isLocked === true &&
       status.msRemaining > 0
@@ -1668,8 +1672,12 @@
       isLocked: false,
       isCertified: false,
       hasCompletedAllModules: false,
-      msRemaining: 0
+      msRemaining: 0,
+      failedModules: []
     };
+    if (!Array.isArray(activeLockoutStatus.failedModules)) {
+      activeLockoutStatus.failedModules = [];
+    }
     const isLocked = shouldShowLockoutUI(activeLockoutStatus);
 
     modules.forEach(module => {
