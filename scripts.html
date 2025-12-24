@@ -1,29 +1,29 @@
 <script>
-  var IMAGE_BASE = "https://apps.dublincleaners.com/images/";
+  var MEDIA_BASE = "https://apps.dublincleaners.com/media/";
   var IMAGES = {
-    safetyPin: IMAGE_BASE + "SafetyPin.jpg",
-    safetyPinAlt: IMAGE_BASE + "Safetypin.jpg",
-    straightPins: IMAGE_BASE + "Straightpin2.jpg",
-    straightPinsAlt: IMAGE_BASE + "StraightPin2.jpg",
-    straightPinVertical: IMAGE_BASE + "StraightPin.jpg",
-    straightPinVerticalAlt: IMAGE_BASE + "straightpin.jpg",
-    womensPantLabel: IMAGE_BASE + "Women-Pant-Size-label.jpg",
-    womensPantLabelAlt: IMAGE_BASE + "Women-Pant-Size-Label.jpg",
-    mensPantLabel: IMAGE_BASE + "Mens-Pant-Size-label.jpg",
-    mensPantLabelAlt: IMAGE_BASE + "Mens-Pant-Size-Label.jpg",
-    intricateLace: IMAGE_BASE + "IntricateLace.jpg",
-    intricateLaceAlt: IMAGE_BASE + "intricatelace.jpg",
-    beadLace: IMAGE_BASE + "BeadLace.jpg",
-    beadLaceAlt: IMAGE_BASE + "beadlace.jpg",
-    silkChiffon: IMAGE_BASE + "SilkChiffon.jpeg",
-    silkChiffonAlt: IMAGE_BASE + "silkchiffon.jpeg",
-    leatherSuede: IMAGE_BASE + "Leather&Suede.jpg",
-    leatherSuedeAlt: IMAGE_BASE + "Leather&Suede.jpg",
-    customSuit: IMAGE_BASE + "CustomSuit.png",
-    spotPos: IMAGE_BASE + "SpotPOS.png",
-    border: IMAGE_BASE + "Border3.jpg",
-    logo: IMAGE_BASE + "LogosHQ.png",
-    verticalPinningExample: IMAGE_BASE + "StraightPin.jpg"
+    safetyPin: MEDIA_BASE + "SafetyPin.jpg",
+    safetyPinAlt: MEDIA_BASE + "Safetypin.jpg",
+    straightPins: MEDIA_BASE + "Straightpin2.jpg",
+    straightPinsAlt: MEDIA_BASE + "StraightPin2.jpg",
+    straightPinVertical: MEDIA_BASE + "StraightPin.jpg",
+    straightPinVerticalAlt: MEDIA_BASE + "straightpin.jpg",
+    womensPantLabel: MEDIA_BASE + "Women-Pant-Size-label.jpg",
+    womensPantLabelAlt: MEDIA_BASE + "Women-Pant-Size-Label.jpg",
+    mensPantLabel: MEDIA_BASE + "Mens-Pant-Size-label.jpg",
+    mensPantLabelAlt: MEDIA_BASE + "Mens-Pant-Size-Label.jpg",
+    intricateLace: MEDIA_BASE + "IntricateLace.jpg",
+    intricateLaceAlt: MEDIA_BASE + "intricatelace.jpg",
+    beadLace: MEDIA_BASE + "BeadLace.jpg",
+    beadLaceAlt: MEDIA_BASE + "beadlace.jpg",
+    silkChiffon: MEDIA_BASE + "SilkChiffon.jpeg",
+    silkChiffonAlt: MEDIA_BASE + "silkchiffon.jpeg",
+    leatherSuede: MEDIA_BASE + "Leather&Suede.jpg",
+    leatherSuedeAlt: MEDIA_BASE + "Leather&Suede.jpg",
+    customSuit: MEDIA_BASE + "CustomSuit.png",
+    spotPos: MEDIA_BASE + "SpotPOS.png",
+    border: MEDIA_BASE + "Border3.jpg",
+    logo: MEDIA_BASE + "LogosHQ.png",
+    verticalPinningExample: MEDIA_BASE + "StraightPin.jpg"
   };
 
   const modules = [
@@ -2297,10 +2297,18 @@
     document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
   }
 
+  function applyMediaBaseAssets() {
+    const brandLogo = document.getElementById('brand-logo');
+    if (brandLogo) {
+      brandLogo.src = IMAGES.logo;
+    }
+  }
+
   const debouncedStickyUpdate = debounce(updateStickyOffsets, 150);
   window.addEventListener('load', updateStickyOffsets);
 
   document.addEventListener('DOMContentLoaded', () => {
+    applyMediaBaseAssets();
     updateStickyOffsets();
     window.addEventListener('resize', debouncedStickyUpdate);
     setTotalEstimateText();
@@ -2743,8 +2751,8 @@
                   <div class="media-mini">
                     <h4 class="media-title">🎥 Measuring from pin to inseam</h4>
                     <video class="media-video media-video--compact" controls preload="metadata" playsinline>
-                      <source src="https://apps.dublincleaners.com/images/MeasuringPin.mp4" type="video/mp4" />
-                      <source src="https://apps.dublincleaners.com/images/measuringpin.mp4" type="video/mp4" />
+                      <source src="${MEDIA_BASE + 'MeasuringPin.mp4'}" type="video/mp4" />
+                      <source src="${MEDIA_BASE + 'measuringpin.mp4'}" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                     <ul class="media-mini-notes">
@@ -3394,7 +3402,7 @@
                   <div class="media-mini">
                     <h4 class="media-title">🎥 Back Inseam Pinning Demo</h4>
                     <video class="media-video media-video--compact" controls preload="metadata" playsinline>
-                      <source src="https://apps.dublincleaners.com/images/pantspinning.mp4" type="video/mp4" />
+                      <source src="${MEDIA_BASE + 'pantspinning.mp4'}" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                     <ul class="media-mini-notes">
@@ -3423,7 +3431,7 @@
                   <div class="media-mini">
                     <h4 class="media-title">🎥 Measure &amp; Mark Pants</h4>
                     <video class="media-video media-video--compact" controls preload="metadata" playsinline>
-                      <source src="https://apps.dublincleaners.com/images/PantMeasure&Mark.mp4" type="video/mp4" />
+                      <source src="${MEDIA_BASE + 'PantMeasure&Mark.mp4'}" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                     <ul class="media-mini-notes">
@@ -3555,8 +3563,8 @@
                   <div class="media-mini">
                     <h4 class="media-title">🎥 Pinning and measuring a suit jacket</h4>
                     <video class="media-video media-video--compact" controls preload="metadata" playsinline>
-                      <source src="https://apps.dublincleaners.com/images/Pinning.mp4" type="video/mp4" />
-                      <source src="https://apps.dublincleaners.com/images/pinning.mp4" type="video/mp4" />
+                      <source src="${MEDIA_BASE + 'Pinning.mp4'}" type="video/mp4" />
+                      <source src="${MEDIA_BASE + 'pinning.mp4'}" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                     <ul class="media-mini-notes">
