@@ -2519,7 +2519,7 @@
     const headingId = `${sectionId}-title`;
     return `
       <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
-        <article class="module module-shell" id="${module.id}">
+        <article class="module module-shell module-three" id="${module.id}">
           ${moduleHeroTemplate(module, headingId)}
           <div class="module-cards">
             <div class="module-card">
@@ -2593,32 +2593,33 @@
               </div>
             </div>
 
-            <div class="module-card">
-              <div class="content-grid">
+            <div class="module-card module-three__paired">
+              <div class="content-grid content-grid--split">
                 <div class="content-main">
                   <h3>Measuring from pin to inseam (objective demo)</h3>
                   <p class="subtitle">See how to capture the final number—never tag sizes or +/- shorthand—right after you mark the hem.</p>
-                  <div class="module-media">
-                    <div class="media-card">
-                      <h4 class="media-title">🎥 Measuring from pin to inseam</h4>
-                      <video class="media-video" controls preload="metadata" playsinline>
-                        <source src="https://apps.dublincleaners.com/images/MeasuringPin.mp4" type="video/mp4" />
-                        <source src="https://apps.dublincleaners.com/images/measuringpin.mp4" type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
-
-                      <div class="media-notes">
-                        <p class="media-notes-title">What to watch for:</p>
-                        <ul>
-                          <li>Always measure the final pinned point to the finished hem/inseam</li>
-                          <li>Do not rely on tag measurements</li>
-                          <li>Smooth fabric—do not stretch</li>
-                          <li>Confirm final measurement with the customer</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
+                  <ul class="tight-list">
+                    <li>Place the garment flat and anchor your tape from the pin to the finished hem point.</li>
+                    <li>Keep fabric smooth without stretching so the inseam reflects the true drape.</li>
+                    <li>Record the final inseam number (not “-2” or tag sizes) before adding it to POS notes.</li>
+                    <li>Confirm the exact number aloud with the customer and repeat back their approval.</li>
+                  </ul>
                 </div>
+                <aside class="content-side module-three__media-side">
+                  <div class="media-mini">
+                    <h4 class="media-title">🎥 Measuring from pin to inseam</h4>
+                    <video class="media-video media-video--compact" controls preload="metadata" playsinline>
+                      <source src="https://apps.dublincleaners.com/images/MeasuringPin.mp4" type="video/mp4" />
+                      <source src="https://apps.dublincleaners.com/images/measuringpin.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    <ul class="media-mini-notes">
+                      <li>Measure pin-to-hem on the table for an objective inseam length.</li>
+                      <li>Note the final number, not the change amount or tag size.</li>
+                      <li>Verify comfort and balance with the customer before saving.</li>
+                    </ul>
+                  </div>
+                </aside>
               </div>
             </div>
 
@@ -3232,6 +3233,64 @@
               </div>
             </div>
 
+            <div class="module-card module-three__paired">
+              <div class="content-grid content-grid--split">
+                <div class="content-main">
+                  <h3>Pants: Back Inseam Pinning (Length &amp; Balance Control)</h3>
+                  <p class="subtitle">Pin from the back inseam/back crotch seam area to manage length and drape while respecting safety boundaries.</p>
+                  <ul class="tight-list">
+                    <li>Place a hand barrier and gain consent before pinning; avoid private or near-private regions and escalate when uncertain.</li>
+                    <li>Use the back inseam reference to keep length balanced across both legs; still pin and measure each leg separately.</li>
+                    <li>Pin first, then verify the final inseam on the table—never rely on tag sizes or on-body measurements.</li>
+                    <li>Stabilize with closed safety pins for garments traveling to the plant; horizontal is preferred for transport.</li>
+                  </ul>
+                </div>
+                <aside class="content-side module-three__media-side">
+                  <div class="media-mini">
+                    <h4 class="media-title">🎥 Back Inseam Pinning Demo</h4>
+                    <video class="media-video media-video--compact" controls preload="metadata" playsinline>
+                      <source src="https://apps.dublincleaners.com/images/pantspinning.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    <ul class="media-mini-notes">
+                      <li>Pin at the back inseam/back crotch seam to control length and seat balance.</li>
+                      <li>Keep your hand between garment and customer; escalate if the area is too close to private/near-private regions.</li>
+                      <li>Confirm the final inseam for each leg after pinning; leg-by-leg pinning still applies.</li>
+                    </ul>
+                  </div>
+                </aside>
+              </div>
+            </div>
+
+            <div class="module-card module-three__paired">
+              <div class="content-grid content-grid--split">
+                <div class="content-main">
+                  <h3>Pants: Measure &amp; Mark (Final Objective Measurements)</h3>
+                  <p class="subtitle">Translate pins into exact, documented inseams so the tailor can sew to the confirmed number.</p>
+                  <ul class="tight-list">
+                    <li>Smooth fabric, then measure from the pinned point to the inseam line on a flat surface.</li>
+                    <li>Record final objective numbers for each leg (e.g., “Left inseam 29.75; Right inseam 30.0”).</li>
+                    <li>Note garment and shoe context when drape matters; avoid tag-only references.</li>
+                    <li>Use safety pins for travel and re-check stability before saving notes.</li>
+                  </ul>
+                </div>
+                <aside class="content-side module-three__media-side">
+                  <div class="media-mini">
+                    <h4 class="media-title">🎥 Measure &amp; Mark Pants</h4>
+                    <video class="media-video media-video--compact" controls preload="metadata" playsinline>
+                      <source src="https://apps.dublincleaners.com/images/PantMeasure&Mark.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    <ul class="media-mini-notes">
+                      <li>Measure after pinning—never on-body—to confirm the exact inseam.</li>
+                      <li>Double-check both legs; do not assume symmetry or tag accuracy.</li>
+                      <li>Write objective notes the tailor can follow without guessing.</li>
+                    </ul>
+                  </div>
+                </aside>
+              </div>
+            </div>
+
             <div class="module-card">
               <div class="content-grid">
                 <div class="content-main">
@@ -3240,38 +3299,6 @@
                     <p class="eyebrow">Repeatable steps</p>
                     <h3>${module.pantsWorkflow.title}</h3>
                     <ol>${workflowSteps}</ol>
-                  </div>
-                  <div class="callout-card" aria-label="Pants hem and inseam pinning demo">
-                    <div>
-                      <p class="eyebrow">Pants Hem / Inseam Pinning</p>
-                      <h3>Back Inseam Pinning (Length & Balance Control)</h3>
-                      <p class="micro-copy">Back inseam pinning focuses on the back crotch seam area to control length and balance while maintaining drape.</p>
-                      <ul>
-                        <li>Useful when adjusting pant length while keeping drape and seat balance aligned from the back inseam.</li>
-                        <li>Allowed only with consent and a hand barrier; never pin or measure in or near private/near-private regions—escalate instead.</li>
-                        <li>Pin first, then measure the final objective inseam on the table; do not rely on tag sizes.</li>
-                        <li>Leg-by-leg pinning is still required when legs differ or the customer requests different lengths—this demo shows the back inseam reference area.</li>
-                      </ul>
-                    </div>
-                    <div class="module-media">
-                      <div class="media-card media-card--compact">
-                        <h4 class="media-title">🎥 Pants Hem Workflow: Back Inseam Pin → Measure → Mark</h4>
-                        <p class="eyebrow">Video A: Pinning the Back Inseam (Back Crotch Seam Area)</p>
-                        <video class="media-video media-video--compact" controls preload="metadata" playsinline>
-                          <source src="https://apps.dublincleaners.com/images/pantspinning.mp4" type="video/mp4" />
-                          Your browser does not support the video tag.
-                        </video>
-                        <div class="media-notes">
-                          <p class="media-notes-title">What to watch for:</p>
-                          <ul>
-                            <li>Pin at the back inseam/back crotch seam area (not the leg hem) to control length and balance.</li>
-                            <li>Communicate: “I’m going to place a pin here to control the length — are you comfortable?”</li>
-                            <li>Use a hand barrier and get consent; avoid private/near-private regions and escalate if too close or if discomfort appears.</li>
-                            <li>Confirm the final objective inseam after pinning—do not rely on tag sizes or assumptions.</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                   <div class="do-dont" aria-label="Do and don't for trouser pinning">
                     <div class="card-lite">
@@ -3334,24 +3361,6 @@
                     <p class="micro-copy">Use final numbers, not guesses or plus/minus shorthand.</p>
                     ${recordingRows}
                   </div>
-                  <div class="module-media" aria-label="Pants measurement demo">
-                    <div class="media-card media-card--compact">
-                      <h4 class="media-title">🎥 Measuring and Marking Pants</h4>
-                      <p class="micro-copy">Measure from the pinned point to the inseam or final objective length, then write the exact number.</p>
-                      <video class="media-video media-video--compact" controls preload="metadata" playsinline>
-                        <source src="https://apps.dublincleaners.com/images/PantMeasure&Mark.mp4" type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
-                      <div class="media-notes">
-                        <p class="media-notes-title">What to watch for:</p>
-                        <ul>
-                          <li>Smooth fabric—do not stretch.</li>
-                          <li>Measure from the correct reference point and record final objective measurements.</li>
-                          <li>Do not rely on tag measurements; confirm final length with the customer.</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
                   <div class="callout-card" aria-label="Drape differences">
                     <div>
                       <p class="eyebrow">Fabric context</p>
@@ -3385,30 +3394,33 @@
               </div>
             </div>
 
-            <div class="module-card">
-              <div class="content-grid">
+            <div class="module-card module-three__paired">
+              <div class="content-grid content-grid--split">
                 <div class="content-main">
                   <h3>Suit jackets: pinning and measuring demo</h3>
-                  <div class="module-media">
-                    <div class="media-card">
-                      <h4 class="media-title">🎥 Pinning and measuring a suit jacket</h4>
-                      <video class="media-video" controls preload="metadata" playsinline>
-                        <source src="https://apps.dublincleaners.com/images/Pinning.mp4" type="video/mp4" />
-                        <source src="https://apps.dublincleaners.com/images/pinning.mp4" type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
-
-                      <div class="media-notes">
-                        <p class="media-notes-title">What to watch for:</p>
-                        <ul>
-                          <li>Confirm customer comfort and posture before pinning on-body</li>
-                          <li>Pin to the final fit, then measure and record objective notes for the tailor</li>
-                          <li>Clarify sleeve vs. jacket cuff expectations and escalate any complex construction</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
+                  <p class="subtitle">Pin for balance first, then record exact sleeve and body measurements the tailor can follow.</p>
+                  <ul class="tight-list">
+                    <li>Check collar roll, shoulder fit, and button stance before pinning; confirm the customer’s stance and comfort.</li>
+                    <li>Pin sleeves to the approved break with cuffs showing as requested; note any vent buttons that need moving.</li>
+                    <li>Measure off-body on the table: shoulder seam to cuff for sleeves, center back to hem for body length.</li>
+                    <li>Record objective notes (e.g., “Shorten sleeves to 23.5 from shoulder seam; move sleeve buttons accordingly”).</li>
+                  </ul>
                 </div>
+                <aside class="content-side module-three__media-side">
+                  <div class="media-mini">
+                    <h4 class="media-title">🎥 Pinning and measuring a suit jacket</h4>
+                    <video class="media-video media-video--compact" controls preload="metadata" playsinline>
+                      <source src="https://apps.dublincleaners.com/images/Pinning.mp4" type="video/mp4" />
+                      <source src="https://apps.dublincleaners.com/images/pinning.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    <ul class="media-mini-notes">
+                      <li>Watch collar lay flat with no gap before pinning sleeves or waist.</li>
+                      <li>Align sleeve pins to the desired cuff reveal; match both arms.</li>
+                      <li>Translate pins into clear measurements the tailor can sew without guessing.</li>
+                    </ul>
+                  </div>
+                </aside>
               </div>
             </div>
 
