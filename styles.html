@@ -147,16 +147,20 @@
     margin-top: 12px;
     display: flex;
     justify-content: center;
+    align-items: center;
+    width: 100%;
   }
 
   .program-overview-image {
     width: 100%;
-    max-width: 520px;
+    max-width: 720px;
     border-radius: 12px;
     border: 1px solid #e2e8f0;
     box-shadow: var(--card-shadow);
     display: block;
     object-fit: cover;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .status-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
@@ -319,6 +323,46 @@
   .module-caption { margin: 6px 0 0; font-size: 0.95rem; color: #475569; line-height: 1.45; }
   .module-image--large { max-width: 420px; }
 
+  /* Global media alignment for consistent UX */
+  .module-figure,
+  .overview-figure,
+  .module-media,
+  .certcomp-wrap,
+  .media-card {
+    text-align: center;
+  }
+
+  .module-card img,
+  .module-figure img,
+  .overview-figure img,
+  .certcomp-wrap img,
+  img.module-image,
+  img.overview-image,
+  img.certcomp-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .module-card video,
+  .module-media video,
+  video.media-video {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .module-caption,
+  .media-notes,
+  .media-footnote {
+    text-align: left;
+  }
+
+  .module-figure figcaption,
+  .overview-figure figcaption {
+    text-align: center;
+  }
+
   .module-figure-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -440,7 +484,8 @@
   .module-five__comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
   .module-five__visuals { padding: 10px; gap: 8px; background: #f1f5f9; }
   .module-five__visuals .module-figure-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; }
-  .module-five__visuals .module-figure { border: 1px solid #e5e7eb; border-radius: 12px; padding: 8px; background: #fff; box-shadow: inset 0 1px 0 #fff; display: flex; flex-direction: column; gap: 6px; height: 100%; }
+  .module-five__visuals .module-figure { border: 1px solid #e5e7eb; border-radius: 12px; padding: 8px; background: #fff; box-shadow: inset 0 1px 0 #fff; display: flex; flex-direction: column; gap: 6px; height: 100%; align-items: center; text-align: center; width: 100%; max-width: 100%; align-self: stretch; }
+  .module-five__visuals .module-figure img { width: 100%; max-width: 100%; margin-left: auto; margin-right: auto; }
   .module-five__visuals .module-figure--paired .module-figure__pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 6px; }
   .module-five__visuals .module-figure--paired img { height: 100%; object-fit: cover; }
   .module-five__visuals .module-image { border: none; box-shadow: none; border-radius: 10px; }
@@ -453,6 +498,10 @@
   .module-five__boundary { border: 1px solid #fcd34d; border-radius: 12px; padding: 12px; background: linear-gradient(135deg, #fef3c7, #fffbea); box-shadow: inset 0 1px 0 #fff; }
   .module-five__reminder { border: 1px solid #cbd5e1; background: #f8fafc; }
   .module-five__visuals .module-caption { text-align: left; }
+
+  /* Certification completion media centering */
+  .certcomp-wrap { display: flex; flex-direction: column; align-items: center; }
+  .certcomp-wrap img { width: 100%; max-width: 720px; }
 
   /* Module 2 specific UI */
   .pin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
