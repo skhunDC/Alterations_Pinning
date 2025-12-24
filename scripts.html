@@ -1867,7 +1867,7 @@
     const statusEl = document.getElementById('module6-signoff-status');
     if (!statusEl) return;
     if (!status || !status.exists) {
-      statusEl.textContent = 'No signoff on file yet.';
+      statusEl.textContent = '';
       statusEl.className = 'status-text';
       return;
     }
@@ -3893,19 +3893,26 @@
           ${moduleHeroTemplate(module, headingId, { showObjectives: false })}
           <div class="module-cards">
             <div class="module-card">
+              <h3>Module 6: In-Person Supervised Fitting + Manager Signoff</h3>
+              <p class="subtitle">Complete a supervised fitting with an approved tailor and submit manager signoff to finish certification.</p>
               <div class="module-objectives-block">
                 <p class="eyebrow">What you'll learn</p>
                 <ul class="module-objectives">${objectives}</ul>
               </div>
-              <h3>Module 6 checklist</h3>
-              <p class="subtitle">This step is required before an employee is fully certified.</p>
-              <ol class="module-objectives">
-                <li>Complete an in-person supervised fitting with an approved tailor (customer OR employee).</li>
-                <li>Document what was fitted (garment type + fitting type).</li>
-                <li>Record the tailor and site details.</li>
-                <li>Manager reviews the fitting details and signs off digitally.</li>
-              </ol>
-              <div id="module6-signoff-status" class="status-text" aria-live="polite">No signoff on file yet.</div>
+              <div class="module-objectives-block">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;">
+                  <h3 style="margin:0;">Module 6 Checklist</h3>
+                  <span aria-hidden="true" style="font-size:1.9rem;line-height:1;">✅</span>
+                </div>
+                <p class="subtitle">This step is required before an employee is fully certified.</p>
+                <ol class="module-objectives">
+                  <li>Complete an in-person supervised fitting with an approved tailor (customer OR employee).</li>
+                  <li>Document what was fitted (garment type + fitting type).</li>
+                  <li>Record the tailor and site details.</li>
+                  <li>Manager reviews the fitting details and signs off digitally.</li>
+                </ol>
+              </div>
+              <div id="module6-signoff-status" class="status-text" aria-live="polite"></div>
             </div>
 
             <div class="module-card signoff-card">
