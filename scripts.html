@@ -1864,13 +1864,27 @@
   }
 
   function renderModule6SignoffStatus(status) {
-    const statusEl = document.getElementById('module6-signoff-status');
     const statusCard = document.getElementById('module6-status-card');
-    if (!statusEl || !statusCard) return;
+    if (!statusCard) return;
+
     if (!status || !status.exists) {
-      statusEl.textContent = '';
-      statusEl.className = 'status-text';
       statusCard.hidden = true;
+      statusCard.innerHTML = '';
+      return;
+    }
+
+    statusCard.innerHTML = `
+      <div class="m6-heading-row">
+        <p class="m6-section-title">Signoff Status</p>
+        <span aria-hidden="true" class="m6-check">📄</span>
+      </div>
+      <div id="module6-signoff-status" class="status-text" aria-live="polite"></div>
+    `;
+
+    const statusEl = document.getElementById('module6-signoff-status');
+    if (!statusEl) {
+      statusCard.hidden = true;
+      statusCard.innerHTML = '';
       return;
     }
 
@@ -3909,8 +3923,6 @@
                   <h2 id="${headingId}" class="module-title" tabindex="-1">${module.title}</h2>
                   <p class="module-subtitle">${module.intro}</p>
                 </div>
-                <h3 class="m6-card-title">Module 6: In-Person Supervised Fitting + Manager Signoff</h3>
-                <p class="subtitle">Complete a supervised fitting with an approved tailor and submit manager signoff to finish certification.</p>
                 <div class="m6-heading-row">
                   <p class="m6-section-title">Module 6 Checklist</p>
                   <span aria-hidden="true" class="m6-check">✅</span>
@@ -4025,13 +4037,7 @@
                 <div id="module6-signoff-feedback" class="status-text" aria-live="polite"></div>
               </div>
 
-              <div class="module-card m6-card m6-status-card" id="module6-status-card" hidden>
-                <div class="m6-heading-row">
-                  <p class="m6-section-title">Signoff Status</p>
-                  <span aria-hidden="true" class="m6-check">📄</span>
-                </div>
-                <div id="module6-signoff-status" class="status-text" aria-live="polite"></div>
-              </div>
+              <div class="module-card m6-card m6-status-card" id="module6-status-card" hidden></div>
 
               ${renderModuleNavigation(module.id)}
             </div>
