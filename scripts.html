@@ -24,7 +24,8 @@
     border: MEDIA_BASE + "Border3.jpg",
     logo: MEDIA_BASE + "LogosHQ.png",
     verticalPinningExample: MEDIA_BASE + "StraightPin.jpg",
-    masterPin: MEDIA_BASE + "masterpin.png"
+    masterPin: MEDIA_BASE + "masterpin.png",
+    certComplete: MEDIA_BASE + "certcomp.png"
   };
 
   const modules = [
@@ -1999,7 +2000,7 @@
             fetchCertificationStatusByName(name)
               .then(updatedStatus => {
                 if (updatedStatus?.isCertified) {
-                  showFinalOutcomePassModal(name);
+                  showFinalOutcomePassModal(name, updatedStatus);
                 }
               })
               .catch(() => {});
@@ -2158,6 +2159,7 @@
     if (body) {
       body.innerHTML = bodyHtml;
     }
+    hydrateMediaElements();
     setFinalOutcomeButton(primaryButton, primaryLabel, primaryAction);
     if (secondaryButton) {
       secondaryButton.textContent = secondaryLabel || 'Close';
@@ -2166,11 +2168,29 @@
     openFinalOutcomeModal();
   }
 
-  function showFinalOutcomePassModal(employeeName) {
+  function showFinalOutcomePassModal(employeeName, certificationStatus) {
     const safeName = escapeHtml(employeeName);
+    const isFullyCertified = !!(
+      certificationStatus &&
+      certificationStatus.isCertified &&
+      certificationStatus.module6Complete
+    );
+    const certImageHtml = isFullyCertified
+      ? `
+        <div class="final-outcome-cert-graphic">
+          <img
+            data-media-key="certComplete"
+            alt="Congratulations on completing all 6 modules of the certification program."
+            loading="lazy"
+          />
+        </div>
+      `
+      : '';
+
     const bodyHtml = `
       <p>Congratulations, <strong>${safeName}</strong>! You have successfully completed the Dublin Cleaners Alterations Pinning Certification Program.</p>
       <p>You are now authorized to pin eligible garments in-store according to Dublin Cleaners standards.</p>
+      ${certImageHtml}
     `;
 
     showFinalOutcomeModalContent({
@@ -2253,7 +2273,7 @@
         if (status && status.module6Complete === false) {
           showFinalOutcomeSignoffPendingModal(name);
         } else if (status && status.isCertified) {
-          showFinalOutcomePassModal(name);
+          showFinalOutcomePassModal(name, status);
         } else {
           showFinalOutcomeFailModal(name, lockoutStatus);
         }
