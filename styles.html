@@ -319,6 +319,46 @@
   .module-caption { margin: 6px 0 0; font-size: 0.95rem; color: #475569; line-height: 1.45; }
   .module-image--large { max-width: 420px; }
 
+  /* Global media alignment for consistent UX */
+  .module-figure,
+  .overview-figure,
+  .module-media,
+  .certcomp-wrap,
+  .media-card {
+    text-align: center;
+  }
+
+  .module-card img,
+  .module-figure img,
+  .overview-figure img,
+  .certcomp-wrap img,
+  img.module-image,
+  img.overview-image,
+  img.certcomp-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .module-card video,
+  .module-media video,
+  video.media-video {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .module-caption,
+  .media-notes,
+  .media-footnote {
+    text-align: left;
+  }
+
+  .module-figure figcaption,
+  .overview-figure figcaption {
+    text-align: center;
+  }
+
   .module-figure-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
