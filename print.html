@@ -74,7 +74,6 @@
         width: calc(100% + 7rem);
         margin-left: -3.5rem;
         height: 170px;
-        background-image: url('https://apps.dublincleaners.com/images/Border3.jpg');
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;
@@ -351,8 +350,8 @@
             to pin garments.
           </p>
           <img
+            id="certificate-logo"
             class="certificate-logo"
-            src="https://apps.dublincleaners.com/images/LogosHQ.png"
             alt="Dublin Cleaners logo"
           />
           <div class="certificate-status-row">
@@ -393,6 +392,7 @@
     </div>
 
     <script>
+      const MEDIA_BASE = "https://apps.dublincleaners.com/media/";
       const params = new URLSearchParams(window.location.search);
       const employeeName = (params.get('name') || '').trim() || 'Employee';
       const location = (params.get('location') || '').trim();
@@ -409,6 +409,16 @@
       const statusText = document.getElementById('statusText');
       const moduleList = document.getElementById('moduleList');
       const statusValue = document.getElementById('statusValue');
+      const certificateLogo = document.getElementById('certificate-logo');
+      const certificateDecor = document.querySelectorAll('.certificate-decor');
+
+      if (certificateLogo) {
+        certificateLogo.src = `${MEDIA_BASE}LogosHQ.png`;
+      }
+
+      certificateDecor.forEach(el => {
+        el.style.backgroundImage = `url('${MEDIA_BASE}Border3.jpg')`;
+      });
 
       document.getElementById('certificate-employee-name').textContent = employeeName;
       document.getElementById('certificate-statement').innerHTML = `${employeeName} has completed the Official Dublin Cleaners <strong>Alterations Pinning Certification Program</strong> and is certified to pin garments.`;
