@@ -23,7 +23,8 @@
     spotPos: MEDIA_BASE + "SpotPOS.png",
     border: MEDIA_BASE + "Border3.jpg",
     logo: MEDIA_BASE + "LogosHQ.png",
-    verticalPinningExample: MEDIA_BASE + "StraightPin.jpg"
+    verticalPinningExample: MEDIA_BASE + "StraightPin.jpg",
+    masterPin: MEDIA_BASE + "masterpin.png"
   };
 
   const modules = [
@@ -2304,6 +2305,21 @@
     }
   }
 
+  function hydrateMediaElements() {
+    const mediaNodes = document.querySelectorAll('[data-media-key]');
+    mediaNodes.forEach(node => {
+      const key = node.dataset.mediaKey;
+      const mediaSrc = IMAGES[key];
+      if (!key || !mediaSrc) return;
+
+      if (node.tagName === 'IMG') {
+        node.src = mediaSrc;
+      } else if (node.tagName === 'SOURCE') {
+        node.src = mediaSrc;
+      }
+    });
+  }
+
   const debouncedStickyUpdate = debounce(updateStickyOffsets, 150);
   window.addEventListener('load', updateStickyOffsets);
 
@@ -2315,6 +2331,7 @@
     setRemainingEstimatePlaceholder();
     renderNavigation();
     renderModules();
+    hydrateMediaElements();
     setupRewritePracticeHelpers();
     initializeModuleQuizzes();
     setupModule6SignoffForm();
