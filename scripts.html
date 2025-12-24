@@ -1,4 +1,29 @@
 <script>
+  var IMAGE_BASE = "https://apps.dublincleaners.com/images/";
+  var IMAGES = {
+    safetyPin: IMAGE_BASE + "SafetyPin.jpg",
+    safetyPinAlt: IMAGE_BASE + "Safetypin.jpg",
+    straightPins: IMAGE_BASE + "Straightpin2.jpg",
+    straightPinsAlt: IMAGE_BASE + "StraightPin2.jpg",
+    straightPinVertical: IMAGE_BASE + "StraightPin.jpg",
+    straightPinVerticalAlt: IMAGE_BASE + "straightpin.jpg",
+    womensPantLabel: IMAGE_BASE + "Women-Pant-Size-label.jpg",
+    womensPantLabelAlt: IMAGE_BASE + "Women-Pant-Size-Label.jpg",
+    mensPantLabel: IMAGE_BASE + "Mens-Pant-Size-label.jpg",
+    mensPantLabelAlt: IMAGE_BASE + "Mens-Pant-Size-Label.jpg",
+    intricateLace: IMAGE_BASE + "IntricateLace.jpg",
+    intricateLaceAlt: IMAGE_BASE + "intricatelace.jpg",
+    beadLace: IMAGE_BASE + "BeadLace.jpg",
+    beadLaceAlt: IMAGE_BASE + "beadlace.jpg",
+    silkChiffon: IMAGE_BASE + "SilkChiffon.jpeg",
+    silkChiffonAlt: IMAGE_BASE + "silkchiffon.jpeg",
+    customSuit: IMAGE_BASE + "CustomSuit.png",
+    spotPos: IMAGE_BASE + "SpotPOS.png",
+    border: IMAGE_BASE + "Border3.jpg",
+    logo: IMAGE_BASE + "LogosHQ.png",
+    verticalPinningExample: IMAGE_BASE + "StraightPin.jpg"
+  };
+
   const modules = [
     {
       id: 'M1',
@@ -2677,20 +2702,20 @@
                       <figure class="module-figure">
                         <img
                           class="module-image"
-                          src="https://www.dublincleaners.com/wp-content/uploads/2025/12/Women-Pant-Size-label.jpg"
+                          src="${IMAGES.womensPantLabel}"
                           alt="Women’s pants size label example."
                           loading="lazy"
-                          onerror="this.onerror=null;this.src='https://www.dublincleaners.com/wp-content/uploads/2025/12/Women-Pant-Size-Label.jpg';"
+                          onerror="this.onerror=null;this.src='${IMAGES.womensPantLabelAlt}';"
                         />
                         <figcaption class="module-caption">Tag sizes vary — measure the garment and capture the confirmed number.</figcaption>
                       </figure>
                       <figure class="module-figure">
                         <img
                           class="module-image"
-                          src="https://www.dublincleaners.com/wp-content/uploads/2025/12/Menslabel.jpg"
+                          src="${IMAGES.mensPantLabel}"
                           alt="Men’s pants size label example; tags still require tape verification."
                           loading="lazy"
-                          onerror="this.onerror=null;this.src='https://www.dublincleaners.com/wp-content/uploads/2025/12/MensLabel.jpg';"
+                          onerror="this.onerror=null;this.src='${IMAGES.mensPantLabelAlt}';"
                         />
                         <figcaption class="module-caption">Men’s labels also drift after alterations. Always verify with a tape.</figcaption>
                       </figure>
@@ -2904,6 +2929,17 @@
                   </div>
                 </div>
                 <aside class="content-side">
+                  <div class="module-media-container">
+                    <figure class="module-figure">
+                      <img
+                        class="module-image"
+                        src="${IMAGES.spotPos}"
+                        alt="Dublin Cleaners SPOT POS interface screenshot."
+                        loading="lazy"
+                      />
+                      <figcaption class="module-caption">Enter objective, measured notes directly in SPOT so tailors see the final numbers.</figcaption>
+                    </figure>
+                  </div>
                   <div class="callout callout--rule">
                     <p class="callout-title">✅ Key Rule</p>
                     <p>Write the action and final number. “Hem” alone is never enough.</p>
@@ -3056,18 +3092,18 @@
                       <figure class="module-figure">
                         <img
                           class="module-image"
-                          src="https://apps.dublincleaners.com/images/Straightpin2.jpg"
+                          src="${IMAGES.straightPins}"
                           alt="Straight pins with colored heads arranged for fitting"
-                          onerror="this.onerror=null;this.src='https://apps.dublincleaners.com/images/StraightPin2.jpg';"
+                          onerror="this.onerror=null;this.src='${IMAGES.straightPinsAlt}';"
                         />
                         <figcaption class="module-caption">Straight pins: temporary and supervised only.</figcaption>
                       </figure>
                       <figure class="module-figure">
                         <img
                           class="module-image"
-                          src="https://apps.dublincleaners.com/images/SafetyPin.jpg"
+                          src="${IMAGES.safetyPin}"
                           alt="Safety pin with closed clasp for secure travel"
-                          onerror="this.onerror=null;this.src='https://apps.dublincleaners.com/images/Safetypin.jpg';"
+                          onerror="this.onerror=null;this.src='${IMAGES.safetyPinAlt}';"
                         />
                         <figcaption class="module-caption">Safety pins: closed clasps required for any garment traveling to the plant.</figcaption>
                       </figure>
@@ -3115,10 +3151,10 @@
                     <figure class="module-figure">
                       <img
                         class="module-image"
-                        src="https://apps.dublincleaners.com/images/StraightPin.jpg"
+                        src="${IMAGES.verticalPinningExample}"
                         alt="Example of vertical pinning on a garment"
                         loading="lazy"
-                        onerror="this.onerror=null;this.src='https://apps.dublincleaners.com/images/straightpin.jpg';"
+                        onerror="this.onerror=null;this.src='${IMAGES.straightPinVerticalAlt}';"
                       />
                       <figcaption class="module-caption">
                         Vertical pinning can be acceptable depending on the garment and customer preference — always confirm the final measurement.
@@ -3640,68 +3676,44 @@
                       <figure class="module-figure">
                         <img
                           class="module-image module-image--large"
-                          src="https://apps.dublincleaners.com/images/IntricateLace.jpg"
+                          src="${IMAGES.intricateLace}"
                           alt="Intricate lace wedding dress example."
                           loading="lazy"
                           referrerpolicy="no-referrer"
-                          data-fallback="apps"
-                          onerror="
-                            if (this.dataset.fallback === 'apps') {
-                              this.dataset.fallback = 'wp-upper';
-                              this.src = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/IntricateLace.jpg';
-                            } else if (this.dataset.fallback === 'wp-upper') {
-                              this.dataset.fallback = 'wp-lower';
-                              this.src = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/intricatelace.jpg';
-                            } else {
-                              this.onerror = null;
-                            }
-                          "
+                          onerror="this.onerror=null;this.src='${IMAGES.intricateLaceAlt}';"
                         />
                         <figcaption class="module-caption">Intricate lace and formal wedding garments are tailor-only—prevent snags and costly damage by escalating immediately.</figcaption>
                       </figure>
                       <figure class="module-figure">
                         <img
                           class="module-image module-image--large"
-                          src="https://apps.dublincleaners.com/images/BeadLace.jpg"
+                          src="${IMAGES.beadLace}"
                           alt="Beaded lace wedding gown with intricate embellishments."
                           loading="lazy"
                           referrerpolicy="no-referrer"
-                          data-fallback="apps"
-                          onerror="
-                            if (this.dataset.fallback === 'apps') {
-                              this.dataset.fallback = 'wp-upper';
-                              this.src = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/BeadLace.jpg';
-                            } else if (this.dataset.fallback === 'wp-upper') {
-                              this.dataset.fallback = 'wp-lower';
-                              this.src = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/beadlace.jpg';
-                            } else {
-                              this.onerror = null;
-                            }
-                          "
+                          onerror="this.onerror=null;this.src='${IMAGES.beadLaceAlt}';"
                         />
                         <figcaption class="module-caption">Beaded lace gowns catch pins and require tailor handling—escalate to protect the fabric and embellishments.</figcaption>
                       </figure>
                       <figure class="module-figure">
                         <img
                           class="module-image module-image--large"
-                          src="https://apps.dublincleaners.com/images/SilkChiffon.jpeg"
+                          src="${IMAGES.silkChiffon}"
                           alt="Delicate silk chiffon fabric draped softly."
                           loading="lazy"
                           referrerpolicy="no-referrer"
-                          data-fallback="apps"
-                          onerror="
-                            if (this.dataset.fallback === 'apps') {
-                              this.dataset.fallback = 'wp-upper';
-                              this.src = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/SilkChiffon.jpeg';
-                            } else if (this.dataset.fallback === 'wp-upper') {
-                              this.dataset.fallback = 'wp-lower';
-                              this.src = 'https://www.dublincleaners.com/wp-content/uploads/2025/12/silkchiffon.jpeg';
-                            } else {
-                              this.onerror = null;
-                            }
-                          "
+                          onerror="this.onerror=null;this.src='${IMAGES.silkChiffonAlt}';"
                         />
                         <figcaption class="module-caption">Silk and chiffon puncture easily—escalate immediately so the tailor can mark safely without pins in fragile fabric.</figcaption>
+                      </figure>
+                      <figure class="module-figure">
+                        <img
+                          class="module-image module-image--large"
+                          src="${IMAGES.customSuit}"
+                          alt="Custom suit jacket on a mannequin."
+                          loading="lazy"
+                        />
+                        <figcaption class="module-caption">Custom suits and bespoke tailoring require precise handling—escalate to a tailor to protect structure and fit.</figcaption>
                       </figure>
                     </div>
                   </div>
