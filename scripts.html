@@ -3901,10 +3901,14 @@
     return `
       <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
         <article class="module module-shell" id="${module.id}">
-          ${moduleHeroTemplate(module, headingId, { showObjectives: false })}
           <div id="module-6" class="module-six">
             <div class="module-cards">
               <div class="module-card m6-card m6-overview">
+                <div class="m6-hero">
+                  <div class="module-hero__meta"><span class="pill">Module ${module.id.replace('M', '')}</span></div>
+                  <h2 id="${headingId}" class="module-title" tabindex="-1">${module.title}</h2>
+                  <p class="module-subtitle">${module.intro}</p>
+                </div>
                 <h3 class="m6-card-title">Module 6: In-Person Supervised Fitting + Manager Signoff</h3>
                 <p class="subtitle">Complete a supervised fitting with an approved tailor and submit manager signoff to finish certification.</p>
                 <div class="m6-heading-row">
