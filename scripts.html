@@ -78,22 +78,30 @@
         {
           bad: '“Shorten a bit.”',
           placeholder: 'Rewrite with a final inseam measurement…',
-          example: '“Shorten inseam to 29 inches; balanced on both legs.”'
+          example: '“Shorten inseam to 29 inches; balanced on both legs.”',
+          requiredKeywords: ['shorten', 'inseam', 'to'],
+          optionalKeywords: ['finished', 'hem', 'balanced']
         },
         {
           bad: '“Hem 2 inches.”',
           placeholder: 'State the final length instead of the change…',
-          example: '“Finished hem 37 inches from floor with dress shoes.”'
+          example: '“Finished hem 37 inches from floor with dress shoes.”',
+          requiredKeywords: ['finished', 'hem', 'from'],
+          optionalKeywords: ['floor', 'shorten', 'to']
         },
         {
           bad: '“Take in 2 inches.”',
           placeholder: 'Record the target waist size…',
-          example: '“Take in waist to 36 inches; customer can sit comfortably.”'
+          example: '“Take in waist to 36 inches; customer can sit comfortably.”',
+          requiredKeywords: ['waist', 'to'],
+          optionalKeywords: ['take', 'set', 'final']
         },
         {
           bad: '“Use tag inseam 32.”',
           placeholder: 'Replace the tag reference with the measured final number…',
-          example: '“Measure and confirm: shorten inseam to 30.5 (customer approved).”'
+          example: '“Measure and confirm: shorten inseam to 30.5 (customer approved).”',
+          requiredKeywords: ['measure', 'inseam', 'to'],
+          optionalKeywords: ['shorten', 'confirm', 'approved']
         }
       ],
       quiz: [
@@ -2272,6 +2280,7 @@
     setRemainingEstimatePlaceholder();
     renderNavigation();
     renderModules();
+    setupRewritePracticeHelpers();
     initializeModuleQuizzes();
     setupModule6SignoffForm();
     bindIdentityPersistence();
@@ -2483,6 +2492,103 @@
   `;
   }
 
+  const rewriteForbiddenPhrases = ['+', '-', 'minus', 'take in 2', 'down 2', 'up 2'];
+  const rewriteActionVerbs = ['shorten', 'length', 'lengthen', 'to', 'set', 'final', 'waist', 'inseam', 'sleeve', 'finished', 'measure'];
+
+  function normalizeRewriteText(text = '') {
+    return text
+      .toLowerCase()
+      .trim()
+      .replace(/[.,!?]/g, '')
+      .replace(/\s+/g, ' ');
+  }
+
+  function buildRewritePracticeConfig() {
+    const moduleOne = modules.find(module => module.id === 'M1');
+    if (!moduleOne || !Array.isArray(moduleOne.practicePrompts)) {
+      return {};
+    }
+    return moduleOne.practicePrompts.reduce((acc, prompt, index) => {
+      const key = `practice-${index}`;
+      acc[key] = {
+        requiredKeywords: prompt.requiredKeywords || [],
+        optionalKeywords: prompt.optionalKeywords || [],
+        example: prompt.example
+      };
+      return acc;
+    }, {});
+  }
+
+  function evaluateRewriteInput(text, config = {}) {
+    const rawText = (text || '').toLowerCase();
+    const normalized = normalizeRewriteText(text);
+    const tokens = normalized.split(' ').filter(Boolean);
+    const hasForbidden = rewriteForbiddenPhrases.some(phrase => rawText.includes(phrase));
+    const numberPattern = /\d+(?:\.\d+)?/;
+    const unitPattern = /(\d+(?:\.\d+)?\s*(?:"|inches?|inch|in\b))/;
+    const hasNumber = numberPattern.test(normalized);
+    const hasNumberAndUnit = unitPattern.test(normalized);
+
+    const requiredKeywords = config.requiredKeywords || [];
+    const optionalKeywords = config.optionalKeywords || [];
+    const requiredMatches = requiredKeywords.filter(keyword => tokens.includes(keyword)).length;
+    const optionalMatches = optionalKeywords.filter(keyword => tokens.includes(keyword)).length;
+    const coverage = requiredKeywords.length
+      ? Math.min(1, (requiredMatches + optionalMatches * 0.5) / requiredKeywords.length)
+      : 1;
+
+    const hasActionVerb = rewriteActionVerbs.some(verb => tokens.includes(verb));
+
+    if (hasForbidden) {
+      return 'needs';
+    }
+
+    if (hasNumberAndUnit && coverage >= 0.75 && (hasActionVerb || coverage === 1)) {
+      return 'good';
+    }
+
+    if ((hasNumber || coverage >= 0.5 || hasActionVerb) && !hasForbidden) {
+      return 'almost';
+    }
+
+    return 'needs';
+  }
+
+  function updateRewriteHelper(helperEl, status) {
+    if (!helperEl) return;
+    helperEl.classList.remove('is-good', 'is-almost', 'is-needs');
+    if (status === 'good') {
+      helperEl.classList.add('is-good');
+      helperEl.textContent = '✅ Looks good — objective measurement captured';
+    } else if (status === 'almost') {
+      helperEl.classList.add('is-almost');
+      helperEl.textContent = '⚠️ Almost — add the final measurement number and unit';
+    } else {
+      helperEl.classList.add('is-needs');
+      helperEl.textContent = '❌ Needs revision — avoid +/- and vague words; include final measurement';
+    }
+  }
+
+  function setupRewritePracticeHelpers() {
+    const configMap = buildRewritePracticeConfig();
+    const practiceInputs = document.querySelectorAll('.rewrite-input');
+    practiceInputs.forEach(input => {
+      const helperId = `${input.id}-helper`;
+      const helperEl = document.getElementById(helperId);
+      const config = configMap[input.dataset.practiceKey] || {};
+      if (!helperEl) return;
+
+      const runEvaluation = () => {
+        const status = evaluateRewriteInput(input.value, config);
+        updateRewriteHelper(helperEl, status);
+      };
+
+      input.addEventListener('input', runEvaluation);
+      input.addEventListener('blur', runEvaluation);
+      runEvaluation();
+    });
+  }
+
   function moduleOneTemplate(module) {
     const subjectiveList = module.vocabulary.subjective.map(item => `<li>❌ ${item}</li>`).join('');
     const objectiveList = module.vocabulary.objective.map(item => `<li>✅ ${item}</li>`).join('');
@@ -2511,7 +2617,8 @@
         </div>
         <p class="bad">${prompt.bad}</p>
         <label class="sr-only" for="practice-${idx}">Rewrite prompt ${idx + 1}</label>
-        <input id="practice-${idx}" type="text" placeholder="${prompt.placeholder}" />
+        <input id="practice-${idx}" class="rewrite-input" type="text" placeholder="${prompt.placeholder}" data-practice-key="practice-${idx}" />
+        <div class="rewrite-helper" id="practice-${idx}-helper" aria-live="polite"></div>
         <p class="hint">Example: ${prompt.example}</p>
       </div>
     `).join('');
