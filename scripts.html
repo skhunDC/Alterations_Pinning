@@ -1864,16 +1864,27 @@
   }
 
   function renderModule6SignoffStatus(status) {
-    const statusEl = document.getElementById('module6-signoff-status');
-    if (!statusEl) return;
+    const statusCard = document.getElementById('module6-status-card');
+    if (!statusCard) return;
+
     if (!status || !status.exists) {
-      statusEl.textContent = '';
-      statusEl.className = 'status-text';
+      statusCard.hidden = true;
+      statusCard.innerHTML = '';
       return;
     }
-    if (!status.isComplete) {
-      statusEl.textContent = 'Signoff started but not complete.';
-      statusEl.className = 'status-text inline-warning';
+
+    statusCard.innerHTML = `
+      <div class="m6-heading-row">
+        <p class="m6-section-title">Signoff Status</p>
+        <span aria-hidden="true" class="m6-check">📄</span>
+      </div>
+      <div id="module6-signoff-status" class="status-text" aria-live="polite"></div>
+    `;
+
+    const statusEl = document.getElementById('module6-signoff-status');
+    if (!statusEl) {
+      statusCard.hidden = true;
+      statusCard.innerHTML = '';
       return;
     }
 
@@ -1882,13 +1893,27 @@
       : '';
     const timeText = status.fittingTime ? ` at ${status.fittingTime}` : '';
     const signedAt = status.signedAtIso ? new Date(status.signedAtIso).toLocaleString() : '—';
+
+    if (!status.isComplete) {
+      statusEl.innerHTML = `
+        <div class="m6-badge">Pending manager signoff</div>
+        <p><strong>Tailor:</strong> ${status.tailorName || '—'} (${status.tailorSite || '—'})</p>
+        <p><strong>Fitting:</strong> ${fittingType || '—'} • ${status.fittingDateIso || '—'}${timeText}</p>
+        <p><strong>Manager:</strong> Awaiting approval</p>
+      `;
+      statusEl.className = 'status-text';
+      statusCard.hidden = false;
+      return;
+    }
+
     statusEl.innerHTML = `
-      <div class="status-badge">Module 6 Completed ✅</div>
+      <div class="m6-badge m6-badge--complete">Completed ✅</div>
       <p><strong>Tailor:</strong> ${status.tailorName || '—'} (${status.tailorSite || '—'})</p>
       <p><strong>Fitting:</strong> ${fittingType || '—'} • ${status.fittingDateIso || '—'}${timeText}</p>
       <p><strong>Manager:</strong> ${status.managerName || '—'} • Signed ${signedAt}</p>
     `;
     statusEl.className = 'status-text';
+    statusCard.hidden = false;
   }
 
   function loadModule6SignoffStatus() {
@@ -3890,118 +3915,130 @@
     return `
       <section id="${sectionId}" class="module-section main-section" aria-labelledby="${headingId}" hidden>
         <article class="module module-shell" id="${module.id}">
-          ${moduleHeroTemplate(module, headingId, { showObjectives: false })}
-          <div class="module-cards">
-            <div class="module-card">
-              <h3>Module 6: In-Person Supervised Fitting + Manager Signoff</h3>
-              <p class="subtitle">Complete a supervised fitting with an approved tailor and submit manager signoff to finish certification.</p>
-              <div class="module-objectives-block">
-                <p class="eyebrow">What you'll learn</p>
-                <ul class="module-objectives">${objectives}</ul>
-              </div>
-              <div class="module-objectives-block">
-                <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;">
-                  <h3 style="margin:0;">Module 6 Checklist</h3>
-                  <span aria-hidden="true" style="font-size:1.9rem;line-height:1;">✅</span>
+          <div id="module-6" class="module-six">
+            <div class="module-cards">
+              <div class="module-card m6-card m6-overview">
+                <div class="m6-hero">
+                  <div class="module-hero__meta"><span class="pill">Module ${module.id.replace('M', '')}</span></div>
+                  <h2 id="${headingId}" class="module-title" tabindex="-1">${module.title}</h2>
+                  <p class="module-subtitle">${module.intro}</p>
                 </div>
-                <p class="subtitle">This step is required before an employee is fully certified.</p>
-                <ol class="module-objectives">
-                  <li>Complete an in-person supervised fitting with an approved tailor (customer OR employee).</li>
-                  <li>Document what was fitted (garment type + fitting type).</li>
-                  <li>Record the tailor and site details.</li>
-                  <li>Manager reviews the fitting details and signs off digitally.</li>
-                </ol>
-              </div>
-              <div id="module6-signoff-status" class="status-text" aria-live="polite"></div>
-            </div>
-
-            <div class="module-card signoff-card">
-              <h3>Module 6 Signoff Form</h3>
-              <div class="form-row">
-                <div>
-                  <label class="form-label" for="module6-tailor">Tailor (required)</label>
-                  <select id="module6-tailor" class="form-input">
-                    <option value="">Select a tailor</option>
-                    <option value="InSun (Plant)">InSun (Plant)</option>
-                    <option value="Beth (Newark)">Beth (Newark)</option>
-                  </select>
+                <div class="m6-heading-row">
+                  <p class="m6-section-title">Module 6 Checklist</p>
+                  <span aria-hidden="true" class="m6-check">✅</span>
                 </div>
-                <div>
-                  <label class="form-label" for="module6-site">Location/Site (required)</label>
-                  <select id="module6-site" class="form-input">
-                    <option value="">Select a site</option>
-                    <option value="Plant">Plant</option>
-                    <option value="Newark">Newark</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="form-label" for="module6-fitting-type">Fitting type (required)</label>
-                  <select id="module6-fitting-type" class="form-input">
-                    <option value="">Select fitting type</option>
-                    <option value="Customer fitting">Customer fitting</option>
-                    <option value="Employee fitting">Employee fitting</option>
-                  </select>
-                </div>
+                <ul class="module-objectives m6-checklist">
+                  ${objectives}
+                  <li>Capture what was fitted (garment + fitting type) and when it occurred.</li>
+                  <li>Manager reviews the fitting details, signs, and confirms completion.</li>
+                </ul>
               </div>
 
-              <div class="form-row">
-                <div>
-                  <label class="form-label" for="module6-garment-type">Garment type (required)</label>
-                  <select id="module6-garment-type" class="form-input">
-                    <option value="">Select garment</option>
-                    <option value="Pants">Pants</option>
-                    <option value="Skirt/Dress">Skirt/Dress</option>
-                    <option value="Jacket/Sport Coat">Jacket/Sport Coat</option>
-                    <option value="Other">Other</option>
-                  </select>
+              <div class="module-card m6-card m6-form-card">
+                <div class="m6-form-header">
+                  <h3 class="m6-card-title">Module 6 Signoff</h3>
+                  <p class="subtitle">Provide fitting details and complete the digital manager signoff.</p>
                 </div>
-                <div id="module6-other-garment-row" hidden>
-                  <label class="form-label" for="module6-other-garment-type">Other garment type (required)</label>
-                  <input type="text" id="module6-other-garment-type" class="form-input" placeholder="Describe garment type" />
+                <div class="m6-grid">
+                  <div class="m6-column">
+                    <p class="m6-section-title">Fitting Details</p>
+                    <div class="form-row">
+                      <div>
+                        <label class="form-label" for="module6-tailor">Tailor (required)</label>
+                        <select id="module6-tailor" class="form-input">
+                          <option value="">Select a tailor</option>
+                          <option value="InSun (Plant)">InSun (Plant)</option>
+                          <option value="Beth (Newark)">Beth (Newark)</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="form-label" for="module6-site">Location/Site (required)</label>
+                        <select id="module6-site" class="form-input">
+                          <option value="">Select a site</option>
+                          <option value="Plant">Plant</option>
+                          <option value="Newark">Newark</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div>
+                        <label class="form-label" for="module6-fitting-type">Fitting type (required)</label>
+                        <select id="module6-fitting-type" class="form-input">
+                          <option value="">Select fitting type</option>
+                          <option value="Customer fitting">Customer fitting</option>
+                          <option value="Employee fitting">Employee fitting</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="form-label" for="module6-garment-type">Garment type (required)</label>
+                        <select id="module6-garment-type" class="form-input">
+                          <option value="">Select garment</option>
+                          <option value="Pants">Pants</option>
+                          <option value="Skirt/Dress">Skirt/Dress</option>
+                          <option value="Jacket/Sport Coat">Jacket/Sport Coat</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div id="module6-other-garment-row" hidden>
+                        <label class="form-label" for="module6-other-garment-type">Other garment type (required)</label>
+                        <input type="text" id="module6-other-garment-type" class="form-input" placeholder="Describe garment type" />
+                      </div>
+                      <div>
+                        <label class="form-label" for="module6-fitting-date">Date of fitting (required)</label>
+                        <input type="date" id="module6-fitting-date" class="form-input" />
+                      </div>
+                      <div>
+                        <label class="form-label" for="module6-fitting-time">Time of fitting (optional)</label>
+                        <input type="time" id="module6-fitting-time" class="form-input" />
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div>
+                        <label class="form-label" for="module6-notes">Notes (optional)</label>
+                        <input type="text" id="module6-notes" class="form-input" maxlength="160" placeholder="Short notes for the manager" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="m6-column">
+                    <p class="m6-section-title">Manager Signoff</p>
+                    <div class="form-row">
+                      <div>
+                        <label class="form-label" for="module6-manager">Manager (required)</label>
+                        <select id="module6-manager" class="form-input">
+                          <option value="">Select a manager</option>
+                          <option value="Ryan Brown">Ryan Brown</option>
+                          <option value="Melissa Lackey">Melissa Lackey</option>
+                          <option value="Sea Khun">Sea Khun</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="form-label" for="module6-manager-signature">Manager typed signature (required)</label>
+                        <input type="text" id="module6-manager-signature" class="form-input" placeholder="Type your full name" />
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <label class="form-label" for="module6-manager-confirm">
+                        <input type="checkbox" id="module6-manager-confirm" />
+                        I confirm this employee completed an in-person supervised fitting with an approved tailor and is approved for certification.
+                      </label>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label class="form-label" for="module6-fitting-date">Date of fitting (required)</label>
-                  <input type="date" id="module6-fitting-date" class="form-input" />
+                <div class="m6-actions">
+                  <button type="button" class="primary" id="module6-signoff-submit">Submit Signoff</button>
                 </div>
-                <div>
-                  <label class="form-label" for="module6-fitting-time">Time of fitting (optional)</label>
-                  <input type="time" id="module6-fitting-time" class="form-input" />
-                </div>
+                <div id="module6-signoff-feedback" class="status-text" aria-live="polite"></div>
               </div>
 
-              <div class="form-row">
-                <div>
-                  <label class="form-label" for="module6-notes">Notes (optional)</label>
-                  <input type="text" id="module6-notes" class="form-input" maxlength="160" placeholder="Short notes for the manager" />
-                </div>
-              </div>
+              <div class="module-card m6-card m6-status-card" id="module6-status-card" hidden></div>
 
-              <h4>Manager Digital Signoff</h4>
-              <div class="form-row">
-                <div>
-                  <label class="form-label" for="module6-manager">Manager (required)</label>
-                  <select id="module6-manager" class="form-input">
-                    <option value="">Select a manager</option>
-                    <option value="Ryan Brown">Ryan Brown</option>
-                    <option value="Melissa Lackey">Melissa Lackey</option>
-                    <option value="Sea Khun">Sea Khun</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="form-label" for="module6-manager-signature">Manager typed signature (required)</label>
-                  <input type="text" id="module6-manager-signature" class="form-input" placeholder="Type your full name" />
-                </div>
-              </div>
-
-              <div class="form-row">
-                <label class="form-label" for="module6-manager-confirm">
-                  <input type="checkbox" id="module6-manager-confirm" />
-                  I confirm this employee completed an in-person supervised fitting with an approved tailor and is approved for certification.
-                </label>
-              </div>
-
-              <button type="button" class="primary" id="module6-signoff-submit">Submit Signoff</button>
-              <div id="module6-signoff-feedback" class="status-text" aria-live="polite"></div>
               ${renderModuleNavigation(module.id)}
             </div>
           </div>
