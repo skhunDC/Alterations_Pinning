@@ -1999,7 +1999,7 @@
           if (status?.isComplete) {
             fetchCertificationStatusByName(name)
               .then(updatedStatus => {
-                if (updatedStatus?.isCertified) {
+                if (isFullyCertifiedStatus(updatedStatus)) {
                   showFinalOutcomePassModal(name, updatedStatus);
                 }
               })
@@ -2168,13 +2168,16 @@
     openFinalOutcomeModal();
   }
 
+  function isFullyCertifiedStatus(status) {
+    if (!status) return false;
+    const module6Complete = status.module6Complete === true
+      || (Array.isArray(status.completedModules) && status.completedModules.includes('M6'));
+    return !!(status.isCertified && module6Complete);
+  }
+
   function showFinalOutcomePassModal(employeeName, certificationStatus) {
     const safeName = escapeHtml(employeeName);
-    const isFullyCertified = !!(
-      certificationStatus &&
-      certificationStatus.isCertified &&
-      certificationStatus.module6Complete
-    );
+    const isFullyCertified = isFullyCertifiedStatus(certificationStatus);
     const certImageHtml = isFullyCertified
       ? `
         <div class="final-outcome-cert-graphic">
@@ -2199,7 +2202,7 @@
       primaryLabel: 'Generate Certificate (PDF)',
       primaryAction: () => {
         closeFinalOutcomeModal();
-        handlePrintCertificate();
+        handlePrintCertificate({ skipCelebrationModal: true });
       },
       secondaryLabel: 'Close'
     });
@@ -4443,6 +4446,9 @@
     });
 
     updateNavShift(sectionId);
+    if (sectionId === 'dashboard') {
+      maybeShowCertificationCelebration();
+    }
 
     const moduleNavLinks = document.querySelectorAll('.nav-link');
     moduleNavLinks.forEach(link => {
@@ -4479,7 +4485,37 @@
     document.body.classList.toggle('modules-nav-active', shouldShiftForNav);
   }
 
-  function handlePrintCertificate() {
+  function maybeShowCertificationCelebration() {
+    const name = getEmployeeName();
+    if (!name) return;
+
+    const revealModal = status => {
+      if (isFullyCertifiedStatus(status)) {
+        showFinalOutcomePassModal(name, status);
+      }
+    };
+
+    if (lastCertificationStatus && isFullyCertifiedStatus(lastCertificationStatus)) {
+      revealModal(lastCertificationStatus);
+      return;
+    }
+
+    fetchCertificationStatusByName(name)
+      .then(status => {
+        lastCertificationStatus = status;
+        revealModal(status);
+      })
+      .catch(() => {});
+  }
+
+  function handlePrintCertificate(options = {}) {
+    const event = options && options.preventDefault ? options : null;
+    const normalizedOptions = event ? {} : options;
+    if (event) {
+      event.preventDefault();
+    }
+
+    const skipCelebrationModal = !!normalizedOptions.skipCelebrationModal;
     const name = getEmployeeName();
     if (!name) {
       showToast('Enter employee name before generating a certificate.', 'error');
@@ -4513,6 +4549,11 @@
         updateCertificateButtonState(status);
         if (!status || !status.isCertified) {
           showToast('Complete Modules 1–5 and Module 6 signoff before generating a certificate.', 'error');
+          return null;
+        }
+
+        if (!skipCelebrationModal) {
+          showFinalOutcomePassModal(name, status);
           return null;
         }
 
