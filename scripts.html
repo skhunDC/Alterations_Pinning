@@ -1598,9 +1598,17 @@
   };
 
   const approvedTailors = ['InSun (Plant)', 'Beth (Newark)'];
-  const approvedSites = ['Plant', 'Newark'];
-  const approvedFittingTypes = ['Customer fitting', 'Employee fitting'];
-  const approvedManagers = ['Ryan Brown', 'Melissa Lackey', 'Sea Khun'];
+  const approvedSites = [
+    'Plant',
+    'Newark',
+    'Muirfield',
+    'Frantz',
+    'Morse',
+    'Granville',
+    'Short North'
+  ];
+  const approvedFittingTypes = ['Customer fitting', 'Employee fitting', 'Mock fitting'];
+  const approvedManagers = ['Ryan Brown', 'Lisa Mabry', 'Demetria Dale'];
 
   const QUESTIONS_PER_MODULE = 6;
   const PASSING_CORRECT_REQUIRED = 5;
@@ -3957,6 +3965,11 @@
                           <option value="">Select a site</option>
                           <option value="Plant">Plant</option>
                           <option value="Newark">Newark</option>
+                          <option value="Muirfield">Muirfield</option>
+                          <option value="Frantz">Frantz</option>
+                          <option value="Morse">Morse</option>
+                          <option value="Granville">Granville</option>
+                          <option value="Short North">Short North</option>
                         </select>
                       </div>
                     </div>
@@ -3968,6 +3981,7 @@
                           <option value="">Select fitting type</option>
                           <option value="Customer fitting">Customer fitting</option>
                           <option value="Employee fitting">Employee fitting</option>
+                          <option value="Mock fitting">Mock fitting</option>
                         </select>
                       </div>
                       <div>
@@ -4013,8 +4027,8 @@
                         <select id="module6-manager" class="form-input">
                           <option value="">Select a manager</option>
                           <option value="Ryan Brown">Ryan Brown</option>
-                          <option value="Melissa Lackey">Melissa Lackey</option>
-                          <option value="Sea Khun">Sea Khun</option>
+                          <option value="Lisa Mabry">Lisa Mabry</option>
+                          <option value="Demetria Dale">Demetria Dale</option>
                         </select>
                       </div>
                       <div>
