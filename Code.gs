@@ -3,7 +3,7 @@ const MODULE_RESULTS_SHEET = 'ModuleResults';
 const QUIZ_ATTEMPTS_SHEET = 'QuizAttempts';
 const EMPLOYEE_LOCKOUTS_SHEET = 'EmployeeLockouts';
 const SIGNOFFS_SHEET = 'Signoffs';
-const LOCKOUT_DURATION_MS = 72 * 60 * 60 * 1000;
+const LOCKOUT_DURATION_MS = 24 * 60 * 60 * 1000;
 const MODULE_HEADERS = ['Timestamp', 'EmployeeName', 'LocationOrID', 'ModuleID', 'Score', 'Passed'];
 const QUIZ_ATTEMPT_HEADERS = [
   'Timestamp',
